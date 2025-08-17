@@ -55,7 +55,7 @@ battle-arena/
 ## 🚀 Getting Started
 
 ### 1. Clone repository
-```bash
+
 git clone https://github.com/USERNAME/battle-arena.git
 cd battle-arena
 
