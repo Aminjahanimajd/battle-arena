@@ -50,10 +50,6 @@ battle-arena/
 ├── .gitignore
 └── README.md
 
-yaml
-Copy
-Edit
-
 ---
 
 ## 🚀 Getting Started
@@ -62,17 +58,16 @@ Edit
 ```bash
 git clone https://github.com/USERNAME/battle-arena.git
 cd battle-arena
-2. Build
-bash
-Copy
-Edit
+
+### 2. Build
 mvn clean compile
-3. Run
-bash
-Copy
-Edit
+
+### 3. Run
 mvn exec:java -Dexec.mainClass="com.amin.battlearena.Game"
-📌 Roadmap
+
+---
+
+## 📌 Roadmap
  Initial project skeleton
 
  Core game loop
@@ -83,8 +78,7 @@ mvn exec:java -Dexec.mainClass="com.amin.battlearena.Game"
 
  Expand with skills, inventory, and AI
 
-📖 License
-MIT License (to be added)
+---
 
-👤 Author
-Amin – Data Analysis student aspiring to become a Machine Learning Engineer.
+## 👤 Author
+Amin – Data Analysis student , University of Messina
