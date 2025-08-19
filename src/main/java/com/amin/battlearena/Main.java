@@ -1,33 +1,49 @@
 package com.amin.battlearena;
 
+import com.amin.battlearena.actions.AttackAction;
+import com.amin.battlearena.actions.DefendAction;
 import com.amin.battlearena.engine.GameEngine;
-import com.amin.battlearena.model.*;
-import com.amin.battlearena.player.*;
-import com.amin.battlearena.exceptions.InvalidActionException;
+import com.amin.battlearena.engine.SimpleAIStrategy;
+import com.amin.battlearena.model.Mage;
+import com.amin.battlearena.model.Position;
+import com.amin.battlearena.model.Warrior;
 
-public final class Main {
-    public static void main(String[] args) throws InvalidActionException {
-        var board = new Board(5,5);
+public class Main {
 
-        var human = new HumanPlayer("Human");
-        var ai = new AIPlayer("Computer");
+    public static void main(String[] args) {
+        // Create player and AI characters
+        Warrior player = new Warrior("Hero", 100, 15, 5, new Position(0, 0));
+        Mage ai = new Mage("Enemy Mage", 80, 10, 3, 50, new Position(1, 0));
 
-        var h1 = new Warrior("H-Warrior", new Position(0,0));
-        var h2 = new Archer("H-Archer", new Position(0,1));
-        human.getTeam().add(h1);
-        human.getTeam().add(h2);
 
-        var a1 = new Warrior("C-Warrior", new Position(4,4));
-        var a2 = new Archer("C-Archer", new Position(4,3));
-        ai.getTeam().add(a1);
-        ai.getTeam().add(a2);
+        // Inject AI strategy into GameEngine
+        GameEngine engine = new GameEngine(player, ai, new SimpleAIStrategy());
 
-        var engine = new GameEngine(board, human, ai);
-        engine.place(h1, h1.getPosition());
-        engine.place(h2, h2.getPosition());
-        engine.place(a1, a1.getPosition());
-        engine.place(a2, a2.getPosition());
+        // Show initial status
+        engine.showStatus();
 
-        engine.start();
+        // Game loop: continue until someone is dead
+        while (!engine.isGameOver()) {
+            try {
+                // Example: player attacks AI
+                engine.playerAction(new AttackAction(), ai);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            engine.showStatus();
+
+            // Optionally: player can defend
+            try {
+                engine.playerAction(new DefendAction(), player);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            engine.showStatus();
+        }
+
+        // Print winner
+        System.out.println("Winner: " + engine.getWinner().getName());
     }
 }

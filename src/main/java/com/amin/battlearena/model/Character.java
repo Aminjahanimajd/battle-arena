@@ -1,26 +1,42 @@
 package com.amin.battlearena.model;
 
+import javax.swing.text.Position;
+
 import com.amin.battlearena.exceptions.DeadCharacterException;
 import com.amin.battlearena.exceptions.InvalidActionException;
 
 // Abstraction & Inheritance: base character; subclasses provide damage profile (polymorphism).
 public abstract class Character {
-    private final String name;
-    private final Stats stats;
-    private Position position;
+    protected String name;
+    protected int hp;
+    protected int attack;
+    protected int defense;
+    protected Position position;
 
-    protected Character(String name, Stats stats, Position start) {
+    public Character(String name, int hp, int attack, int defense, Position position) {
         this.name = name;
-        this.stats = stats;
-        this.position = start;
+        this.hp = hp;
+        this.attack = attack;
+        this.defense = defense;
+        this.position = position;
     }
 
+    public abstract int baseDamage();
+
     public String getName() { return name; }
-    public Stats getStats() { return stats; }
+    public int getHp() { return hp; }
+    public int getAttack() { return attack; }
+    public int getDefense() { return defense; }
     public Position getPosition() { return position; }
     protected void setPosition(Position p) { this.position = p; }
+    public void takeDamage(int dmg) { this.hp -= dmg; }
 
-    public boolean isAlive() { return !stats.isDead(); }
+    public int getAttack() { return attack; }
+    public int getDefense() { return defense; }
+
+    public boolean isAlive() { return !isDead(); }
+    public boolean isDead() { return this.hp <= 0; }
+    public void addTemporaryDefense(int value) { this.defense += value; }
 
     public boolean inRangeOf(Character target) {
         return this.position.distanceTo(target.position) <= stats.getRange();

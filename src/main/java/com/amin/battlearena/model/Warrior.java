@@ -1,9 +1,9 @@
 package com.amin.battlearena.model;
 
 public final class Warrior extends Character {
-    public Warrior(String name, Position start) {
-        super(name, new Stats(40, 6, 3, 1), start);
-    }
+    public Warrior(String name, int hp, int attack, int defense, Position position) {
+    super(name, hp, attack, defense, position);
+}
     @Override
     protected int baseDamage() { return 4; }
 }

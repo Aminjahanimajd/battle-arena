@@ -1,46 +1,55 @@
 package com.amin.battlearena.engine;
 
-import com.amin.battlearena.exceptions.InvalidActionException;
-import com.amin.battlearena.model.Board;
+import com.amin.battlearena.actions.Action;
+import com.amin.battlearena.actions.AttackAction;
+import com.amin.battlearena.actions.DefendAction;
+import com.amin.battlearena.exceptions.OutOfTurnException;
 import com.amin.battlearena.model.Character;
-import com.amin.battlearena.model.Position;
-import com.amin.battlearena.player.Player;
+import main.java.com.amin.battlearena.engine.AIStrategy;
+import java.util.List;
 
-public final class GameEngine {
-    private final Board board;
-    private final Player p1, p2;
-    private Player current;
+public class GameEngine {
 
-    public GameEngine(Board board, Player p1, Player p2) {
-        this.board = board; this.p1 = p1; this.p2 = p2; this.current = p1;
+    private Character player;
+    private Character ai;
+    private AIStrategy aiStrategy;
+    private boolean playerTurn;
+
+    public GameEngine(Character player, Character ai, AIStrategy aiStrategy) {
+        this.player = player;
+        this.ai = ai;
+        this.aiStrategy = aiStrategy;
+        this.playerTurn = true; // player starts
     }
 
-    public void start() {
-        log("Game start: " + p1.getName() + " vs " + p2.getName());
-        while (!isGameOver()) {
-            try {
-                log("Turn: " + current.getName());
-                current.takeTurn(this);
-                swapTurn();
-            } catch (Exception e) {
-                log("Error: " + e.getMessage());
-                // keep same player's turn if error to retry
-            }
-        }
-        Player winner = p1.hasAliveUnits() ? p1 : p2;
-        log("Winner: " + winner.getName());
+    // Player acts
+    public void playerAction(Action action, Character target) throws Exception {
+        if (!playerTurn) throw new OutOfTurnException("It's not your turn!");
+        action.execute(this, player, ai);
+        playerTurn = false; // switch turn
+        aiTurn();
     }
 
-    private void swapTurn() { current = (current == p1) ? p2 : p1; }
+    // AI acts
+    private void aiTurn() {
+        if (ai.isDead() || player.isDead()) return;
+        aiStrategy.takeTurn(ai, player);
+        playerTurn = true; // switch turn back to player
+    }
 
+    // Game over check
     public boolean isGameOver() {
-        return !p1.hasAliveUnits() || !p2.hasAliveUnits();
+        return player.isDead() || ai.isDead();
     }
 
-    public Player getOpponentOf(Player player) { return (player == p1) ? p2 : p1; }
+    public Character getWinner() {
+        if (!isGameOver()) return null;
+        return player.isDead() ? ai : player;
+    }
 
-    public void place(Character c, Position p) throws InvalidActionException { board.place(c, p); }
-    public void move(Character c, Position p) throws InvalidActionException { board.move(c, p); }
-
-    public void log(String s) { System.out.println(s); }
+    public void showStatus() {
+        System.out.println(player);
+        System.out.println(ai);
+        System.out.println("Player's turn: " + playerTurn);
+    }
 }
