@@ -1,18 +1,18 @@
 package com.amin.battlearena.engine;
 
 import com.amin.battlearena.actions.Action;
-import com.amin.battlearena.actions.AttackAction;
-import com.amin.battlearena.actions.DefendAction;
 import com.amin.battlearena.exceptions.OutOfTurnException;
 import com.amin.battlearena.model.Character;
-import main.java.com.amin.battlearena.engine.AIStrategy;
-import java.util.List;
+import com.amin.battlearena.model.Position;
+import com.amin.battlearena.player.Player;
 
 public class GameEngine {
 
-    private Character player;
-    private Character ai;
-    private AIStrategy aiStrategy;
+    private Player player1;
+    private Player player2;
+    private final Character player;
+    private final Character ai;
+    private final AIStrategy aiStrategy;
     private boolean playerTurn;
 
     public GameEngine(Character player, Character ai, AIStrategy aiStrategy) {
@@ -22,6 +22,18 @@ public class GameEngine {
         this.playerTurn = true; // player starts
     }
 
+     /** Returns the opponent of the given player */
+    public Player getOpponentOf(Player player) {
+        if (player.equals(player1)) return player2;
+        if (player.equals(player2)) return player1;
+        return null; // or throw an exception if player is invalid
+    }
+
+    /** ✅ Add this helper so AttackAction compiles */
+    public void log(String message) {
+        System.out.println("[LOG] " + message);
+    }
+
     // Player acts
     public void playerAction(Action action, Character target) throws Exception {
         if (!playerTurn) throw new OutOfTurnException("It's not your turn!");
@@ -29,6 +41,22 @@ public class GameEngine {
         playerTurn = false; // switch turn
         aiTurn();
     }
+
+public void move(Character character, Position newPos) {
+    if (character == null || !character.isAlive()) {
+        log("Invalid move: Character is null or dead.");
+        return;
+    }
+
+    if (newPos == null) {
+        log("Invalid move: Position is null.");
+        return;
+    }
+
+    // Move the character directly
+    character.moveTo(newPos); // Use moveTo() instead of setPosition() for protected access
+    log(character.getName() + " moves to (" + newPos.x() + "," + newPos.y() + ")");
+}
 
     // AI acts
     private void aiTurn() {

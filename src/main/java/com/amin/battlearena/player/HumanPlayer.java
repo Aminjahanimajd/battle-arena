@@ -1,10 +1,11 @@
 package com.amin.battlearena.player;
 
-import com.amin.battlearena.engine.GameEngine;
-import com.amin.battlearena.model.Character;
-import com.amin.battlearena.actions.AttackAction;
 import java.util.List;
 import java.util.Scanner;
+
+import com.amin.battlearena.actions.AttackAction;
+import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.model.Character;
 
 public final class HumanPlayer extends Player {
     public HumanPlayer(String name) { super(name); }

@@ -1,8 +1,9 @@
 package com.amin.battlearena.model;
 
-import com.amin.battlearena.exceptions.InvalidActionException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.amin.battlearena.exceptions.InvalidActionException;
 
 // Information hiding: bounds & occupancy managed here.
 public final class Board {

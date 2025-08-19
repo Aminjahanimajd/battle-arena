@@ -8,13 +8,14 @@ public class Mage extends Character {
     private int mana;
 
     public Mage(String name, int hp, int attack, int defense, int mana, Position position) {
-        super(name, hp, attack, defense, mana , position);
+        super(name, hp, attack, defense, position);
         this.mana = mana;
     }
 
     public int getMana() {
         return mana;
     }
+    @Override
     public int baseDamage() {
         return getAttack() + (mana / 5); // example polymorphic damage
     }
