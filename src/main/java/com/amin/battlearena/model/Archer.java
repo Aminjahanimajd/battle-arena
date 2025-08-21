@@ -1,36 +1,32 @@
 package com.amin.battlearena.model;
 
-import com.amin.battlearena.exceptions.DeadCharacterException;
+import com.amin.battlearena.abilities.DoubleShot;
 
-public final class Archer extends Character {
+/**
+ * Ranged damage dealer. Has a range field; range checks should be enforced by GameEngine/Board.
+ */
+public class Archer extends Character {
+
+    private final int range;
 
     public Archer(String name, Position position) {
-        // Example stats for Archer: HP = 80, ATK = 15, DEF = 10
-        super(name, 80, 15, 10, position);
+        this(name, position, 3); // default range 3
     }
 
-    @Override
-    public void attack(Character target) {
-        if (target == null || !target.isAlive()) {
-            System.out.println(getName() + " has no valid target to attack.");
-            return;
-        }
+    public Archer(String name, Position position, int range) {
+        super(name, new Stats(80, 15, 5, 3), position);
+        this.range = Math.max(1, range);
+        addAbility(new DoubleShot());
+    }
 
-        try {
-            // Archers could have a higher chance of dealing bonus damage
-            int damage = this.attack + baseDamage();
-            target.takeDamage(damage);
-            System.out.println(getName() + " shoots an arrow at " + target.getName() +
-                    " for " + damage + " damage!");
-        } catch (DeadCharacterException e) {
-            // Handle defeated target
-            System.out.println(target.getName() + " has been slain by " + getName() + "!");
-        }
+    public int getRange() { return range; }
+
+    public boolean inRangeOf(Character other) {
+        return this.getPosition().distanceTo(other.getPosition()) <= range;
     }
 
     @Override
     protected int baseDamage() {
-        // Archers do reliable ranged damage
         return 2;
     }
 }

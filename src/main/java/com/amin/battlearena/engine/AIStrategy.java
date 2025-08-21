@@ -1,8 +1,10 @@
 package com.amin.battlearena.engine;
 
-import com.amin.battlearena.actions.AttackAction;
-import com.amin.battlearena.model.Character;
+import com.amin.battlearena.player.Player;
 
+/**
+ * Strategy interface for AI implementations. Implementations perform a full AI turn when invoked.
+ */
 public interface AIStrategy {
-    AttackAction takeTurn(Character aiPlayer, Character humanTarget);
+    void takeTurn(GameEngine engine, Player aiPlayer) throws Exception;
 }

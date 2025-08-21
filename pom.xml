@@ -2,6 +2,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.amin.battlearena</groupId>
   <artifactId>battle-arena</artifactId>
   <version>0.1.0</version>
@@ -9,10 +10,56 @@
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Jackson version: pick a 2.15.x compatible with Java 17 -->
+    <jackson.version>2.15.2</jackson.version>
+    <slf4j.version>2.0.13</slf4j.version>
+    <sqlite.version>3.45.1.0</sqlite.version>
   </properties>
+
+  <dependencies>
+    <!-- Jackson (JSON parsing for levels/config) -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <!-- SQLite JDBC driver -->
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>${sqlite.version}</version>
+    </dependency>
+
+    <!-- Logging (SLF4J simple backend) -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+
+    <!-- JUnit for future tests -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
+      <!-- Compiler -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
@@ -20,6 +67,8 @@
           <release>${maven.compiler.release}</release>
         </configuration>
       </plugin>
+
+      <!-- Jar packaging with main class -->
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
@@ -30,6 +79,23 @@
             </manifest>
           </archive>
         </configuration>
+      </plugin>
+
+      <!-- Exec plugin so you can run the main class with mvn exec:java -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <mainClass>com.amin.battlearena.Main</mainClass>
+        </configuration>
+      </plugin>
+
+      <!-- Surefire plugin for tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
       </plugin>
     </plugins>
   </build>

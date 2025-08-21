@@ -1,49 +1,76 @@
 package com.amin.battlearena;
 
-import com.amin.battlearena.actions.AttackAction;
-import com.amin.battlearena.actions.DefendAction;
+import com.amin.battlearena.database.DatabaseManager;
 import com.amin.battlearena.engine.GameEngine;
 import com.amin.battlearena.engine.SimpleAIStrategy;
+import com.amin.battlearena.model.Archer;
+import com.amin.battlearena.model.Board;
+import com.amin.battlearena.model.Character;
+import com.amin.battlearena.model.Knight;
 import com.amin.battlearena.model.Mage;
 import com.amin.battlearena.model.Position;
+import com.amin.battlearena.model.Ranger;
 import com.amin.battlearena.model.Warrior;
+import com.amin.battlearena.player.AIPlayer;
+import com.amin.battlearena.player.HumanPlayer;
 
-public class Main {
-
+/**
+ * Small bootstrap to test the CLI battle loop.
+ * - Initializes DB
+ * - Builds a human and an AI with simple teams and positions
+ * - Runs the engine loop (console-driven)
+ */
+public final class Main {
     public static void main(String[] args) {
-        // Create player and AI characters
-        Warrior player = new Warrior("Hero", 100, 15, 5, new Position(0, 0));
-        Mage ai = new Mage("Enemy Mage", 80, 10, 3, 50, new Position(1, 0));
-
-
-        // Inject AI strategy into GameEngine
-        GameEngine engine = new GameEngine(player, ai, new SimpleAIStrategy());
-
-        // Show initial status
-        engine.showStatus();
-
-        // Game loop: continue until someone is dead
-        while (!engine.isGameOver()) {
-            try {
-                // Example: player attacks AI
-                engine.playerAction(new AttackAction(), ai);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            engine.showStatus();
-
-            // Optionally: player can defend
-            try {
-                engine.playerAction(new DefendAction(), player);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            engine.showStatus();
+        // initialize database (creates file and tables if missing)
+        try {
+            DatabaseManager.getConnection();
+        } catch (Exception e) {
+            System.err.println("[Main] Warning: database initialization failed: " + e.getMessage());
         }
 
-        // Print winner
-        System.out.println("Winner: " + engine.getWinner().getName());
+        // create board (example size)
+        Board board = new Board(8, 8); // optionally used by UI/engine validation
+
+        // create players
+        HumanPlayer human = new HumanPlayer("Amin");
+        AIPlayer cpu = new AIPlayer("CPU", new SimpleAIStrategy());
+
+        // build a simple human team
+        Warrior w = new Warrior("Ares", new Position(1, 1));
+        Archer ar = new Archer("Robin", new Position(1, 2));
+        Mage m = new Mage("Gand", new Position(0, 1));
+        human.addToTeam(w);
+        human.addToTeam(ar);
+        human.addToTeam(m);
+
+        // build a CPU team (example: small wave)
+        Knight k = new Knight("Bulwark", new Position(6, 6));
+        Ranger ranger = new Ranger("Ranger-Boss", new Position(5, 5)); // boss-like archer
+        cpu.addToTeam(k);
+        cpu.addToTeam(ranger);
+
+        // quick sanity: ensure positions are on board
+        for (Character c : human.getTeam()) {
+            if (!board.isWithinBounds(c.getPosition()))
+                System.err.println("[Main] Warning: human character out of bounds: " + c);
+        }
+        for (Character c : cpu.getTeam()) {
+            if (!board.isWithinBounds(c.getPosition()))
+                System.err.println("[Main] Warning: cpu character out of bounds: " + c);
+        }
+
+        // create engine and run
+        GameEngine engine = new GameEngine(human, cpu , board);
+        engine.log("Starting battle on " + board);
+
+        engine.runBattleLoop();
+
+        // close DB connection gracefully
+        try {
+            DatabaseManager.close();
+        } catch (Exception e) {
+            System.err.println("[Main] Warning: database close failed: " + e.getMessage());
+        }
     }
 }

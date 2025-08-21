@@ -1,29 +1,19 @@
 package com.amin.battlearena.model;
 
-import com.amin.battlearena.exceptions.DeadCharacterException;
-import com.amin.battlearena.exceptions.InvalidActionException;
+import com.amin.battlearena.abilities.ArcaneBurst;
 
-public class Mage extends Character {
+/**
+ * Glass-cannon magic user: higher attack, lower defense.
+ */
+public final class Mage extends Character {
 
-    private int mana;
-
-    public Mage(String name, int hp, int attack, int defense, int mana, Position position) {
-        super(name, hp, attack, defense, position);
-        this.mana = mana;
+    public Mage(String name, Position position) {
+        super(name, new Stats(75, 18, 4, 2), position);
+        addAbility(new ArcaneBurst());
     }
 
-    public int getMana() {
-        return mana;
-    }
     @Override
-    public int baseDamage() {
-        return getAttack() + (mana / 5); // example polymorphic damage
-    }
-    public void castSpell(Character target) throws InvalidActionException, DeadCharacterException {
-        if (this.isDead()) throw new DeadCharacterException(this.getName() + " is dead!");
-        if (mana < 10) throw new InvalidActionException("Not enough mana to cast a spell!");
-        
-        target.takeDamage(this.getAttack() + 5); // Spell does extra damage
-        this.mana -= 10;
+    protected int baseDamage() {
+        return 3;
     }
 }

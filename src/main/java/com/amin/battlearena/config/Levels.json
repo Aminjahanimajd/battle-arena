@@ -1,0 +1,12 @@
+[
+  { "level": 1, "enemies": ["Warrior"], "rewardGold": 100, "requiresLevel": 0, "note": "Intro duel" },
+  { "level": 2, "enemies": ["Warrior","Archer"], "rewardGold": 120, "requiresLevel": 1, "note": "Add ranged" },
+  { "level": 3, "enemies": ["Archer","Archer"], "rewardGold": 140, "requiresLevel": 2, "note": "Kite pressure" },
+  { "level": 4, "enemies": ["Warrior","Mage"], "rewardGold": 170, "requiresLevel": 3, "note": "Burst checks" },
+  { "level": 5, "enemies": ["Knight"], "rewardGold": 200, "requiresLevel": 4, "note": "Tank check" },
+  { "level": 6, "enemies": ["Ranger"], "rewardGold": 260, "requiresLevel": 5, "note": "Mini-boss: elite archer" },
+  { "level": 7, "enemies": ["Warrior","Knight"], "rewardGold": 300, "requiresLevel": 6, "note": "Frontline wall" },
+  { "level": 8, "enemies": ["Mage","Archer","Archer"], "rewardGold": 360, "requiresLevel": 7, "note": "Focus fire" },
+  { "level": 9, "enemies": ["Knight","Ranger"], "rewardGold": 440, "requiresLevel": 8, "note": "Defense + spike" },
+  { "level": 10, "enemies": ["Master"], "rewardGold": 600, "requiresLevel": 9, "note": "Boss: Master" }
+]

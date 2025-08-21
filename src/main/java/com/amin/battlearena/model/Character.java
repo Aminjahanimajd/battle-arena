@@ -1,72 +1,124 @@
 package com.amin.battlearena.model;
 
-
+import com.amin.battlearena.abilities.Ability;
 import com.amin.battlearena.exceptions.DeadCharacterException;
 import com.amin.battlearena.exceptions.InvalidActionException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-// Abstraction & Inheritance: base character; subclasses provide damage profile (polymorphism).
+/**
+ * Core abstract character model.
+ *
+ * Design notes:
+ * - Uses composition (Stats) for character numeric state (encapsulation, information hiding).
+ * - Exposes a small, well-documented public API (move, attack, takeDamage, abilities).
+ * - Defines extension points: subclasses override baseDamage() and may add abilities.
+ * - Keeps fields protected only when subclass access is required; otherwise private.
+ */
 public abstract class Character {
-    protected String name;
-    protected int hp;
-    protected int attack;
-    protected int defense;
-    protected Position position;
 
-    public Character(String name, int hp, int attack, int defense, Position position) {
-        this.name = name;
-        this.hp = hp;
-        this.attack = attack;
-        this.defense = defense;
-        this.position = position;
+    private final String name;
+    private final Stats stats;           // composition: encapsulated numeric state
+    private Position position;
+    private final List<Ability> abilities = new ArrayList<>();
+
+    // transient/temporary defensive buff (reset each turn or by duration system)
+    private int temporaryDefense = 0;
+
+    protected Character(String name, Stats stats, Position position) {
+        this.name = Objects.requireNonNull(name, "name");
+        this.stats = Objects.requireNonNull(stats, "stats");
+        this.position = Objects.requireNonNull(position, "position");
     }
 
-    // public abstract int baseDamage(); // Removed duplicate declaration
-
+    // --------- Basic accessors ---------
     public String getName() { return name; }
-    public int getHp() { return hp; }
-    public int getAttack() { return attack; }
-    public Stats getStats() { return new Stats(hp, attack); }
+    public Stats getStats() { return stats; }
     public Position getPosition() { return position; }
-    protected void setPosition(Position p) { this.position = p; }
+    protected void setPosition(Position position) { this.position = Objects.requireNonNull(position); }
 
-    public int getDefense() { return defense; }
-    public void moveTo(Position position) { this.setPosition(position); }
-    public boolean isAlive() { return !isDead(); }
-    public boolean isDead() { return this.hp <= 0; }
-    public void addTemporaryDefense(int amount) { this.defense += amount; }
+    public boolean isAlive() { return !stats.isDead(); }
 
-    public boolean inRangeOf(Character target) {
-        // Assuming attack is used as range, or add a 'range' field if needed
-        return this.position.distanceTo(target.position) <= this.attack;
+    /**
+     * Amount of extra defense provided temporarily (e.g. by abilities).
+     * Managed here to keep defense calculation centralized.
+     */
+    public int getTemporaryDefense() { return temporaryDefense; }
+    public void addTemporaryDefense(int amount) { this.temporaryDefense += Math.max(0, amount); }
+    public void clearTemporaryDefense() { this.temporaryDefense = 0; }
+
+    // Public accessor to expose subclass baseDamage to other packages (read-only).
+    // Keeps protected baseDamage() as the extension point while allowing external callers to read it.
+    public int getBaseDamage() {
+        return baseDamage();
     }
 
+    // --------- Movement ---------
+    /**
+     * Move the character to a new position.
+     * Subclasses or external engine can validate movement range before calling.
+     */
+    public void moveTo(Position newPosition) throws InvalidActionException {
+        if (!isAlive()) throw new InvalidActionException(name + " is dead and cannot move.");
+        if (newPosition == null) throw new InvalidActionException("newPosition is null");
+        setPosition(newPosition);
+    }
+
+    // --------- Combat ---------
+    /**
+     * Default attack: calculates damage using attacker's attack + baseDamage,
+     * minus target defense (including temporaryDefense).
+     *
+     * Subclasses can override if they need special attack mechanics.
+     */
     public void attack(Character target) throws InvalidActionException, DeadCharacterException {
-        if (!this.isAlive()) throw new DeadCharacterException(name + " is dead.");
-        if (!target.isAlive()) throw new InvalidActionException("Target already defeated.");
-        if (!inRangeOf(target)) throw new InvalidActionException("Target out of range.");
+        if (!isAlive()) throw new InvalidActionException(name + " is dead and cannot attack.");
+        if (target == null) throw new InvalidActionException("target is null");
+        if (!target.isAlive()) throw new InvalidActionException("target " + target.getName() + " is already dead.");
 
-        int raw = this.attack + baseDamage();
-        int mitigated = Math.max(0, raw - target.getDefense());
-        target.takeDamage(mitigated);
-    }
-    protected abstract int baseDamage(); // polymorphic contribution
+        int raw = this.stats.getAttack() + baseDamage();
+        int effectiveDefense = target.stats.getDefense() + target.getTemporaryDefense();
+        int damage = Math.max(0, raw - effectiveDefense);
 
-    public void takeDamage(int damage) throws DeadCharacterException {
-        if (hp <= 0) throw new DeadCharacterException(name + " is already dead!");
-        hp -= damage;
-        if (hp <= 0) hp = 0;
+        target.takeDamage(damage);
     }
 
-    /** Inner helper to carry stats around */
-    public static class Stats {
-        private final int hp;
-        private final int attack;
-        public Stats(int hp, int attack) {
-            this.hp = hp;
-            this.attack = attack;
+    /**
+     * Reduces HP by given amount (after defense resolution). Throws DeadCharacterException when killed.
+     */
+    public void takeDamage(int amount) throws DeadCharacterException {
+        if (amount <= 0) return;
+        stats.damage(amount);
+        if (stats.isDead()) {
+            throw new DeadCharacterException(name + " has been slain.");
         }
-        public int getHp() { return hp; }
-        public int getAttack() { return attack; }
     }
 
+    /**
+     * Subclasses define their damage flavor (scales or fixed).
+     */
+    protected abstract int baseDamage();
+
+    // --------- Abilities ---------
+    public List<Ability> getAbilities() { return List.copyOf(abilities); }
+
+    public void addAbility(Ability ability) {
+        if (ability != null) abilities.add(ability);
+    }
+
+    /**
+     * Called at end of character's turn to count down cooldowns and clear per-turn temporary buffs.
+     * Keeping this method here centralizes per-character housekeeping.
+     */
+    public void endTurnHousekeeping() {
+        clearTemporaryDefense(); // simple model; extend to timed statuses later
+        for (Ability a : abilities) a.reduceCooldown();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s[hp=%d/%d atk=%d def=%d pos=%s]", name,
+                stats.getHp(), stats.getMaxHp(), stats.getAttack(), stats.getDefense(), position);
+    }
 }

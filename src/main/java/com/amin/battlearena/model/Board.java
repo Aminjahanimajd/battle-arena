@@ -1,36 +1,65 @@
 package com.amin.battlearena.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
 
-import com.amin.battlearena.exceptions.InvalidActionException;
-
-// Information hiding: bounds & occupancy managed here.
+/**
+ * Lightweight Board utility for grid bounds and occupancy checks.
+ *
+ * Responsibilities:
+ * - Know board dimensions.
+ * - Validate positions (within bounds).
+ * - Provide occupancy checks against a collection of characters (players' teams).
+ *
+ * Note: This class intentionally does not mutate Character positions directly.
+ * Use GameEngine.move(...) which will consult Board when needed before calling character.moveTo(...).
+ */
 public final class Board {
-    private final int width, height;
-    private final Map<Character, Position> locs = new HashMap<>();
+    private final int width;
+    private final int height;
 
     public Board(int width, int height) {
-        this.width = width; this.height = height;
+        if (width <= 0 || height <= 0) throw new IllegalArgumentException("Board dimensions must be positive");
+        this.width = width;
+        this.height = height;
     }
 
-    public void place(Character c, Position p) throws InvalidActionException {
-        requireInside(p);
-        locs.put(c, p);
-        c.setPosition(p);
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+
+    public boolean isWithinBounds(Position p) {
+        Objects.requireNonNull(p);
+        return p.x() >= 0 && p.x() < width && p.y() >= 0 && p.y() < height;
     }
 
-    public boolean isInside(Position p) {
-        return p.x() >= 0 && p.y() >= 0 && p.x() < width && p.y() < height;
+    /**
+     * Check whether any alive character in the provided collection occupies the given position.
+     */
+    public boolean isPositionOccupied(Position p, Collection<Character> characters) {
+        Objects.requireNonNull(p);
+        if (characters == null || characters.isEmpty()) return false;
+        return characters.stream()
+                .filter(Objects::nonNull)
+                .filter(Character::isAlive)
+                .anyMatch(c -> p.equals(c.getPosition()));
     }
 
-    public void move(Character c, Position next) throws InvalidActionException {
-        if (!isInside(next)) throw new InvalidActionException("Move out of bounds.");
-        locs.put(c, next);
-        c.setPosition(next);
+    /**
+     * Find a character located at the given position among the provided collection.
+     */
+    public Optional<Character> getCharacterAt(Position p, Collection<Character> characters) {
+        Objects.requireNonNull(p);
+        if (characters == null || characters.isEmpty()) return Optional.empty();
+        return characters.stream()
+                .filter(Objects::nonNull)
+                .filter(Character::isAlive)
+                .filter(c -> p.equals(c.getPosition()))
+                .findFirst();
     }
 
-    private void requireInside(Position p) throws InvalidActionException {
-        if (!isInside(p)) throw new InvalidActionException("Position out of bounds: " + p);
+    @Override
+    public String toString() {
+        return "Board{" + width + "x" + height + "}";
     }
 }
