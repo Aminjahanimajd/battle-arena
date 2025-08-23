@@ -9,7 +9,7 @@ public final class Schema {
     public static void ensure() {
         try (Connection conn = Database.getConnection(); Statement st = conn.createStatement()) {
             st.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS players(
+                CREATE TABLE IF NOT EXISTS player(
                   player_id TEXT PRIMARY KEY,
                   gold INTEGER NOT NULL,
                   unlocked_level INTEGER NOT NULL,

@@ -1,251 +1,188 @@
 package com.amin.battlearena.engine;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.amin.battlearena.events.EventBus;
-import com.amin.battlearena.exceptions.InvalidActionException;
-import com.amin.battlearena.model.Board;
-import com.amin.battlearena.model.Character;
-import com.amin.battlearena.model.Position;
-import com.amin.battlearena.player.AIPlayer;
-import com.amin.battlearena.player.HumanPlayer;
-import com.amin.battlearena.player.Player;
+import com.amin.battlearena.domain.events.BattleEnded;
+import com.amin.battlearena.domain.events.CharacterKilled;
+import com.amin.battlearena.domain.events.EventBus;
+import com.amin.battlearena.domain.model.Board;
+import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.domain.model.Position;
+import com.amin.battlearena.infra.DeadCharacterException;
+import com.amin.battlearena.players.AIPlayer;
+import com.amin.battlearena.players.HumanPlayer;
+import com.amin.battlearena.players.Player;
 
 /**
- * Lightweight GameEngine implementation (cleaned to avoid broad catches and
- * use pattern-matching instanceof where suitable).
+ * Central game engine responsible for turn orchestration and
+ * providing a small set of runtime services to domain logic (actions/abilities).
+ *
+ * - Uses a single injected EventBus for typed GameEvents.
+ * - Centralize damage application so CharacterKilled events are posted consistently.
+ * - Supports a temporary evasion mechanic (abilities can grant a per-turn dodge chance).
  */
 public final class GameEngine {
 
-    private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
+    private static final Logger LOG = Logger.getLogger(GameEngine.class.getName());
 
     private final HumanPlayer human;
     private final AIPlayer ai;
     private final Board board;
     private final EventBus eventBus;
 
-    public GameEngine(HumanPlayer human, AIPlayer ai, Board board) {
+    private volatile Player currentPlayer;
+
+    public GameEngine(HumanPlayer human, AIPlayer ai, Board board, EventBus eventBus) {
         this.human = Objects.requireNonNull(human, "human");
         this.ai = Objects.requireNonNull(ai, "ai");
         this.board = Objects.requireNonNull(board, "board");
-        this.eventBus = new EventBus();
-        logger.fine("GameEngine created");
+        this.eventBus = Objects.requireNonNull(eventBus, "eventBus");
+    }
+
+    /**
+     * Convenience ctor for backwards compatibility which creates a local EventBus.
+     */
+    public GameEngine(HumanPlayer human, AIPlayer ai, Board board) {
+        this(human, ai, board, new EventBus());
     }
 
     public HumanPlayer getHuman() { return human; }
     public AIPlayer getAI() { return ai; }
     public Board getBoard() { return board; }
     public EventBus getEventBus() { return eventBus; }
+    public Player getCurrentPlayer() { return currentPlayer; }
 
-    public void log(String msg) {
-        if (msg == null) return;
-        logger.info(msg);
-    }
-
+    /**
+     * Main turn loop: alternate human <-> AI until one side has no alive characters.
+     */
     public void runBattleLoop() {
         log("Battle started between " + human.getName() + " and " + ai.getName());
 
-        while (true) {
-            // Human turn
+        List<Player> order = List.of(human, ai);
+        int turn = 0;
+
+        while (!human.aliveTeam().isEmpty() && !ai.aliveTeam().isEmpty()) {
+            currentPlayer = order.get(turn % order.size());
             try {
-                human.takeTurn(this);
-            } catch (Exception e) { // catch expected runtime/checked exceptions from turn execution
-                logger.log(Level.WARNING, "Exception during human turn", e);
+                log("Turn " + (turn + 1) + " - " + currentPlayer.getName());
+                currentPlayer.takeTurn(this);
+            } catch (Exception | Error t) {
+                LOG.log(Level.WARNING, "Exception during player turn: " + currentPlayer.getName(), t);
+            } finally {
+                currentPlayer = null;
             }
 
-            if (!playerHasAlive(ai) || !playerHasAlive(human)) {
-                break;
-            }
-
-            // AI turn
-            try {
-                ai.takeTurn(this);
-            } catch (Exception e) {
-                logger.log(Level.WARNING, "Exception during AI turn", e);
-            }
-
-            if (!playerHasAlive(human) || !playerHasAlive(ai)) {
-                break;
-            }
+            // if someone died during the turn, break early
+            if (human.aliveTeam().isEmpty() || ai.aliveTeam().isEmpty()) break;
+            turn++;
         }
 
-        // decide winner/loser
-        Player winner = playerHasAlive(human) && !playerHasAlive(ai) ? human
-                : playerHasAlive(ai) && !playerHasAlive(human) ? ai
-                : null;
-        Player loser = winner == human ? ai : (winner == ai ? human : null);
+        Player winner = human.aliveTeam().isEmpty() ? ai : human;
+        Player loser  = human.aliveTeam().isEmpty() ? human : ai;
 
-        if (winner != null) {
-            log("Battle ended. Winner: " + winner.getName());
-        } else {
-            log("Battle ended in a draw or uncertain state.");
+        log("Battle ended. Winner: " + winner.getName() + ", Loser: " + loser.getName());
+        try {
+            eventBus.post(new BattleEnded(winner, loser));
+        } catch (Exception | Error t) {
+            LOG.log(Level.WARNING, "Failed to post BattleEnded event", t);
         }
-
-        // Attempt to publish BattleEnded event reflectively if available
-        tryPublishBattleEnded(winner, loser);
     }
 
     /**
-     * Heuristically determines whether the player still has alive characters.
-     * Uses pattern-matching instanceof to handle return types cleanly.
+     * The canonical way to deal damage. Domain code (abilities/actions) should call this.
+     *
+     * @param target target character
+     * @param amount damage amount (>0)
+     * @param source optional source character (may be null)
+     * @return true if the target died as a result of this call, false otherwise
      */
-    private boolean playerHasAlive(Player p) {
-        if (p == null) return false;
+    public boolean applyDamage(Character target, int amount, Character source) {
+        Objects.requireNonNull(target, "target");
+        if (amount <= 0) {
+            log("applyDamage called with non-positive amount: " + amount + " for " + target.getName());
+            return false;
+        }
 
-        String[] candidates = {
-                "hasAlive", "hasAliveTeam", "hasLivingCharacters", "isAlive",
-                "aliveTeam", "getAliveTeam", "getTeam", "teamSize", "getRemaining"
-        };
+        synchronized (target) {
+            if (!target.isAlive()) {
+                log("applyDamage: target already dead: " + target.getName());
+                return false;
+            }
 
-        for (String name : candidates) {
+            // Evasion check: abilities can grant a per-turn evasion chance (0.0 - 1.0)
+            double evasionChance = target.getTemporaryEvasion();
+            if (evasionChance > 0.0) {
+                double roll = ThreadLocalRandom.current().nextDouble();
+                if (roll < evasionChance) {
+                    log(target.getName() + " evaded an attack! (chance=" + evasionChance + ", roll=" + roll + ")");
+                    return false;
+                }
+            }
+
             try {
-                Method m = p.getClass().getMethod(name);
-                Object res = m.invoke(p);
-                if (res instanceof Boolean b) {
-                    return b;
-                } else if (res instanceof Number n) {
-                    return n.intValue() > 0;
-                } else if (res instanceof java.util.Collection<?> c) {
-                    return !c.isEmpty();
-                } else if (res != null && res.getClass().isArray()) {
-                    return Array.getLength(res) > 0;
-                }
-            } catch (NoSuchMethodException nsme) {
-                // method not present on this Player impl — try next candidate
-            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                // reflection invocation issue for this method; log at FINE and try next candidate
-                logger.log(Level.FINER, "playerHasAlive reflection attempt failed for " + name, e);
+                // Character.takeDamage is the domain-level implementation (may throw DeadCharacterException)
+                target.takeDamage(amount);
+                log(String.format("%s took %d damage (hp=%d/%d) from %s",
+                        target.getName(), amount, target.getStats().getHp(), target.getStats().getMaxHp(),
+                        source == null ? "<unknown>" : source.getName()));
+                return false;
+            } catch (DeadCharacterException dcx) {
+                log(String.format("%s was killed by %s", target.getName(), source == null ? "<unknown>" : source.getName()));
+                // find player-owner of the killer character, if any
+                com.amin.battlearena.players.Player killerOwner = findOwnerOf(source);
+                publishCharacterKilled(target, killerOwner);
+                return true;
             }
         }
-
-        // As a final attempt, try aliveCount/getAliveCount
-        try {
-            for (String name : new String[]{"aliveCount", "getAliveCount"}) {
-                try {
-                    Method m = p.getClass().getMethod(name);
-                    Object res = m.invoke(p);
-                    if (res instanceof Number n) return n.intValue() > 0;
-                } catch (NoSuchMethodException nsme) {
-                    // try next
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                    logger.log(Level.FINER, "playerHasAlive final reflection attempt failed for " + name, e);
-                }
-            }
-        } catch (Exception ignored) {
-            // give up and assume alive (safe default)
-        }
-
-        // Could not determine — assume true to avoid abrupt termination
-        return true;
     }
 
-    public Player getOpponentOf(Player player) {
-        if (player == null) return null;
-        if (player == human) return ai;
-        if (player == ai) return human;
-        // fallback in case different instances compare equal
-        if (player.equals(human)) return ai;
-        if (player.equals(ai)) return human;
+    /**
+     * Publish a CharacterKilled event using the engine's EventBus.
+     */
+    private void publishCharacterKilled(Character victim, com.amin.battlearena.players.Player killer) {
+        try {
+            eventBus.post(new CharacterKilled(victim, killer));
+            log("Published CharacterKilled: victim=" + victim.getName() + " killer=" + (killer == null ? "<unknown>" : killer.getName()));
+        } catch (Exception | Error t) {
+            LOG.log(Level.WARNING, "Failed to post CharacterKilled", t);
+        }
+    }
+
+    /**
+     * Find which player owns the supplied character (human, ai or null).
+     */
+    private com.amin.battlearena.players.Player findOwnerOf(Character c) {
+        if (c == null) return null;
+        if (human.getTeam().contains(c)) return human;
+        if (ai.getTeam().contains(c)) return ai;
         return null;
     }
 
-
-    public boolean move(Character character, Position newPosition) {
-        Objects.requireNonNull(character, "character");
-        Objects.requireNonNull(newPosition, "newPosition");
-
-        // No-op if same spot
-        if (newPosition.equals(character.getPosition())) {
-            return true;
-        }
-
-        // Bounds check
-        if (!board.isWithinBounds(newPosition)) {
-            log("Move blocked: out of bounds " + newPosition);
-            return false;
-        }
-
-        // Build a list of all characters on the board
-        List<Character> all = new ArrayList<>();
-        all.addAll(human.getTeam());
-        all.addAll(ai.getTeam());
-
-        // Don’t count the moving character as a blocker
-        all.remove(character);
-
-        // Occupancy check
-        if (board.isPositionOccupied(newPosition, all)) {
-            log("Move blocked: tile occupied at " + newPosition);
-            return false;
-        }
-
-        try {
-            // Perform the move
-            character.moveTo(newPosition);
-            return true;
-        } catch (InvalidActionException e) {
-            System.err.println("Invalid move: " + e.getMessage());
-            return false;
-        }
+    public void log(String msg) {
+        if (msg == null) return;
+        LOG.info("[Engine] " + msg);
+        System.out.println("[Engine] " + msg);
     }
 
     /**
-     * Attempts to construct and publish a BattleEnded event using reflection.
-     * Uses more specific exception handling (ReflectiveOperationException,
-     * InvocationTargetException, IllegalArgumentException) instead of broad Throwable.
+     * Get the opponent of the given player.
      */
-    private void tryPublishBattleEnded(Player winner, Player loser) {
-        try {
-            Class<?> evtClass = Class.forName("com.amin.battlearena.events.BattleEnded");
-            Object evtInstance = null;
+    public Player getOpponentOf(Player player) {
+        if (player == human) return ai;
+        if (player == ai) return human;
+        throw new IllegalArgumentException("Unknown player: " + player);
+    }
 
-            for (Constructor<?> ctor : evtClass.getConstructors()) {
-                Class<?>[] params = ctor.getParameterTypes();
-                if (params.length == 2 && Player.class.isAssignableFrom(params[0]) && Player.class.isAssignableFrom(params[1])) {
-                    evtInstance = ctor.newInstance(winner, loser);
-                    break;
-                } else if (params.length == 1 && Player.class.isAssignableFrom(params[0])) {
-                    evtInstance = ctor.newInstance(winner);
-                    break;
-                } else if (params.length == 0) {
-                    evtInstance = ctor.newInstance();
-                    break;
-                }
-            }
-
-            if (evtInstance == null) {
-                evtInstance = evtClass.getDeclaredConstructor().newInstance();
-            }
-
-            String[] methodNames = {"publish", "emit", "post", "dispatch", "send", "fire"};
-            Method publishMethod = null;
-            for (String mname : methodNames) {
-                try {
-                    publishMethod = eventBus.getClass().getMethod(mname, Object.class);
-                    if (publishMethod != null) break;
-                } catch (NoSuchMethodException ignored) {}
-            }
-
-            if (publishMethod != null) {
-                publishMethod.invoke(eventBus, evtInstance);
-                logger.fine("Published BattleEnded event via EventBus.");
-            } else {
-                logger.fine("No publish method found on EventBus; skipping BattleEnded publish.");
-            }
-
-        } catch (ClassNotFoundException cnfe) {
-            logger.fine("BattleEnded event class not present; skipping event publish.");
-        } catch (ReflectiveOperationException | IllegalArgumentException e) {
-        // concrete reflection-related failures; log them for debugging
-        logger.log(Level.WARNING, "Failed to publish BattleEnded event reflectively", e);
-        }
+    /**
+     * Move a character to a new position.
+     */
+    public void move(Character character, Position newPosition) {
+        // Simple movement - just update the character's position
+        character.setPosition(newPosition);
+        log(character.getName() + " moved to " + newPosition);
     }
 }

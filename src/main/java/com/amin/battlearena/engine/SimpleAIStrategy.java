@@ -1,12 +1,13 @@
 package com.amin.battlearena.engine;
 
-import com.amin.battlearena.actions.AttackAction;
-import com.amin.battlearena.model.Archer;
-import com.amin.battlearena.model.Character;
-import com.amin.battlearena.model.Position;
-import com.amin.battlearena.player.Player;
 import java.util.Comparator;
 import java.util.List;
+
+import com.amin.battlearena.domain.actions.AttackAction;
+import com.amin.battlearena.domain.model.Archer;
+import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.domain.model.Position;
+import com.amin.battlearena.players.Player;
 
 /**
  * A small, deterministic AI:
@@ -43,7 +44,8 @@ public final class SimpleAIStrategy implements AIStrategy {
         // move towards nearest enemy
         Character nearest = enemyAlive.stream()
                 .min(Comparator.comparingInt(e -> actor.getPosition().distanceTo(e.getPosition())))
-                .orElseThrow();
+                .orElse(null);
+        if (nearest == null) return;
         Position next = actor.getPosition().stepTowards(nearest.getPosition());
         engine.move(actor, next);
         actor.endTurnHousekeeping();

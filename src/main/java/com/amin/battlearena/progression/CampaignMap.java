@@ -15,7 +15,7 @@ public final class CampaignMap {
         var n = nodes.get(id);
         if (n == null) return false;
         // unlocked if all prereqs are unlocked (i.e., beaten)
-        return n.prereqs().isEmpty() || n.prereqs().stream().allMatch(progress::isUnlocked);
+        return n.prereqs().isEmpty() || n.prereqs().stream().allMatch(prereq -> progress.unlockedLevels().contains(prereq));
     }
 
     public List<LevelNode> unlockedNodes(PlayerProgress progress) {

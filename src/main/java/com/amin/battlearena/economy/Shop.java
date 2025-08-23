@@ -11,7 +11,8 @@ public final class Shop {
         var u = catalog.find(upgradeId).orElse(null);
         if (u == null) return false;
         if (ownedUpgradeIds.contains(upgradeId)) return false;
-        if (!wallet.spend(u.cost())) return false;
+        if (wallet.gold() < u.cost()) return false;
+        wallet.add(-u.cost()); // spend by adding negative amount
         ownedUpgradeIds.add(upgradeId);
         return true;
     }

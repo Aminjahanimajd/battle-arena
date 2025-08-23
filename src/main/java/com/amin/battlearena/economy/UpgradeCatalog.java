@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.amin.battlearena.model.Character;
+import com.amin.battlearena.domain.model.Character;
 
 /**
  * Catalog of available upgrades.

@@ -1,7 +1,7 @@
 package com.amin.battlearena.economy;
 
-import com.amin.battlearena.model.Character;
-import com.amin.battlearena.model.Stats;
+import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.domain.model.Stats;
 
 /**
  * Simple stat upgrades that work with the existing Stats API.
@@ -16,6 +16,7 @@ public final class StatUpgrade {
     private final int hpPlus;
     private final int atkPlus;
     private final int defPlus;
+    @SuppressWarnings("unused")
     private final int rangePlus; // kept for constructor compatibility (ignored if Stats doesn't support it)
 
     /**

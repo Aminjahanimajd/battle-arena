@@ -1,6 +1,6 @@
 package com.amin.battlearena.economy;
 
-import com.amin.battlearena.model.Character;
+import com.amin.battlearena.domain.model.Character;
 
 public interface Upgrade {
     String id();

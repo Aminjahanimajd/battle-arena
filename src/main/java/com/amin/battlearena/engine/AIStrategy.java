@@ -1,6 +1,6 @@
 package com.amin.battlearena.engine;
 
-import com.amin.battlearena.player.Player;
+import com.amin.battlearena.players.Player;
 
 /**
  * Strategy interface for AI implementations. Implementations perform a full AI turn when invoked.
