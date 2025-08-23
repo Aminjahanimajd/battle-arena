@@ -37,18 +37,22 @@ This project emphasizes **clean design** and **software engineering best practic
 ---
 
 ## 📂 Project Structure
-battle-arena/
-├── pom.xml # Maven configuration
-├── src/
-│ ├── main/java/com/amin/battlearena/
-│ │ ├── Game.java # Entry point
-│ │ ├── model/ # Entities: Hero, Monster, Unit, Arena
-│ │ ├── service/ # Battle logic, turn management
-│ │ ├── ui/ # Console UI (later: GUI)
-│ │ └── util/ # Helpers, factories
-│ └── test/java/... # Unit tests
-├── .gitignore
-└── README.md
+com/amin/battlearena
+├── app/                 # application bootstrap, Main, wiring (DI-lite)
+├── engine/              # GameEngine, turn loop, orchestration (no domain rules)
+├── domain/
+│   ├── model/           # Character, Stats, Position, Board, Units (domain objects)
+│   ├── actions/         # Command objects: Action, AttackAction, etc.
+│   ├── abilities/       # Ability implementations
+│   └── events/          # GameEvent classes + EventBus
+├── players/             # Player, HumanPlayer, AIPlayer, strategies
+├── progression/         # Level, CampaignMap, PlayerProgress, LevelNode
+├── levels/              # LevelService, EnemySpawner, LevelLoader (config)
+├── economy/             # Wallet, EconomyManager, ShopService
+├── persistence/         # DAO, ProgressService, MigrationUtility
+├── ui/                  # CLI, Menu, LevelSelectCLI, ShopCLI
+└── infra/               # Logging, utilities, adapters (e.g., JSON helpers)
+
 
 ---
 
