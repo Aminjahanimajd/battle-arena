@@ -11,60 +11,50 @@ A **professional-grade, production-ready** turn-based battle game engine built i
 
 ---
 
-## 🎯 **What This Project Demonstrates**
+## 🎮 Game Concept
+**Battle Arena** is a turn-based combat game where players control heroes, monsters, and units on a grid.  
+Each unit has **attributes** (health, attack, defense, agility) and can perform **actions** (attack, defend, use skills).  
 
-This project showcases **world-class software engineering practices** including:
-
-- **SOLID Principles** - Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
-- **Design Patterns** - State, Chain of Responsibility, Memento, Visitor, Builder, Strategy
-- **Performance Optimizations** - Object pooling, caching, lazy loading
-- **Code Quality** - Comprehensive validation, error handling, null safety
-- **Architecture** - Clean separation of concerns, modular design, extensibility
-
----
-
-## 🏗️ **Architecture Overview**
-
-### **Core Components**
-```
-GameEngine (Coordinator)
-├── TurnManager (Turn orchestration)
-├── MovementValidator (Movement validation)
-├── EventPublisher (Event management)
-└── GameState (State management)
-```
-
-### **Design Patterns Implemented**
-- **State Pattern**: Character behavior based on HP status
-- **Chain of Responsibility**: Flexible action validation
-- **Memento Pattern**: Undo/redo functionality
-- **Visitor Pattern**: Character-specific operations
-- **Builder Pattern**: Complex object construction
-
-### **Performance Features**
-- **Object Pooling**: Efficient Position object reuse
-- **Caching**: Damage calculation optimization
-- **Lazy Loading**: On-demand ability loading
+Future features will include:
+- Multiple heroes with unique abilities ⚔️  
+- AI-controlled opponents 🤖  
+- Different arenas and maps 🗺️  
+- Power-ups and inventory system 🎒  
 
 ---
 
-## 🎮 **Game Features**
+## 🧩 Design Principles
+This project emphasizes **clean design** and **software engineering best practices**:
 
-### **Character Types**
-- **Warrior**: Balanced melee fighter with Power Strike ability
-- **Archer**: Ranged attacker with Double Shot ability
-- **Mage**: Magical damage dealer with Arcane Burst ability
-- **Knight**: Tank with Charge ability
-- **Ranger**: Elite ranged attacker with Piercing Volley ability
-- **Master**: Boss character with Master Strike and Evasion abilities
+- **Booch OOP Methodology** → modular object-oriented design.  
+- **SOLID Principles** → maintainable and extensible code.  
+- **Parnas Principle** → information hiding for clean module boundaries.  
+- **Reuse Mechanisms** → inheritance, composition, and delegation.  
+- **Design Patterns** → Factory, Strategy, Observer (planned).  
 
-### **Core Systems**
-- **Turn-based Combat**: Strategic turn management
-- **Mana System**: Resource management for abilities
-- **Movement System**: Character-specific movement ranges
-- **Ability System**: Cooldown and mana-based abilities
-- **Level System**: 20 progressively difficult levels
-- **Economy System**: Gold-based upgrades and progression
+---
+
+## 🛠️ Tech Stack
+- **Language**: Java 17  
+- **Build Tool**: Maven  
+- **Version Control**: Git + GitHub  
+- **Testing**: JUnit (planned)  
+
+---
+
+## 📂 Project Structure
+battle-arena/
+├── pom.xml # Maven configuration
+├── src/
+│ ├── main/java/com/amin/battlearena/
+│ │ ├── Game.java # Entry point
+│ │ ├── model/ # Entities: Hero, Monster, Unit, Arena
+│ │ ├── service/ # Battle logic, turn management
+│ │ ├── ui/ # Console UI (later: GUI)
+│ │ └── util/ # Helpers, factories
+│ └── test/java/... # Unit tests
+├── .gitignore
+└── README.md
 
 ---
 
