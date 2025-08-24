@@ -1,32 +1,51 @@
 package com.amin.battlearena.domain.abilities;
 
-import com.amin.battlearena.engine.GameEngine;
-import com.amin.battlearena.infra.InvalidActionException;
 import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.infra.DeadCharacterException;
+import com.amin.battlearena.infra.InvalidActionException;
 
 /**
- * DoubleShot: two quick attacks; each deals ~80% damage.
+ * Archer ability: fires two arrows in quick succession.
  */
 public final class DoubleShot extends AbstractAbility {
-    public DoubleShot() { super("Double Shot", "Two quick arrows.", 2); }
+
+    public DoubleShot() {
+        super("Double Shot", "Fire two arrows in quick succession", 4, 18);
+    }
 
     @Override
     public void activate(Character user, Character target, GameEngine engine)
-            throws InvalidActionException {
-        if (!isReady()) { engine.log(user.getName() + " tried Double Shot but it's on cooldown."); return; }
-        if (target == null) throw new InvalidActionException("No target");
-
-        int one = (int) Math.round(user.getStats().getAttack() * 0.8) + user.getBaseDamage();
-        int eff1 = Math.max(0, one - (target.getStats().getDefense() + target.getTemporaryDefense()));
-        engine.applyDamage(target, eff1, user);
-
-        // if target still alive, apply the second shot
-        if (target.isAlive()) {
-            int eff2 = Math.max(0, one - (target.getStats().getDefense() + target.getTemporaryDefense()));
-            engine.applyDamage(target, eff2, user);
+            throws InvalidActionException, DeadCharacterException {
+        if (!canUse(user)) {
+            if (!isReady()) {
+                throw new InvalidActionException("Double Shot is on cooldown for " + getRemainingCooldown() + " turns");
+            } else {
+                throw new InvalidActionException("Not enough mana. Need " + getManaCost() + " mana, have " + user.getCurrentMana());
+            }
         }
 
-        engine.log(user.getName() + " fires Double Shot at " + target.getName() + " for approx " + one + " dmg per shot.");
+        if (target == null) {
+            throw new InvalidActionException("No target for Double Shot");
+        }
+
+        // Spend mana first
+        if (!user.spendMana(getManaCost())) {
+            throw new InvalidActionException("Failed to spend mana for Double Shot");
+        }
+
+        // Fire two shots
+        int baseDamage = user.getStats().getAttack() + user.getBaseDamage();
+        
+        engine.log(user.getName() + " uses Double Shot on " + target.getName() + "!");
+        
+        // First shot
+        engine.applyDamage(target, baseDamage);
+        
+        // Second shot (slightly reduced damage)
+        int secondShotDamage = (int) (baseDamage * 0.8);
+        engine.applyDamage(target, secondShotDamage);
+        
         startCooldown();
     }
 }

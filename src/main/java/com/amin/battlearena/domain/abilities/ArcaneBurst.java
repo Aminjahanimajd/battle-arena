@@ -1,26 +1,49 @@
 package com.amin.battlearena.domain.abilities;
 
-import com.amin.battlearena.engine.GameEngine;
-import com.amin.battlearena.infra.InvalidActionException;
 import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.infra.DeadCharacterException;
+import com.amin.battlearena.infra.InvalidActionException;
 
 /**
- * ArcaneBurst: damage = 170% of attack + baseDamage
+ * Mage ability: powerful magical burst attack.
  */
 public final class ArcaneBurst extends AbstractAbility {
-    public ArcaneBurst() { super("Arcane Burst", "Magic burst dealing 170% attack.", 4); }
+
+    public ArcaneBurst() {
+        super("Arcane Burst", "A powerful magical attack that ignores some defense", 5, 25);
+    }
 
     @Override
     public void activate(Character user, Character target, GameEngine engine)
-            throws InvalidActionException {
-        if (!isReady()) { engine.log(user.getName() + " tried Arcane Burst but it's on cooldown."); return; }
-        if (target == null) throw new InvalidActionException("No target");
+            throws InvalidActionException, DeadCharacterException {
+        if (!canUse(user)) {
+            if (!isReady()) {
+                throw new InvalidActionException("Arcane Burst is on cooldown for " + getRemainingCooldown() + " turns");
+            } else {
+                throw new InvalidActionException("Not enough mana. Need " + getManaCost() + " mana, have " + user.getCurrentMana());
+            }
+        }
 
-        int raw = (int) Math.round(user.getStats().getAttack() * 1.7) + user.getBaseDamage();
-        int effective = Math.max(0, raw - (target.getStats().getDefense() + target.getTemporaryDefense()));
-        engine.applyDamage(target, effective, user);
+        if (target == null) {
+            throw new InvalidActionException("No target for Arcane Burst");
+        }
 
-        engine.log(user.getName() + " casts Arcane Burst on " + target.getName() + " for " + raw + " dmg.");
+        // Spend mana first
+        if (!user.spendMana(getManaCost())) {
+            throw new InvalidActionException("Failed to spend mana for Arcane Burst");
+        }
+
+        // Calculate magical damage (ignores 50% of target's defense)
+        int baseDamage = user.getStats().getAttack() + user.getBaseDamage();
+        int targetDefense = target.getStats().getDefense() + target.getTemporaryDefense();
+        int ignoredDefense = targetDefense / 2; // Ignore half the defense
+        int effectiveDefense = targetDefense - ignoredDefense;
+        
+        int damage = Math.max(0, baseDamage - effectiveDefense);
+
+        engine.log(user.getName() + " unleashes Arcane Burst on " + target.getName() + "!");
+        engine.applyDamage(target, damage);
         startCooldown();
     }
 }

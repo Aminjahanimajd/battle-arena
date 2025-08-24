@@ -46,8 +46,11 @@ public final class SimpleAIStrategy implements AIStrategy {
                 .min(Comparator.comparingInt(e -> actor.getPosition().distanceTo(e.getPosition())))
                 .orElse(null);
         if (nearest == null) return;
+        
         Position next = actor.getPosition().stepTowards(nearest.getPosition());
-        engine.move(actor, next);
-        actor.endTurnHousekeeping();
+        if (next != null) {
+            engine.move(actor, next);
+            actor.endTurnHousekeeping();
+        }
     }
 }

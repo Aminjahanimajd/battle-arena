@@ -1,16 +1,13 @@
 package com.amin.battlearena.app;
 
-import com.amin.battlearena.economy.EconomyManager;
-import com.amin.battlearena.engine.GameEngine;
-import com.amin.battlearena.engine.SimpleAIStrategy;
-import com.amin.battlearena.domain.events.EventBus;
 import com.amin.battlearena.domain.model.Archer;
 import com.amin.battlearena.domain.model.Board;
 import com.amin.battlearena.domain.model.Knight;
 import com.amin.battlearena.domain.model.Mage;
 import com.amin.battlearena.domain.model.Position;
 import com.amin.battlearena.domain.model.Warrior;
-import com.amin.battlearena.persistence.ProgressService;
+import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.SimpleAIStrategy;
 import com.amin.battlearena.persistence.Schema;
 import com.amin.battlearena.players.AIPlayer;
 import com.amin.battlearena.players.HumanPlayer;
@@ -40,17 +37,19 @@ public final class Main {
         cpu.addToTeam(new Mage("Hexer-1", new Position(board.getWidth() - 2, 2)));
         cpu.addToTeam(new Knight("Guard-1", new Position(board.getWidth() - 1, 3)));
 
-        // shared event bus and progress service
-        EventBus bus = new EventBus();
-        ProgressService progress = new ProgressService();
+        // shared event bus and progress service (commented out for now)
+        // EventBus bus = new EventBus();
+        // ProgressService progress = new ProgressService();
 
-        GameEngine engine = new GameEngine(human, cpu, board, bus);
-        EconomyManager econ = new EconomyManager(bus, human, cpu, progress, 10, 50);
+        GameEngine engine = new GameEngine(human, cpu, board);
+        // EconomyManager econ = new EconomyManager(bus, human, cpu, progress, 10, 50);
 
         engine.log("Starting battle on board " + board);
         engine.runBattleLoop();
         engine.log("Battle finished.");
 
-        econ.close();
+        // Clean up resources
+        human.cleanup();
+        // econ.close();
     }
 }

@@ -3,30 +3,34 @@ package com.amin.battlearena.domain.model;
 import com.amin.battlearena.domain.abilities.DoubleShot;
 
 /**
- * Ranged damage dealer. Has a range field; range checks should be enforced by GameEngine/Board.
+ * Ranged attacker with good mobility.
+ * Movement: 2 spaces per turn
+ * Mana: Medium mana pool, moderate regeneration
  */
-public class Archer extends Character {
-
-    private final int range;
+public final class Archer extends Character {
 
     public Archer(String name, Position position) {
-        this(name, position, 3); // default range 3
-    }
-
-    public Archer(String name, Position position, int range) {
-        super(name, new Stats(80, 15, 5, 3), position);
-        this.range = Math.max(1, range);
+        super(name, new Stats(90, 14, 6, 4, 3), position, 45, 5, 20);
         addAbility(new DoubleShot());
     }
 
-    public int getRange() { return range; }
-
-    public boolean inRangeOf(Character other) {
-        return this.getPosition().distanceTo(other.getPosition()) <= range;
+    @Override
+    protected int calculateBaseDamage() {
+        return 2;
     }
 
-    @Override
-    public int baseDamage() {
+    /**
+     * Archers can move 2 spaces per turn
+     */
+    public int getMovementRange() {
         return 2;
+    }
+
+    /**
+     * Check if target is in range for archer attacks
+     */
+    public boolean inRangeOf(Character target) {
+        if (target == null) return false;
+        return getPosition().distanceTo(target.getPosition()) <= getStats().getRange();
     }
 }

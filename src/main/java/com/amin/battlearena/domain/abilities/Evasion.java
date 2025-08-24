@@ -1,24 +1,38 @@
 package com.amin.battlearena.domain.abilities;
 
-import com.amin.battlearena.engine.GameEngine;
-import com.amin.battlearena.infra.InvalidActionException;
 import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.infra.DeadCharacterException;
+import com.amin.battlearena.infra.InvalidActionException;
 
 /**
- * Evasion: small temporary defense boost + a turn-limited dodge chance.
+ * Master ability: grants temporary evasion chance.
  */
 public final class Evasion extends AbstractAbility {
-    private static final double DODGE_CHANCE = 0.25; // 25% chance
-    private static final int DEFENSE_BONUS = 12;
 
-    public Evasion() { super("Evasion", "Gain +12 temporary defense and a short dodge chance this turn.", 4); }
+    public Evasion() {
+        super("Evasion", "Grants temporary evasion chance for this turn", 5, 20);
+    }
 
     @Override
-    public void activate(Character user, Character target, GameEngine engine) throws InvalidActionException {
-        if (!isReady()) { engine.log(user.getName() + " tried Evasion but it's on cooldown."); return; }
-        user.addTemporaryDefense(DEFENSE_BONUS);
-        user.addTemporaryEvasion(DODGE_CHANCE);
-        engine.log(user.getName() + " activates Evasion (+12 defense, +" + (int)(DODGE_CHANCE*100) + "% dodge).");
+    public void activate(Character user, Character target, GameEngine engine)
+            throws InvalidActionException, DeadCharacterException {
+        if (!canUse(user)) {
+            if (!isReady()) {
+                throw new InvalidActionException("Evasion is on cooldown for " + getRemainingCooldown() + " turns");
+            } else {
+                throw new InvalidActionException("Not enough mana. Need " + getManaCost() + " mana, have " + user.getCurrentMana());
+            }
+        }
+
+        // Spend mana first
+        if (!user.spendMana(getManaCost())) {
+            throw new InvalidActionException("Failed to spend mana for Evasion");
+        }
+
+        // Grant 30% evasion chance for this turn
+        user.addTemporaryEvasion(0.3);
+        engine.log(user.getName() + " activates Evasion! (30% chance to dodge attacks)");
         startCooldown();
     }
 }

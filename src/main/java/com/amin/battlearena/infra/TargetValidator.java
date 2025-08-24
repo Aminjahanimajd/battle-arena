@@ -1,27 +1,34 @@
 package com.amin.battlearena.infra;
 
-import com.amin.battlearena.engine.GameEngine;
 import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.engine.GameEngine;
 
 /**
- * Validates that the target is valid for the action.
+ * Validator that checks if the target is valid for the action.
  */
 public class TargetValidator extends ActionValidator {
     
     @Override
     public boolean validate(Character actor, Character target, GameEngine engine) {
+        if (actor == null) {
+            return validateNext(actor, target, engine);
+        }
+        
+        // For actions that require a target
         if (target == null) {
-            engine.log("Target cannot be null");
+            if (engine != null) engine.log("Action requires a target but none was provided");
             return false;
         }
         
+        // Check if target is alive
         if (!target.isAlive()) {
-            engine.log("Target " + target.getName() + " is already dead");
+            if (engine != null) engine.log("Target " + target.getName() + " is already dead");
             return false;
         }
         
-        if (actor.equals(target)) {
-            engine.log("Actor cannot target themselves");
+        // Check if target is the same as actor
+        if (target.equals(actor)) {
+            if (engine != null) engine.log("Cannot target self");
             return false;
         }
         

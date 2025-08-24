@@ -78,7 +78,7 @@ public class CharacterBuilder {
         if (name == null) throw new IllegalStateException("Name must be set");
         if (position == null) throw new IllegalStateException("Position must be set");
         
-        Archer archer = new Archer(name, position, range);
+        Archer archer = new Archer(name, position);
         
         // Add custom abilities if specified, otherwise Archer has default DoubleShot
         if (!abilities.isEmpty()) {

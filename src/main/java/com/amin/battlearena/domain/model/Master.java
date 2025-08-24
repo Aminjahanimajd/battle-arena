@@ -1,19 +1,30 @@
 package com.amin.battlearena.domain.model;
 
+import com.amin.battlearena.domain.abilities.Evasion;
 import com.amin.battlearena.domain.abilities.MasterStrike;
 
 /**
- * Boss "Master" — heavy melee champion with very high stats.
+ * Boss-level character with multiple abilities and high stats.
+ * Movement: 2 spaces per turn
+ * Mana: Very high mana pool, very fast regeneration
  */
 public final class Master extends Character {
 
     public Master(String name, Position position) {
-        super(name, new Stats(220, 20, 12, 2), position);
+        super(name, new Stats(200, 20, 12, 4), position, 80, 10, 40);
         addAbility(new MasterStrike());
+        addAbility(new Evasion());
     }
 
     @Override
-    public int baseDamage() {
-        return 4;
+    protected int calculateBaseDamage() {
+        return 5;
+    }
+
+    /**
+     * Masters can move 2 spaces per turn
+     */
+    public int getMovementRange() {
+        return 2;
     }
 }

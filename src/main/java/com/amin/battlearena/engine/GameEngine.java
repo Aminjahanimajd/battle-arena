@@ -3,12 +3,9 @@ package com.amin.battlearena.engine;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.amin.battlearena.domain.events.BattleEnded;
-import com.amin.battlearena.domain.events.CharacterKilled;
-import com.amin.battlearena.domain.events.EventBus;
 import com.amin.battlearena.domain.model.Board;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
@@ -18,12 +15,13 @@ import com.amin.battlearena.players.HumanPlayer;
 import com.amin.battlearena.players.Player;
 
 /**
- * Central game engine responsible for turn orchestration and
- * providing a small set of runtime services to domain logic (actions/abilities).
+ * Central game engine responsible for coordinating game components.
+ * Now follows Single Responsibility Principle by delegating to specialized components.
  *
- * - Uses a single injected EventBus for typed GameEvents.
- * - Centralize damage application so CharacterKilled events are posted consistently.
- * - Supports a temporary evasion mechanic (abilities can grant a per-turn dodge chance).
+ * Responsibilities:
+ * - Coordinates game components
+ * - Provides game services to domain logic
+ * - Manages damage application and character state
  */
 public final class GameEngine {
 
@@ -32,157 +30,149 @@ public final class GameEngine {
     private final HumanPlayer human;
     private final AIPlayer ai;
     private final Board board;
-    private final EventBus eventBus;
+    private final TurnManager turnManager;
+    private MovementValidator movementValidator;
+    private final EventPublisher eventPublisher;
+    private final GameState gameState;
 
-    private volatile Player currentPlayer;
-
-    public GameEngine(HumanPlayer human, AIPlayer ai, Board board, EventBus eventBus) {
+    public GameEngine(HumanPlayer human, AIPlayer ai, Board board) {
         this.human = Objects.requireNonNull(human, "human");
         this.ai = Objects.requireNonNull(ai, "ai");
         this.board = Objects.requireNonNull(board, "board");
-        this.eventBus = Objects.requireNonNull(eventBus, "eventBus");
+        
+        // Initialize specialized components
+        this.gameState = new GameState();
+        this.movementValidator = new MovementValidator(board, gameState.getAllCharacters());
+        this.eventPublisher = new EventPublisher();
+        this.turnManager = new TurnManager(List.of(human, ai));
+        
+        // Setup game state
+        setupGameState();
     }
 
-    /**
-     * Convenience ctor for backwards compatibility which creates a local EventBus.
-     */
-    public GameEngine(HumanPlayer human, AIPlayer ai, Board board) {
-        this(human, ai, board, new EventBus());
+    private void setupGameState() {
+        // Add players to game state
+        gameState.addPlayer(human);
+        gameState.addPlayer(ai);
+        
+        // Add all characters to game state
+        human.getTeam().forEach(gameState::addCharacter);
+        ai.getTeam().forEach(gameState::addCharacter);
+        
+        // Update movement validator with current characters
+        updateMovementValidator();
+    }
+
+    private void updateMovementValidator() {
+        // This would need to be updated when characters are added/removed
+        // For now, we'll recreate the validator
+        this.movementValidator = new MovementValidator(board, gameState.getAllCharacters());
     }
 
     public HumanPlayer getHuman() { return human; }
     public AIPlayer getAI() { return ai; }
     public Board getBoard() { return board; }
-    public EventBus getEventBus() { return eventBus; }
-    public Player getCurrentPlayer() { return currentPlayer; }
+    public GameState getGameState() { return gameState; }
+    public TurnManager getTurnManager() { return turnManager; }
 
     /**
-     * Main turn loop: alternate human <-> AI until one side has no alive characters.
+     * Main turn loop: delegate to TurnManager.
      */
     public void runBattleLoop() {
-        log("Battle started between " + human.getName() + " and " + ai.getName());
-
-        List<Player> order = List.of(human, ai);
-        int turn = 0;
-
-        while (!human.aliveTeam().isEmpty() && !ai.aliveTeam().isEmpty()) {
-            currentPlayer = order.get(turn % order.size());
-            try {
-                log("Turn " + (turn + 1) + " - " + currentPlayer.getName());
-                currentPlayer.takeTurn(this);
-            } catch (Exception | Error t) {
-                LOG.log(Level.WARNING, "Exception during player turn: " + currentPlayer.getName(), t);
-            } finally {
-                currentPlayer = null;
-            }
-
-            // if someone died during the turn, break early
-            if (human.aliveTeam().isEmpty() || ai.aliveTeam().isEmpty()) break;
-            turn++;
-        }
-
-        Player winner = human.aliveTeam().isEmpty() ? ai : human;
-        Player loser  = human.aliveTeam().isEmpty() ? human : ai;
-
-        log("Battle ended. Winner: " + winner.getName() + ", Loser: " + loser.getName());
-        try {
-            eventBus.post(new BattleEnded(winner, loser));
-        } catch (Exception | Error t) {
-            LOG.log(Level.WARNING, "Failed to post BattleEnded event", t);
-        }
+        turnManager.runTurns(this);
     }
 
     /**
-     * The canonical way to deal damage. Domain code (abilities/actions) should call this.
-     *
-     * @param target target character
-     * @param amount damage amount (>0)
-     * @param source optional source character (may be null)
-     * @return true if the target died as a result of this call, false otherwise
+     * Move a character to a new position using MovementValidator.
      */
-    public boolean applyDamage(Character target, int amount, Character source) {
-        Objects.requireNonNull(target, "target");
-        if (amount <= 0) {
-            log("applyDamage called with non-positive amount: " + amount + " for " + target.getName());
-            return false;
+    public boolean move(Character character, Position newPosition) {
+        boolean success = movementValidator.validateAndMove(character, newPosition);
+        if (success) {
+            gameState.updatePosition(character, newPosition);
         }
-
-        synchronized (target) {
-            if (!target.isAlive()) {
-                log("applyDamage: target already dead: " + target.getName());
-                return false;
-            }
-
-            // Evasion check: abilities can grant a per-turn evasion chance (0.0 - 1.0)
-            double evasionChance = target.getTemporaryEvasion();
-            if (evasionChance > 0.0) {
-                double roll = ThreadLocalRandom.current().nextDouble();
-                if (roll < evasionChance) {
-                    log(target.getName() + " evaded an attack! (chance=" + evasionChance + ", roll=" + roll + ")");
-                    return false;
-                }
-            }
-
-            try {
-                // Character.takeDamage is the domain-level implementation (may throw DeadCharacterException)
-                target.takeDamage(amount);
-                log(String.format("%s took %d damage (hp=%d/%d) from %s",
-                        target.getName(), amount, target.getStats().getHp(), target.getStats().getMaxHp(),
-                        source == null ? "<unknown>" : source.getName()));
-                return false;
-            } catch (DeadCharacterException dcx) {
-                log(String.format("%s was killed by %s", target.getName(), source == null ? "<unknown>" : source.getName()));
-                // find player-owner of the killer character, if any
-                com.amin.battlearena.players.Player killerOwner = findOwnerOf(source);
-                publishCharacterKilled(target, killerOwner);
-                return true;
-            }
-        }
+        return success;
     }
 
     /**
-     * Publish a CharacterKilled event using the engine's EventBus.
-     */
-    private void publishCharacterKilled(Character victim, com.amin.battlearena.players.Player killer) {
-        try {
-            eventBus.post(new CharacterKilled(victim, killer));
-            log("Published CharacterKilled: victim=" + victim.getName() + " killer=" + (killer == null ? "<unknown>" : killer.getName()));
-        } catch (Exception | Error t) {
-            LOG.log(Level.WARNING, "Failed to post CharacterKilled", t);
-        }
-    }
-
-    /**
-     * Find which player owns the supplied character (human, ai or null).
-     */
-    private com.amin.battlearena.players.Player findOwnerOf(Character c) {
-        if (c == null) return null;
-        if (human.getTeam().contains(c)) return human;
-        if (ai.getTeam().contains(c)) return ai;
-        return null;
-    }
-
-    public void log(String msg) {
-        if (msg == null) return;
-        LOG.info("[Engine] " + msg);
-        System.out.println("[Engine] " + msg);
-    }
-
-    /**
-     * Get the opponent of the given player.
+     * Get the opponent of a given player.
      */
     public Player getOpponentOf(Player player) {
         if (player == human) return ai;
         if (player == ai) return human;
-        throw new IllegalArgumentException("Unknown player: " + player);
+        throw new IllegalArgumentException("Unknown player: " + player.getName());
     }
 
     /**
-     * Move a character to a new position.
+     * Apply damage to a character and handle death events.
      */
-    public void move(Character character, Position newPosition) {
-        // Simple movement - just update the character's position
-        character.setPosition(newPosition);
-        log(character.getName() + " moved to " + newPosition);
+    public void applyDamage(Character target, int amount) {
+        if (target == null || amount <= 0) {
+            LOG.warning(String.format("applyDamage called with non-positive amount: %d for %s", 
+                       amount, target != null ? target.getName() : "null"));
+            return;
+        }
+
+        try {
+            target.takeDamage(amount);
+            log(String.format("%s takes %d damage (HP now %d/%d)", 
+                target.getName(), amount, target.getStats().getHp(), target.getStats().getMaxHp()));
+
+            if (!target.isAlive()) {
+                log(target.getName() + " has been slain!");
+                eventPublisher.notifyCharacterKilled(target);
+                gameState.removeCharacter(target);
+            }
+        } catch (DeadCharacterException e) {
+            log(target.getName() + " was killed by the damage!");
+            eventPublisher.notifyCharacterKilled(target);
+            gameState.removeCharacter(target);
+        }
+    }
+
+    /**
+     * Log a message to the game log.
+     */
+    public void log(String message) {
+        LOG.info("[Engine] " + message);
+    }
+
+    /**
+     * Get a random number for game mechanics.
+     */
+    public int getRandom(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
+    }
+
+    /**
+     * Check if a random event occurs based on probability.
+     */
+    public boolean randomEvent(double probability) {
+        return ThreadLocalRandom.current().nextDouble() < probability;
+    }
+
+    /**
+     * Notify that a battle has ended (called by TurnManager).
+     */
+    void notifyBattleEnded(Player winner, Player loser) {
+        eventPublisher.notifyBattleEnded(winner, loser);
+        try {
+            eventPublisher.publish(new BattleEnded(winner, loser));
+        } catch (Exception e) {
+            LOG.warning(String.format("Error publishing battle ended event: %s", e.getMessage()));
+        }
+    }
+
+    /**
+     * Add an event listener.
+     */
+    public void addEventListener(GameEventListener listener) {
+        eventPublisher.addEventListener(listener);
+    }
+
+    /**
+     * Remove an event listener.
+     */
+    public void removeEventListener(GameEventListener listener) {
+        eventPublisher.removeEventListener(listener);
     }
 }

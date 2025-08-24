@@ -2,10 +2,10 @@ package com.amin.battlearena.domain.actions;
 
 import java.util.Objects;
 
+import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
-import com.amin.battlearena.domain.model.Character;
 
 /**
  * Simple attack action that delegates to Character.attack(...) and logs result.
@@ -29,10 +29,19 @@ public final class AttackAction implements Action {
         int effectiveDefense = target.getStats().getDefense() + target.getTemporaryDefense();
         int damage = Math.max(0, rawDamage - effectiveDefense);
         
-        engine.applyDamage(target, damage, actor);
-
-        engine.log(actor.getName() + " attacks " + target.getName()
-                + " (HP now " + target.getStats().getHp() + "/" + target.getStats().getMaxHp() + ")");
+        // Log the attack details
+        engine.log(String.format("%s attacks %s: %d attack + %d base - %d defense = %d damage", 
+                actor.getName(), target.getName(), 
+                actor.getStats().getAttack(), actor.getBaseDamage(), 
+                effectiveDefense, damage));
+        
+        if (damage > 0) {
+            engine.applyDamage(target, damage);
+            engine.log(actor.getName() + " attacks " + target.getName()
+                    + " (HP now " + target.getStats().getHp() + "/" + target.getStats().getMaxHp() + ")");
+        } else {
+            engine.log(actor.getName() + " attacks " + target.getName() + " but does no damage (defense too high)");
+        }
 
         // engine may subscribe to dead events or inspect target state after call
     }

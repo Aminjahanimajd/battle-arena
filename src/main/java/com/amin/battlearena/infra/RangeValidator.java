@@ -1,26 +1,30 @@
 package com.amin.battlearena.infra;
 
-import com.amin.battlearena.engine.GameEngine;
 import com.amin.battlearena.domain.model.Archer;
 import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.domain.model.Ranger;
+import com.amin.battlearena.engine.GameEngine;
 
 /**
- * Validates that the target is within range of the actor.
+ * Validator that checks if the target is within range for ranged attacks.
  */
 public class RangeValidator extends ActionValidator {
     
     @Override
     public boolean validate(Character actor, Character target, GameEngine engine) {
-        // Check if actor is an archer and validate range
+        if (actor == null || target == null) {
+            return validateNext(actor, target, engine);
+        }
+        
+        // Only check range for ranged characters
         if (actor instanceof Archer archer) {
-            if (target == null || !archer.inRangeOf(target)) {
-                engine.log("Target is null or out of range for " + actor.getName());
+            if (!archer.inRangeOf(target)) {
+                if (engine != null) engine.log("Target " + target.getName() + " is out of range for " + actor.getName());
                 return false;
             }
-        } else {
-            // For melee characters, check adjacency (distance <= 1)
-            if (actor.getPosition().distanceTo(target.getPosition()) > 1) {
-                engine.log("Target " + target.getName() + " is not adjacent to " + actor.getName());
+        } else if (actor instanceof Ranger ranger) {
+            if (!ranger.inRangeOf(target)) {
+                if (engine != null) engine.log("Target " + target.getName() + " is out of range for " + actor.getName());
                 return false;
             }
         }

@@ -1,65 +1,136 @@
 package com.amin.battlearena.economy;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import com.amin.battlearena.domain.model.Character;
 
 /**
- * Catalog of available upgrades.
- *
- * Some older code constructs StatUpgrade using the simple numeric constructor:
- *   StatUpgrade(int hpPlus, int atkPlus, int defPlus, int rangePlus)
- *
- * Because StatUpgrade is not itself an Upgrade (it doesn't implement Upgrade),
- * we wrap each StatUpgrade into an anonymous Upgrade adapter that delegates
- * apply(...) calls to the StatUpgrade instance and provides id/name/cost.
+ * Catalog of all available upgrades in the game.
+ * Provides upgrades for different character types and stats.
  */
 public final class UpgradeCatalog {
-    private final Map<String, Upgrade> map = new LinkedHashMap<>();
-
-    public void register(Upgrade u) { map.put(u.id(), u); }
-    public Optional<Upgrade> find(String id) { return Optional.ofNullable(map.get(id)); }
-    public Collection<Upgrade> all() { return map.values(); }
-
-    public static UpgradeCatalog defaultCatalog() {
-        var cat = new UpgradeCatalog();
-
-        // UP-HP-1: +10 HP cost 50
-        {
-            final StatUpgrade su = new StatUpgrade(10, 0, 0, 0);
-            cat.register(new Upgrade() {
-                @Override public String id() { return "UP-HP-1"; }
-                @Override public String name() { return "+10 HP"; }
-                @Override public int cost() { return 50; }
-                @Override public void apply(Character c) { su.apply(c); }
-            });
-        }
-
-        // UP-ATK-1: +2 Attack cost 60
-        {
-            final StatUpgrade su = new StatUpgrade(0, 2, 0, 0);
-            cat.register(new Upgrade() {
-                @Override public String id() { return "UP-ATK-1"; }
-                @Override public String name() { return "+2 Attack"; }
-                @Override public int cost() { return 60; }
-                @Override public void apply(Character c) { su.apply(c); }
-            });
-        }
-
-        // UP-DEF-1: +2 Defense cost 60
-        {
-            final StatUpgrade su = new StatUpgrade(0, 0, 2, 0);
-            cat.register(new Upgrade() {
-                @Override public String id() { return "UP-DEF-1"; }
-                @Override public String name() { return "+2 Defense"; }
-                @Override public int cost() { return 60; }
-                @Override public void apply(Character c) { su.apply(c); }
-            });
-        }
-
-        return cat;
+    
+    private static final Map<String, List<Upgrade>> upgradesByCharacter = new HashMap<>();
+    
+    static {
+        initializeUpgrades();
+    }
+    
+    private static void initializeUpgrades() {
+        // Warrior upgrades
+        List<Upgrade> warriorUpgrades = new ArrayList<>();
+        warriorUpgrades.add(new Upgrade("warrior_hp", "Warrior Vitality", "Increase Warrior's max HP", 
+                                       Upgrade.Type.STAT_HP, 0, 3, 100, 25, 150, 1.5));
+        warriorUpgrades.add(new Upgrade("warrior_attack", "Warrior Strength", "Increase Warrior's attack power", 
+                                       Upgrade.Type.STAT_ATTACK, 0, 3, 12, 3, 200, 1.8));
+        warriorUpgrades.add(new Upgrade("warrior_defense", "Warrior Armor", "Increase Warrior's defense", 
+                                       Upgrade.Type.STAT_DEFENSE, 0, 3, 8, 2, 180, 1.6));
+        warriorUpgrades.add(new Upgrade("warrior_mana", "Warrior Spirit", "Increase Warrior's mana pool", 
+                                       Upgrade.Type.STAT_MANA, 0, 3, 30, 10, 120, 1.4));
+        upgradesByCharacter.put("Warrior", warriorUpgrades);
+        
+        // Archer upgrades
+        List<Upgrade> archerUpgrades = new ArrayList<>();
+        archerUpgrades.add(new Upgrade("archer_hp", "Archer Endurance", "Increase Archer's max HP", 
+                                      Upgrade.Type.STAT_HP, 0, 3, 90, 20, 140, 1.5));
+        archerUpgrades.add(new Upgrade("archer_attack", "Archer Precision", "Increase Archer's attack power", 
+                                      Upgrade.Type.STAT_ATTACK, 0, 3, 14, 2, 180, 1.7));
+        archerUpgrades.add(new Upgrade("archer_speed", "Archer Agility", "Increase Archer's movement speed", 
+                                      Upgrade.Type.STAT_SPEED, 0, 3, 4, 1, 250, 2.0));
+        archerUpgrades.add(new Upgrade("archer_mana", "Archer Focus", "Increase Archer's mana pool", 
+                                      Upgrade.Type.STAT_MANA, 0, 3, 45, 8, 150, 1.5));
+        upgradesByCharacter.put("Archer", archerUpgrades);
+        
+        // Mage upgrades
+        List<Upgrade> mageUpgrades = new ArrayList<>();
+        mageUpgrades.add(new Upgrade("mage_hp", "Mage Constitution", "Increase Mage's max HP", 
+                                    Upgrade.Type.STAT_HP, 0, 3, 80, 15, 120, 1.4));
+        mageUpgrades.add(new Upgrade("mage_attack", "Mage Power", "Increase Mage's attack power", 
+                                    Upgrade.Type.STAT_ATTACK, 0, 3, 15, 3, 220, 1.9));
+        mageUpgrades.add(new Upgrade("mage_mana", "Mage Wisdom", "Increase Mage's mana pool", 
+                                    Upgrade.Type.STAT_MANA, 0, 3, 60, 15, 200, 1.6));
+        mageUpgrades.add(new Upgrade("mage_mana_regen", "Mage Meditation", "Increase Mage's mana regeneration", 
+                                    Upgrade.Type.STAT_MANA_REGEN, 0, 3, 8, 2, 300, 2.0));
+        upgradesByCharacter.put("Mage", mageUpgrades);
+        
+        // Knight upgrades
+        List<Upgrade> knightUpgrades = new ArrayList<>();
+        knightUpgrades.add(new Upgrade("knight_hp", "Knight Fortitude", "Increase Knight's max HP", 
+                                      Upgrade.Type.STAT_HP, 0, 3, 150, 35, 200, 1.7));
+        knightUpgrades.add(new Upgrade("knight_defense", "Knight Protection", "Increase Knight's defense", 
+                                      Upgrade.Type.STAT_DEFENSE, 0, 3, 15, 3, 250, 1.8));
+        knightUpgrades.add(new Upgrade("knight_mana", "Knight Honor", "Increase Knight's mana pool", 
+                                      Upgrade.Type.STAT_MANA, 0, 3, 40, 10, 160, 1.5));
+        knightUpgrades.add(new Upgrade("knight_mana_regen", "Knight Discipline", "Increase Knight's mana regeneration", 
+                                      Upgrade.Type.STAT_MANA_REGEN, 0, 3, 4, 1, 180, 1.6));
+        upgradesByCharacter.put("Knight", knightUpgrades);
+        
+        // Ranger upgrades
+        List<Upgrade> rangerUpgrades = new ArrayList<>();
+        rangerUpgrades.add(new Upgrade("ranger_hp", "Ranger Stamina", "Increase Ranger's max HP", 
+                                      Upgrade.Type.STAT_HP, 0, 3, 110, 25, 180, 1.6));
+        rangerUpgrades.add(new Upgrade("ranger_attack", "Ranger Mastery", "Increase Ranger's attack power", 
+                                      Upgrade.Type.STAT_ATTACK, 0, 3, 16, 3, 240, 1.8));
+        rangerUpgrades.add(new Upgrade("ranger_speed", "Ranger Swiftness", "Increase Ranger's movement speed", 
+                                      Upgrade.Type.STAT_SPEED, 0, 3, 5, 1, 300, 2.2));
+        rangerUpgrades.add(new Upgrade("ranger_mana", "Ranger Focus", "Increase Ranger's mana pool", 
+                                      Upgrade.Type.STAT_MANA, 0, 3, 55, 10, 200, 1.6));
+        upgradesByCharacter.put("Ranger", rangerUpgrades);
+        
+        // Master upgrades
+        List<Upgrade> masterUpgrades = new ArrayList<>();
+        masterUpgrades.add(new Upgrade("master_hp", "Master Vitality", "Increase Master's max HP", 
+                                      Upgrade.Type.STAT_HP, 0, 3, 200, 40, 400, 2.0));
+        masterUpgrades.add(new Upgrade("master_attack", "Master Power", "Increase Master's attack power", 
+                                      Upgrade.Type.STAT_ATTACK, 0, 3, 20, 4, 500, 2.2));
+        masterUpgrades.add(new Upgrade("master_defense", "Master Defense", "Increase Master's defense", 
+                                      Upgrade.Type.STAT_DEFENSE, 0, 3, 12, 2, 350, 1.9));
+        masterUpgrades.add(new Upgrade("master_mana", "Master Spirit", "Increase Master's mana pool", 
+                                      Upgrade.Type.STAT_MANA, 0, 3, 80, 20, 300, 1.8));
+        upgradesByCharacter.put("Master", masterUpgrades);
+        
+        // Global ability upgrades
+        List<Upgrade> abilityUpgrades = new ArrayList<>();
+        abilityUpgrades.add(new Upgrade("ability_cooldown", "Quick Casting", "Reduce ability cooldowns", 
+                                       Upgrade.Type.ABILITY_COOLDOWN, 0, 3, 0, -1, 400, 2.5));
+        abilityUpgrades.add(new Upgrade("ability_mana_cost", "Efficient Casting", "Reduce ability mana costs", 
+                                       Upgrade.Type.ABILITY_MANA_COST, 0, 3, 0, -2, 350, 2.0));
+        abilityUpgrades.add(new Upgrade("ability_damage", "Enhanced Abilities", "Increase ability damage", 
+                                       Upgrade.Type.ABILITY_DAMAGE, 0, 3, 0, 3, 450, 2.2));
+        upgradesByCharacter.put("Global", abilityUpgrades);
+    }
+    
+    /**
+     * Get all available upgrades for a specific character type.
+     */
+    public static List<Upgrade> getUpgradesForCharacter(String characterType) {
+        return upgradesByCharacter.getOrDefault(characterType, new ArrayList<>());
+    }
+    
+    /**
+     * Get all available upgrades in the game.
+     */
+    public static List<Upgrade> getAllUpgrades() {
+        List<Upgrade> allUpgrades = new ArrayList<>();
+        upgradesByCharacter.values().forEach(allUpgrades::addAll);
+        return allUpgrades;
+    }
+    
+    /**
+     * Get available character types that have upgrades.
+     */
+    public static List<String> getAvailableCharacterTypes() {
+        return new ArrayList<>(upgradesByCharacter.keySet());
+    }
+    
+    /**
+     * Find a specific upgrade by ID.
+     */
+    public static Upgrade findUpgradeById(String upgradeId) {
+        return getAllUpgrades().stream()
+                .filter(u -> u.getId().equals(upgradeId))
+                .findFirst()
+                .orElse(null);
     }
 }

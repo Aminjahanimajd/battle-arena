@@ -1,11 +1,11 @@
 package com.amin.battlearena.levels;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import com.amin.battlearena.domain.model.Board;
-import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.domain.model.Units;
+import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.SimpleAIStrategy;
 import com.amin.battlearena.players.AIPlayer;
 
@@ -17,7 +17,11 @@ public final class EnemySpawner {
     private final List<LevelDefinition> levels;
 
     public EnemySpawner() {
-        this.levels = LevelLoader.loadAll();
+        try {
+            this.levels = LevelLoader.loadLevels();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load levels", e);
+        }
     }
 
     private Optional<LevelDefinition> getLevel(int levelNumber) {
@@ -25,30 +29,23 @@ public final class EnemySpawner {
     }
 
     public AIPlayer createAiForLevel(int levelNumber, String aiName, Board board) {
-        LevelDefinition def = getLevel(levelNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Level " + levelNumber + " not found"));
+        // Verify level exists
+        if (!getLevel(levelNumber).isPresent()) {
+            throw new IllegalArgumentException("Level " + levelNumber + " not found");
+        }
 
         AIPlayer ai = new AIPlayer(aiName, new SimpleAIStrategy());
-        int w = board.getWidth();
-        int h = board.getHeight();
-
-        int idx = 0;
-        for (String type : def.enemies) {
-            int x = Math.max(0, w - 1 - (idx / h));  // fill rightmost columns top-down
-            int y = idx % h;
-            Position pos = new Position(x, y);
-
-            int attempts = 0;
-            while (board.isPositionOccupied(pos, ai.getTeam()) && attempts < w) {
-                x = Math.max(0, x - 1);
-                pos = new Position(x, y);
-                attempts++;
+        
+        try {
+            // Use the new LevelLoader to create enemies with proper positioning
+            List<Character> enemies = LevelLoader.createEnemiesForLevel(levelNumber);
+            for (Character enemy : enemies) {
+                ai.addToTeam(enemy);
             }
-
-            var enemy = Units.spawn(type, type + "-" + (idx + 1), pos);
-            ai.addToTeam(enemy);
-            idx++;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create enemies for level " + levelNumber, e);
         }
+        
         return ai;
     }
 
