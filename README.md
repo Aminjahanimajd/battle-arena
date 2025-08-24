@@ -44,16 +44,27 @@ This project emphasizes **clean design** and **software engineering best practic
 
 ## 📂 Project Structure
 battle-arena/
+
 ├── pom.xml # Maven configuration
+
 ├── src/
+
 │ ├── main/java/com/amin/battlearena/
+
 │ │ ├── Game.java # Entry point
+
 │ │ ├── model/ # Entities: Hero, Monster, Unit, Arena
+
 │ │ ├── service/ # Battle logic, turn management
+
 │ │ ├── ui/ # Console UI (later: GUI)
+
 │ │ └── util/ # Helpers, factories
+
 │ └── test/java/... # Unit tests
+
 ├── .gitignore
+
 └── README.md
 
 ---
