@@ -2,7 +2,7 @@ package com.amin.battlearena.domain.abilities;
 
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
@@ -62,5 +62,6 @@ public final class Charge extends AbstractAbility {
         }
 
         startCooldown();
+        saveStateQuietly(engine);
     }
 }

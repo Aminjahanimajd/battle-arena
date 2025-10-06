@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import com.amin.battlearena.domain.events.BattleEnded;
 import com.amin.battlearena.domain.events.CharacterKilled;
 import com.amin.battlearena.domain.events.EventBus;
+import com.amin.battlearena.persistence.PlayerProgressUtil;
 import com.amin.battlearena.persistence.ProgressService;
 import com.amin.battlearena.players.Player;
 
@@ -60,7 +61,7 @@ public final class EconomyManager implements AutoCloseable {
             PlayerProgressUtil.loadIntoWallet(progressService, p1, wallets.get(p1));
             PlayerProgressUtil.loadIntoWallet(progressService, p2, wallets.get(p2));
         } catch (Exception e) {
-            LOG.fine("Could not pre-load wallet from DB: " + e.getMessage());
+            LOG.log(java.util.logging.Level.FINE, "Could not pre-load wallet from DB: {0}", e.getMessage());
         }
     }
 
@@ -69,13 +70,13 @@ public final class EconomyManager implements AutoCloseable {
         if (killer == null) return;
         Wallet w = walletOf(killer);
         w.add(goldPerKill);
-        LOG.info(killer.getName() + " +" + goldPerKill + "g (kill)");
+        LOG.log(java.util.logging.Level.INFO, "{0} +{1}g (kill)", new Object[]{killer.getName(), goldPerKill});
 
         // persist updated progress for the killer
         try {
             PlayerProgressUtil.saveFromWallet(progressService, killer, w);
         } catch (Exception e) {
-            LOG.warning("Failed to persist gold after kill for " + killer.getName() + ": " + e.getMessage());
+            LOG.log(java.util.logging.Level.WARNING, "Failed to persist gold after kill for {0}: {1}", new Object[]{killer.getName(), e.getMessage()});
         }
     }
 
@@ -83,7 +84,7 @@ public final class EconomyManager implements AutoCloseable {
         Player winner = evt.winner;
         Wallet w = walletOf(winner);
         w.add(goldForWin);
-        LOG.info(winner.getName() + " +" + goldForWin + "g (victory)");
+        LOG.log(java.util.logging.Level.INFO, "{0} +{1}g (victory)", new Object[]{winner.getName(), goldForWin});
 
         // persist both players' wallets
         try {
@@ -93,7 +94,7 @@ public final class EconomyManager implements AutoCloseable {
                 PlayerProgressUtil.saveFromWallet(progressService, p, wallet);
             }
         } catch (Exception e) {
-            LOG.warning("Failed to persist gold after battle end: " + e.getMessage());
+            LOG.log(java.util.logging.Level.WARNING, "Failed to persist gold after battle end: {0}", e.getMessage());
         }
     }
 
@@ -102,8 +103,18 @@ public final class EconomyManager implements AutoCloseable {
     }
 
     @Override
-    public void close() {
-        if (killUnsub != null) try { killUnsub.run(); } catch (Exception ignored) {}
-        if (endUnsub != null) try { endUnsub.run(); } catch (Exception ignored) {}
+    public void close() throws Exception {
+        Exception first = null;
+        try {
+            if (killUnsub != null) killUnsub.run();
+        } catch (Exception e) {
+            first = e;
+        }
+        try {
+            if (endUnsub != null) endUnsub.run();
+        } catch (Exception e) {
+            if (first == null) first = e; else first.addSuppressed(e);
+        }
+        if (first != null) throw first;
     }
 }

@@ -1,7 +1,7 @@
 package com.amin.battlearena.infra;
 
 import com.amin.battlearena.domain.model.Character;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 
 /**
  * Service that uses the Chain of Responsibility pattern to validate actions.
@@ -61,6 +61,7 @@ public final class ActionValidationService {
      * @return the first validator in the chain
      */
     public ActionValidator getValidationChain() {
+        // Returning the chain head is safe for read-only traversal; callers should not mutate it.
         return validationChain;
     }
 }

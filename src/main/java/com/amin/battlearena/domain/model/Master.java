@@ -18,7 +18,7 @@ public final class Master extends Character {
 
     @Override
     protected int calculateBaseDamage() {
-        return 5;
+        return 8; // Increased from 5 for better combat balance - masters are powerful
     }
 
     /**

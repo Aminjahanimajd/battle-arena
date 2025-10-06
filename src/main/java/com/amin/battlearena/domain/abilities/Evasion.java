@@ -1,7 +1,7 @@
 package com.amin.battlearena.domain.abilities;
 
 import com.amin.battlearena.domain.model.Character;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
@@ -34,5 +34,6 @@ public final class Evasion extends AbstractAbility {
         user.addTemporaryEvasion(0.3);
         engine.log(user.getName() + " activates Evasion! (30% chance to dodge attacks)");
         startCooldown();
+        saveStateQuietly(engine);
     }
 }

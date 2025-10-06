@@ -11,38 +11,38 @@ public class DamageCalculator implements CharacterVisitor {
     
     @Override
     public void visit(Warrior warrior) {
-        totalDamage += warrior.getStats().getAttack() + 2; // Warrior bonus
-        totalDefense += warrior.getStats().getDefense() + 1; // Warrior defense bonus
+        totalDamage += warrior.getStats().getAttack() + 2; // warrior damage bonus
+        totalDefense += warrior.getStats().getDefense() + 1; // warrior defense bonus
     }
     
     @Override
     public void visit(Archer archer) {
-        totalDamage += archer.getStats().getAttack() + 1; // Archer bonus
-        totalDefense += archer.getStats().getDefense(); // No defense bonus
+        totalDamage += archer.getStats().getAttack() + 1; // archer damage bonus
+        totalDefense += archer.getStats().getDefense() + 0; // archer defense bonus
     }
     
     @Override
     public void visit(Mage mage) {
-        totalDamage += mage.getStats().getAttack() + 3; // Mage bonus
-        totalDefense += mage.getStats().getDefense() - 1; // Mage defense penalty
+        totalDamage += mage.getStats().getAttack() + 3; // mage damage bonus
+        totalDefense += mage.getStats().getDefense() + (-1); // mage defense bonus
     }
     
     @Override
     public void visit(Knight knight) {
-        totalDamage += knight.getStats().getAttack() + 1; // Knight bonus
-        totalDefense += knight.getStats().getDefense() + 2; // Knight defense bonus
+        totalDamage += knight.getStats().getAttack() + 1; // knight damage bonus
+        totalDefense += knight.getStats().getDefense() + 2; // knight defense bonus
     }
     
     @Override
     public void visit(Ranger ranger) {
-        totalDamage += ranger.getStats().getAttack() + 2; // Ranger bonus
-        totalDefense += ranger.getStats().getDefense(); // No defense bonus
+        totalDamage += ranger.getStats().getAttack() + 2; // ranger damage bonus
+        totalDefense += ranger.getStats().getDefense() + 0; // ranger defense bonus
     }
     
     @Override
     public void visit(Master master) {
-        totalDamage += master.getStats().getAttack() + 4; // Master bonus
-        totalDefense += master.getStats().getDefense() + 1; // Master defense bonus
+        totalDamage += master.getStats().getAttack() + 4; // master damage bonus
+        totalDefense += master.getStats().getDefense() + 1; // master defense bonus
     }
     
     /**

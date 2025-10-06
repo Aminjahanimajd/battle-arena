@@ -14,6 +14,8 @@ public final class Shop {
         this.catalog = catalog; 
     }
 
+    public UpgradeCatalog getCatalog() { return catalog; }
+
     /**
      * Get all available upgrades for a specific character type.
      */
@@ -45,49 +47,98 @@ public final class Shop {
         
         return true;
     }
+    
+    /**
+     * Purchase upgrade using PlayerData system.
+     */
+    public boolean purchaseUpgrade(com.amin.battlearena.persistence.PlayerData playerData, String upgradeId) {
+        Upgrade upgrade = UpgradeCatalog.findUpgradeById(upgradeId);
+        if (upgrade == null) return false;
+        
+        int currentLevel = playerData.getPurchasedUpgradeLevel(upgradeId);
+        if (currentLevel >= upgrade.getMaxStages()) return false; // Max level reached
+        
+        // Calculate cost for next level
+        int cost = calculateUpgradeCost(upgrade, currentLevel + 1);
+        
+        if (playerData.getGold() < cost) return false;
+        
+        // Spend the gold
+        playerData.addGold(-cost);
+        
+        // Update upgrade level
+        playerData.setPurchasedUpgradeLevel(upgradeId, currentLevel + 1);
+        
+        return true;
+    }
+    
+    private int calculateUpgradeCost(Upgrade upgrade, int level) {
+        return (int) (upgrade.getBaseCost() * Math.pow(upgrade.getCostMultiplier(), level - 1));
+    }
 
     /**
      * Apply an upgrade to a character's stats or abilities.
      */
     private void applyUpgradeToCharacter(Character character, Upgrade upgrade) {
-        switch (upgrade.getType()) {
-            case STAT_HP -> {
-                // Increase max HP and restore current HP proportionally
-                int currentHp = character.getStats().getHp();
-                int maxHp = character.getStats().getMaxHp();
-                int newMaxHp = upgrade.getCurrentValue();
-                character.getStats().setMaxHp(newMaxHp);
-                // Restore HP proportionally
-                if (maxHp > 0) {
-                    int newHp = (int) ((double) currentHp / maxHp * newMaxHp);
-                    character.getStats().setHp(newHp);
-                }
+        if (upgrade.getType() == Upgrade.Type.STAT_HP) {
+            // Increase max HP and restore current HP proportionally
+            int currentHp = character.getStats().getHp();
+            int maxHp = character.getStats().getMaxHp();
+            int newMaxHp = maxHp + upgrade.getValuePerStage();
+            character.getStats().setMaxHp(newMaxHp);
+            // Restore HP proportionally
+            if (maxHp > 0) {
+                int newHp = (int) ((double) currentHp / maxHp * newMaxHp);
+                character.getStats().setHp(newHp);
             }
-            case STAT_ATTACK -> character.getStats().setAttack(upgrade.getCurrentValue());
-            case STAT_DEFENSE -> character.getStats().setDefense(upgrade.getCurrentValue());
-            case STAT_SPEED -> character.getStats().setSpeed(upgrade.getCurrentValue());
-            case STAT_MANA -> {
-                // Increase max mana and restore current mana proportionally
-                int maxMana = character.getMaxMana();
-                int newMaxMana = upgrade.getCurrentValue();
-                // Note: We can't directly set max mana, so we'll just restore current mana
-                character.restoreMana(newMaxMana - maxMana);
+        } else if (upgrade.getType() == Upgrade.Type.STAT_ATTACK) {
+            int currentAttack = character.getStats().getAttack();
+            character.getStats().setAttack(currentAttack + upgrade.getValuePerStage());
+        } else if (upgrade.getType() == Upgrade.Type.STAT_DEFENSE) {
+            int currentDefense = character.getStats().getDefense();
+            character.getStats().setDefense(currentDefense + upgrade.getValuePerStage());
+        } else if (upgrade.getType() == Upgrade.Type.STAT_SPEED) {
+            // Speed concept removed - convert to range upgrade instead
+            int currentRange = character.getStats().getRange();
+            character.getStats().setRange(currentRange + upgrade.getValuePerStage());
+        } else if (upgrade.getType() == Upgrade.Type.STAT_MANA) {
+            // Increase max mana by restoring additional mana
+            character.restoreMana(upgrade.getValuePerStage());
+        } else if (upgrade.getType() == Upgrade.Type.STAT_MANA_REGEN) {
+            // Note: We can't directly modify mana regen in the current system
+            // This would require adding a method to Character class
+        } else if (upgrade.getType() == Upgrade.Type.ABILITY_COOLDOWN) {
+            // Note: We can't directly modify ability cooldowns in the current system
+            // This would require adding methods to Ability classes
+        } else if (upgrade.getType() == Upgrade.Type.ABILITY_MANA_COST) {
+            // Note: We can't directly modify ability mana costs in the current system
+            // This would require adding methods to Ability classes
+        } else if (upgrade.getType() == Upgrade.Type.ABILITY_DAMAGE) {
+            // Note: We can't directly modify ability damage in the current system
+            // This would require adding methods to Ability classes
+        }
+    }
+    
+    /**
+     * Apply all purchased upgrades to a character based on player data.
+     */
+    public void applyPurchasedUpgrades(Character character, com.amin.battlearena.persistence.PlayerData playerData) {
+        String characterType = character.getClass().getSimpleName();
+        List<Upgrade> characterUpgrades = UpgradeCatalog.getUpgradesForCharacter(characterType);
+        
+        for (Upgrade upgrade : characterUpgrades) {
+            int level = playerData.getPurchasedUpgradeLevel(upgrade.getId());
+            for (int i = 0; i < level; i++) {
+                applyUpgradeToCharacter(character, upgrade);
             }
-            case STAT_MANA_REGEN -> {
-                // Note: We can't directly modify mana regen in the current system
-                // This would require adding a method to Character class
-            }
-            case ABILITY_COOLDOWN -> {
-                // Note: We can't directly modify ability cooldowns in the current system
-                // This would require adding methods to Ability classes
-            }
-            case ABILITY_MANA_COST -> {
-                // Note: We can't directly modify ability mana costs in the current system
-                // This would require adding methods to Ability classes
-            }
-            case ABILITY_DAMAGE -> {
-                // Note: We can't directly modify ability damage in the current system
-                // This would require adding methods to Ability classes
+        }
+        
+        // Apply global upgrades
+        List<Upgrade> globalUpgrades = UpgradeCatalog.getUpgradesForCharacter("Global");
+        for (Upgrade upgrade : globalUpgrades) {
+            int level = playerData.getPurchasedUpgradeLevel(upgrade.getId());
+            for (int i = 0; i < level; i++) {
+                applyUpgradeToCharacter(character, upgrade);
             }
         }
     }

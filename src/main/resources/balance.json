@@ -1,0 +1,15 @@
+{
+  "warrior.damageBonus": 2,
+  "warrior.defenseBonus": 1,
+  "archer.damageBonus": 1,
+  "archer.defenseBonus": 0,
+  "mage.damageBonus": 3,
+  "mage.defenseBonus": -1,
+  "knight.damageBonus": 1,
+  "knight.defenseBonus": 2,
+  "ranger.damageBonus": 2,
+  "ranger.defenseBonus": 0,
+  "master.damageBonus": 4,
+  "master.defenseBonus": 1
+}
+

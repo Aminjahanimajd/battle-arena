@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.amin.battlearena.domain.items.HealthPotion;
+import com.amin.battlearena.domain.items.ManaPotion;
+import com.amin.battlearena.domain.items.StrengthElixir;
 import com.amin.battlearena.domain.model.Character;
 
 /**
@@ -14,14 +17,22 @@ import com.amin.battlearena.domain.model.Character;
 public abstract class Player {
     private final String name;
     private final List<Character> team = new ArrayList<>();
+    // Basic inventory for consumables during battle
+    private final Inventory inventory = new Inventory();
 
     protected Player(String name) {
         this.name = Objects.requireNonNull(name);
+        // Starter items (can be adjusted or loaded from persistence)
+        inventory.add(new HealthPotion(20));
+        inventory.add(new ManaPotion(10));
+        inventory.add(new StrengthElixir());
     }
 
     public String getName() { return name; }
 
     public List<Character> getTeam() { return List.copyOf(team); }
+
+    public Inventory getInventory() { return inventory; }
 
     public void addToTeam(Character c) {
         if (c != null) team.add(c);
@@ -59,5 +70,5 @@ public abstract class Player {
      * Perform this player's turn in the context of the engine.
      * Implementations should attempt to act with one or more characters and return.
      */
-    public abstract void takeTurn(com.amin.battlearena.engine.GameEngine engine) throws Exception;
+    public abstract void takeTurn(com.amin.battlearena.engine.core.GameEngine engine) throws Exception;
 }

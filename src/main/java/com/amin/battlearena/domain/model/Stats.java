@@ -3,7 +3,7 @@ package com.amin.battlearena.domain.model;
 import java.util.Objects;
 
 /**
- * Encapsulates numeric attributes for a Character: HP, attack, defense and speed.
+ * Encapsulates numeric attributes for a Character: HP, attack, defense, and range.
  *
  * Design notes:
  * - Encapsulation / information hiding: fields are private and mutations are through methods.
@@ -16,20 +16,25 @@ public final class Stats {
     private int maxHp;     // maximum hit points
     private int attack;
     private int defense;
-    private int speed;
+
     private int range;     // used by ranged characters like Archer
 
-    public Stats(int maxHp, int attack, int defense, int speed) {
+    // Combat extras
+    // Critical chance in [0.0, 1.0]
+    private double critChance = 0.0;
+    // Critical damage multiplier (>= 1.0), default 1.5x
+    private double critMultiplier = 1.5;
+
+    public Stats(int maxHp, int attack, int defense) {
         if (maxHp <= 0) throw new IllegalArgumentException("maxHp must be > 0");
         this.maxHp = maxHp;
         this.hp = maxHp;
         this.attack = Math.max(0, attack);
         this.defense = Math.max(0, defense);
-        this.speed = Math.max(0, speed);
     }
 
-    public Stats(int maxHp, int attack, int defense, int speed , int range) {
-        this(maxHp, attack, defense, speed);
+    public Stats(int maxHp, int attack, int defense, int range) {
+        this(maxHp, attack, defense);
         this.range = Math.max(1, range);
     }
 
@@ -38,8 +43,11 @@ public final class Stats {
     public int getMaxHp() { return maxHp; }
     public int getAttack() { return attack; }
     public int getDefense() { return defense; }
-    public int getSpeed() { return speed; }
-    public int getRange() { return range; }
+
+    public int getRange() { return Math.max(1, range); }
+
+    public double getCritChance() { return Math.max(0.0, Math.min(1.0, critChance)); }
+    public double getCritMultiplier() { return Math.max(1.0, critMultiplier); }
 
     // ---------- Mutators (controlled) ----------
 
@@ -60,8 +68,6 @@ public final class Stats {
         hp = Math.min(maxHp, hp + amount);
     }
 
-
-    
     /**
      * Set current HP directly (clamped between 0 and maxHp).
      */
@@ -101,16 +107,20 @@ public final class Stats {
         this.defense = Math.max(0, this.defense + delta);
     }
 
-    public void setSpeed(int newSpeed) {
-        this.speed = Math.max(0, newSpeed);
-    }
-
-    public void modifySpeed(int delta) {
-        this.speed = Math.max(0, this.speed + delta);
-    }
-
     public void setRange(int range) {
         this.range = Math.max(1, range);
+    }
+
+    public void setCritChance(double chance) {
+        this.critChance = Math.max(0.0, Math.min(1.0, chance));
+    }
+
+    public void addCritChance(double delta) {
+        setCritChance(this.critChance + delta);
+    }
+
+    public void setCritMultiplier(double multiplier) {
+        this.critMultiplier = Math.max(1.0, multiplier);
     }
 
     // ---------- Queries ----------
@@ -123,7 +133,9 @@ public final class Stats {
                 ", maxHp=" + maxHp +
                 ", attack=" + attack +
                 ", defense=" + defense +
-                ", speed=" + speed +
+                ", range=" + range +
+                ", critChance=" + critChance +
+                ", critMultiplier=" + critMultiplier +
                 '}';
     }
 
@@ -136,12 +148,11 @@ public final class Stats {
         return hp == stats.hp &&
                maxHp == stats.maxHp &&
                attack == stats.attack &&
-               defense == stats.defense &&
-               speed == stats.speed;
+               defense == stats.defense;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hp, maxHp, attack, defense, speed);
+        return Objects.hash(hp, maxHp, attack, defense);
     }
 }

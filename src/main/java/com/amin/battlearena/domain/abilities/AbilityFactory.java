@@ -10,15 +10,23 @@ public final class AbilityFactory {
 
     public static Ability create(String key) {
         if (key == null) throw new IllegalArgumentException("Ability key cannot be null");
-        switch (key.trim().toLowerCase(Locale.ROOT)) {
-            case "powerstrike":    return new PowerStrike();
-            case "arcaneburst":    return new ArcaneBurst();
-            case "doubleshot":     return new DoubleShot();
-            case "charge":         return new Charge();
-            case "masterstrike":   return new MasterStrike();
-            case "piercingvolley": return new PiercingVolley();
-            case "evasion":        return new Evasion();
-            default: throw new IllegalArgumentException("Unknown ability key: " + key);
+        String lowerKey = key.trim().toLowerCase(Locale.ROOT);
+        if ("powerstrike".equals(lowerKey)) {
+            return new PowerStrike();
+        } else if ("arcaneburst".equals(lowerKey)) {
+            return new ArcaneBurst();
+        } else if ("doubleshot".equals(lowerKey)) {
+            return new DoubleShot();
+        } else if ("charge".equals(lowerKey)) {
+            return new Charge();
+        } else if ("masterstrike".equals(lowerKey)) {
+            return new MasterStrike();
+        } else if ("piercingvolley".equals(lowerKey)) {
+            return new PiercingVolley();
+        } else if ("evasion".equals(lowerKey)) {
+            return new Evasion();
+        } else {
+            throw new IllegalArgumentException("Unknown ability key: " + key);
         }
     }
 }

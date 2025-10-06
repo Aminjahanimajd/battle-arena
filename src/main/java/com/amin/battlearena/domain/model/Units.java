@@ -19,14 +19,21 @@ public final class Units {
     private Units() {}
 
     public static Character spawn(Kind kind, String name, Position pos) {
-        return switch (kind) {
-            case WARRIOR -> new Warrior(name, pos);
-            case MAGE    -> new Mage(name, pos);
-            case ARCHER  -> new Archer(name, pos);
-            case KNIGHT  -> new Knight(name, pos);
-            case RANGER  -> new Ranger(name, pos);
-            case MASTER  -> new Master(name, pos);
-        };
+        if (kind == Kind.WARRIOR) {
+            return new Warrior(name, pos);
+        } else if (kind == Kind.MAGE) {
+            return new Mage(name, pos);
+        } else if (kind == Kind.ARCHER) {
+            return new Archer(name, pos);
+        } else if (kind == Kind.KNIGHT) {
+            return new Knight(name, pos);
+        } else if (kind == Kind.RANGER) {
+            return new Ranger(name, pos);
+        } else if (kind == Kind.MASTER) {
+            return new Master(name, pos);
+        } else {
+            throw new IllegalArgumentException("Unknown character kind: " + kind);
+        }
     }
 
     public static Character spawn(String typeKey, String name, Position pos) {

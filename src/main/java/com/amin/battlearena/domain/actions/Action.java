@@ -1,9 +1,9 @@
 package com.amin.battlearena.domain.actions;
 
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
-import com.amin.battlearena.domain.model.Character;
 
 /**
  * Represents a domain action (attack, defend, move, skill...). Implementations should be small and focused.

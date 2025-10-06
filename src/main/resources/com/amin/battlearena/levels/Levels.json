@@ -1,0 +1,24 @@
+[
+  {
+    "id": "L01",
+    "name": "Training Grounds",
+    "prereqs": [],
+    "rewards": { "winGold": 100, "killGold": 10 },
+    "requiresPlayerLevel": 1,
+    "enemies": ["Warrior"],
+    "enemyPositions": [[7, 2]],
+    "note": "Intro fight against a lone warrior.",
+    "winConditionType": "EliminateAllEnemies"
+  },
+  {
+    "id": "L10",
+    "name": "Master's Challenge",
+    "prereqs": ["L09"],
+    "rewards": { "winGold": 1000, "killGold": 50 },
+    "requiresPlayerLevel": 10,
+    "enemies": ["Master"],
+    "enemyPositions": [[7, 2]],
+    "note": "Boss battle against the Master.",
+    "winConditionType": "EliminateAllEnemies"
+  }
+]

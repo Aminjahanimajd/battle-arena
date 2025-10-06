@@ -36,8 +36,8 @@ public final class UpgradeCatalog {
                                       Upgrade.Type.STAT_HP, 0, 3, 90, 20, 140, 1.5));
         archerUpgrades.add(new Upgrade("archer_attack", "Archer Precision", "Increase Archer's attack power", 
                                       Upgrade.Type.STAT_ATTACK, 0, 3, 14, 2, 180, 1.7));
-        archerUpgrades.add(new Upgrade("archer_speed", "Archer Agility", "Increase Archer's movement speed", 
-                                      Upgrade.Type.STAT_SPEED, 0, 3, 4, 1, 250, 2.0));
+        archerUpgrades.add(new Upgrade("archer_defense", "Archer Evasion", "Increase Archer's defense", 
+                                      Upgrade.Type.STAT_DEFENSE, 0, 3, 6, 2, 170, 1.6));
         archerUpgrades.add(new Upgrade("archer_mana", "Archer Focus", "Increase Archer's mana pool", 
                                       Upgrade.Type.STAT_MANA, 0, 3, 45, 8, 150, 1.5));
         upgradesByCharacter.put("Archer", archerUpgrades);
@@ -72,8 +72,8 @@ public final class UpgradeCatalog {
                                       Upgrade.Type.STAT_HP, 0, 3, 110, 25, 180, 1.6));
         rangerUpgrades.add(new Upgrade("ranger_attack", "Ranger Mastery", "Increase Ranger's attack power", 
                                       Upgrade.Type.STAT_ATTACK, 0, 3, 16, 3, 240, 1.8));
-        rangerUpgrades.add(new Upgrade("ranger_speed", "Ranger Swiftness", "Increase Ranger's movement speed", 
-                                      Upgrade.Type.STAT_SPEED, 0, 3, 5, 1, 300, 2.2));
+        rangerUpgrades.add(new Upgrade("ranger_defense", "Ranger Agility", "Increase Ranger's defense through agility", 
+                                      Upgrade.Type.STAT_DEFENSE, 0, 3, 8, 2, 200, 1.7));
         rangerUpgrades.add(new Upgrade("ranger_mana", "Ranger Focus", "Increase Ranger's mana pool", 
                                       Upgrade.Type.STAT_MANA, 0, 3, 55, 10, 200, 1.6));
         upgradesByCharacter.put("Ranger", rangerUpgrades);

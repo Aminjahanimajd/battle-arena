@@ -1,7 +1,7 @@
 package com.amin.battlearena.domain.abilities;
 
 import com.amin.battlearena.domain.model.Character;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
@@ -11,7 +11,7 @@ import com.amin.battlearena.infra.InvalidActionException;
 public final class ArcaneBurst extends AbstractAbility {
 
     public ArcaneBurst() {
-        super("Arcane Burst", "A powerful magical attack that ignores some defense", 5, 25);
+        super("Arcane Burst", "A powerful magical attack that ignores some defense", 5, 25, 3);
     }
 
     @Override
@@ -27,6 +27,11 @@ public final class ArcaneBurst extends AbstractAbility {
 
         if (target == null) {
             throw new InvalidActionException("No target for Arcane Burst");
+        }
+
+        // Check range
+        if (!isInRange(user, target)) {
+            throw new InvalidActionException("Target is out of range for Arcane Burst (max range: " + getRange() + ")");
         }
 
         // Spend mana first
@@ -45,5 +50,6 @@ public final class ArcaneBurst extends AbstractAbility {
         engine.log(user.getName() + " unleashes Arcane Burst on " + target.getName() + "!");
         engine.applyDamage(target, damage);
         startCooldown();
+        saveStateQuietly(engine);
     }
 }

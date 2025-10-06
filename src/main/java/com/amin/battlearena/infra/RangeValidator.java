@@ -3,7 +3,7 @@ package com.amin.battlearena.infra;
 import com.amin.battlearena.domain.model.Archer;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Ranger;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 
 /**
  * Validator that checks if the target is within range for ranged attacks.

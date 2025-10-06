@@ -1,7 +1,6 @@
 package com.amin.battlearena.persistence;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,19 +24,12 @@ import java.util.Optional;
  */
 public final class PlayerDAO {
 
-    private final String jdbcUrl;
-
     public PlayerDAO() {
-        this("jdbc:sqlite:battle_arena.db");
-    }
-
-    public PlayerDAO(String jdbcUrl) {
-        this.jdbcUrl = jdbcUrl;
         ensureSchema();
     }
 
     private Connection conn() throws SQLException {
-        return DriverManager.getConnection(jdbcUrl);
+        return Database.getConnection();
     }
 
     /** Ensure players table exists with columns: name PK, gold, unlocked_level, unlocked_levels */

@@ -11,7 +11,7 @@ import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Master;
 import com.amin.battlearena.domain.model.Position;
 import com.amin.battlearena.domain.model.Ranger;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
@@ -76,13 +76,117 @@ public final class HumanPlayer extends Player {
             }
 
             try {
-                switch (actionChoice) {
-                    case 1 -> { // Attack: choose target
+                if (actionChoice == 1) { // Attack: choose target
+                    var enemyAlive = engine.getOpponentOf(this).aliveTeam();
+                    if (enemyAlive.isEmpty()) {
+                        engine.log("No enemies to attack.");
+                        return;
+                    }
+                    System.out.println("Choose target:");
+                    for (int i = 0; i < enemyAlive.size(); i++) {
+                        var t = enemyAlive.get(i);
+                        System.out.printf("%d) %s %s%n", i + 1, t.getName(), t);
+                    }
+                    System.out.print("Target choice: ");
+                    
+                    if (!scanner.hasNextInt()) {
+                        engine.log("[Error] Please enter a valid number for target choice");
+                        scanner.nextLine(); // clear invalid input
+                        return;
+                    }
+                    
+                    int targetChoice = scanner.nextInt();
+                    if (targetChoice < 1 || targetChoice > enemyAlive.size()) {
+                        engine.log("[Error] Please enter a number between 1 and " + enemyAlive.size());
+                        return;
+                    }
+                    
+                    int tIdx = targetChoice - 1;
+                    new AttackAction().execute(engine, actor, enemyAlive.get(tIdx));
+                } else if (actionChoice == 2) {
+                    new DefendAction().execute(engine, actor, null);
+                } else if (actionChoice == 3) {
+                    // Movement with validation
+                    int maxMove = getMovementRange(actor);
+                    System.out.println(actor.getName() + " can move up to " + maxMove + " spaces");
+                    System.out.print("Enter new X: "); 
+                    if (!scanner.hasNextInt()) {
+                        engine.log("[Error] Please enter a valid number for X coordinate");
+                        scanner.nextLine(); // clear invalid input
+                        return;
+                    }
+                    int nx = scanner.nextInt();
+                    
+                    System.out.print("Enter new Y: "); 
+                    if (!scanner.hasNextInt()) {
+                        engine.log("[Error] Please enter a valid number for Y coordinate");
+                        scanner.nextLine(); // clear invalid input
+                        return;
+                    }
+                    int ny = scanner.nextInt();
+                    
+                    Position newPos = new Position(nx, ny);
+                    Position currentPos = actor.getPosition();
+                    
+                    // Validate movement distance
+                    int distance = currentPos.distanceTo(newPos);
+                    if (distance > maxMove) {
+                        engine.log("[Error] " + actor.getName() + " can only move " + maxMove + " spaces, not " + distance);
+                        return;
+                    }
+                    
+                    engine.move(actor, newPos);
+                } else if (actionChoice == 4) {
+                    // Use ability
+                    List<Ability> abilities = actor.getAbilities();
+                    if (abilities.isEmpty()) {
+                        engine.log(actor.getName() + " has no abilities.");
+                        return;
+                    }
+                    
+                    System.out.println("Available abilities:");
+                    for (int i = 0; i < abilities.size(); i++) {
+                        Ability ability = abilities.get(i);
+                        String status = ability.canUse(actor) ? "READY" : 
+                                      !ability.isReady() ? "COOLDOWN(" + ability.getRemainingCooldown() + ")" :
+                                      "NO MANA(" + ability.getManaCost() + ")";
+                        System.out.printf("%d) %s - %s [%s]%n", i + 1, ability.getName(), ability.getDescription(), status);
+                    }
+                    
+                    System.out.print("Choose ability: ");
+                    if (!scanner.hasNextInt()) {
+                        engine.log("[Error] Please enter a valid number for ability choice");
+                        scanner.nextLine(); // clear invalid input
+                        return;
+                    }
+                    
+                    int abilityChoice = scanner.nextInt();
+                    if (abilityChoice < 1 || abilityChoice > abilities.size()) {
+                        engine.log("[Error] Please enter a number between 1 and " + abilities.size());
+                        return;
+                    }
+                    
+                    Ability selectedAbility = abilities.get(abilityChoice - 1);
+                    
+                    if (!selectedAbility.canUse(actor)) {
+                        if (!selectedAbility.isReady()) {
+                            engine.log("[Error] " + selectedAbility.getName() + " is on cooldown");
+                        } else {
+                            engine.log("[Error] Not enough mana for " + selectedAbility.getName());
+                        }
+                        return;
+                    }
+                    
+                    // If ability needs a target, prompt for one
+                    if (selectedAbility.getName().contains("Attack") || selectedAbility.getName().contains("Strike") || 
+                        selectedAbility.getName().contains("Burst") || selectedAbility.getName().contains("Volley")) {
+                        
                         var enemyAlive = engine.getOpponentOf(this).aliveTeam();
                         if (enemyAlive.isEmpty()) {
-                            engine.log("No enemies to attack.");
+                            engine.log("No enemies to target.");
                             return;
                         }
+                        
                         System.out.println("Choose target:");
                         for (int i = 0; i < enemyAlive.size(); i++) {
                             var t = enemyAlive.get(i);
@@ -103,119 +207,10 @@ public final class HumanPlayer extends Player {
                         }
                         
                         int tIdx = targetChoice - 1;
-                        new AttackAction().execute(engine, actor, enemyAlive.get(tIdx));
-                    }
-                    case 2 -> {
-                        new DefendAction().execute(engine, actor, null);
-                    }
-                    case 3 -> {
-                        // Movement with validation
-                        int maxMove = getMovementRange(actor);
-                        System.out.println(actor.getName() + " can move up to " + maxMove + " spaces");
-                        System.out.print("Enter new X: "); 
-                        if (!scanner.hasNextInt()) {
-                            engine.log("[Error] Please enter a valid number for X coordinate");
-                            scanner.nextLine(); // clear invalid input
-                            return;
-                        }
-                        int nx = scanner.nextInt();
-                        
-                        System.out.print("Enter new Y: "); 
-                        if (!scanner.hasNextInt()) {
-                            engine.log("[Error] Please enter a valid number for Y coordinate");
-                            scanner.nextLine(); // clear invalid input
-                            return;
-                        }
-                        int ny = scanner.nextInt();
-                        
-                        Position newPos = new Position(nx, ny);
-                        Position currentPos = actor.getPosition();
-                        
-                        // Validate movement distance
-                        int distance = currentPos.distanceTo(newPos);
-                        if (distance > maxMove) {
-                            engine.log("[Error] " + actor.getName() + " can only move " + maxMove + " spaces, not " + distance);
-                            return;
-                        }
-                        
-                        engine.move(actor, newPos);
-                    }
-                    case 4 -> {
-                        // Use ability
-                        List<Ability> abilities = actor.getAbilities();
-                        if (abilities.isEmpty()) {
-                            engine.log(actor.getName() + " has no abilities.");
-                            return;
-                        }
-                        
-                        System.out.println("Available abilities:");
-                        for (int i = 0; i < abilities.size(); i++) {
-                            Ability ability = abilities.get(i);
-                            String status = ability.canUse(actor) ? "READY" : 
-                                          !ability.isReady() ? "COOLDOWN(" + ability.getRemainingCooldown() + ")" :
-                                          "NO MANA(" + ability.getManaCost() + ")";
-                            System.out.printf("%d) %s - %s [%s]%n", i + 1, ability.getName(), ability.getDescription(), status);
-                        }
-                        
-                        System.out.print("Choose ability: ");
-                        if (!scanner.hasNextInt()) {
-                            engine.log("[Error] Please enter a valid number for ability choice");
-                            scanner.nextLine(); // clear invalid input
-                            return;
-                        }
-                        
-                        int abilityChoice = scanner.nextInt();
-                        if (abilityChoice < 1 || abilityChoice > abilities.size()) {
-                            engine.log("[Error] Please enter a number between 1 and " + abilities.size());
-                            return;
-                        }
-                        
-                        Ability selectedAbility = abilities.get(abilityChoice - 1);
-                        
-                        if (!selectedAbility.canUse(actor)) {
-                            if (!selectedAbility.isReady()) {
-                                engine.log("[Error] " + selectedAbility.getName() + " is on cooldown");
-                            } else {
-                                engine.log("[Error] Not enough mana for " + selectedAbility.getName());
-                            }
-                            return;
-                        }
-                        
-                        // If ability needs a target, prompt for one
-                        if (selectedAbility.getName().contains("Attack") || selectedAbility.getName().contains("Strike") || 
-                            selectedAbility.getName().contains("Burst") || selectedAbility.getName().contains("Volley")) {
-                            
-                            var enemyAlive = engine.getOpponentOf(this).aliveTeam();
-                            if (enemyAlive.isEmpty()) {
-                                engine.log("No enemies to target.");
-                                return;
-                            }
-                            
-                            System.out.println("Choose target:");
-                            for (int i = 0; i < enemyAlive.size(); i++) {
-                                var t = enemyAlive.get(i);
-                                System.out.printf("%d) %s %s%n", i + 1, t.getName(), t);
-                            }
-                            System.out.print("Target choice: ");
-                            
-                            if (!scanner.hasNextInt()) {
-                                engine.log("[Error] Please enter a valid number for target choice");
-                                scanner.nextLine(); // clear invalid input
-                                return;
-                            }
-                            
-                            int targetChoice = scanner.nextInt();
-                            if (targetChoice < 1 || targetChoice > enemyAlive.size()) {
-                                engine.log("[Error] Please enter a number between 1 and " + enemyAlive.size());
-                                return;
-                            }
-                            
-                            int tIdx = targetChoice - 1;
-                            selectedAbility.activate(actor, enemyAlive.get(tIdx), engine);
-                        } else {
-                            // Self-targeting ability
-                            selectedAbility.activate(actor, null, engine);
-                        }
+                        selectedAbility.activate(actor, enemyAlive.get(tIdx), engine);
+                    } else {
+                        // Self-targeting ability
+                        selectedAbility.activate(actor, null, engine);
                     }
                 }
             } catch (InvalidActionException | DeadCharacterException ex) {

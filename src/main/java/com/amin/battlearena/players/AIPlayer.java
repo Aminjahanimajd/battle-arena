@@ -1,7 +1,7 @@
 package com.amin.battlearena.players;
 
-import com.amin.battlearena.engine.AIStrategy;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.ai.AIStrategy;
+import com.amin.battlearena.engine.core.GameEngine;
 
 /**
  * Simple AI player delegating decision-making to an AIStrategy.

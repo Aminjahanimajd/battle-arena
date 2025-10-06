@@ -16,7 +16,7 @@ public final class Mage extends Character {
 
     @Override
     protected int calculateBaseDamage() {
-        return 1;
+        return 6; // Increased from 1 for better combat balance - mages hit hard but are fragile
     }
 
     /**

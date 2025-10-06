@@ -10,13 +10,13 @@ import com.amin.battlearena.domain.abilities.DoubleShot;
 public final class Archer extends Character {
 
     public Archer(String name, Position position) {
-        super(name, new Stats(90, 14, 6, 4, 3), position, 45, 5, 20);
+        super(name, new Stats(90, 14, 6, 3), position, 45, 5, 20);
         addAbility(new DoubleShot());
     }
 
     @Override
     protected int calculateBaseDamage() {
-        return 2;
+        return 4; // Increased from 2 for better combat balance
     }
 
     /**

@@ -32,12 +32,18 @@ public final class ShopService {
         if (opt.isEmpty()) return false;
         Character c = opt.get();
 
-        switch (statKey.toLowerCase()) {
-            case "hp" -> c.getStats().modifyMaxHp(delta);
-            case "attack" -> c.getStats().modifyAttack(delta);
-            case "defense" -> c.getStats().modifyDefense(delta);
-            case "speed" -> c.getStats().modifySpeed(delta);
-            default -> throw new IllegalArgumentException("Unknown stat: " + statKey);
+        String lowerStatKey = statKey.toLowerCase(java.util.Locale.ROOT);
+        if ("hp".equals(lowerStatKey)) {
+            c.getStats().modifyMaxHp(delta);
+        } else if ("attack".equals(lowerStatKey)) {
+            c.getStats().modifyAttack(delta);
+        } else if ("defense".equals(lowerStatKey)) {
+            c.getStats().modifyDefense(delta);
+        } else if ("range".equals(lowerStatKey)) {
+            c.getStats().setRange(Math.max(1, c.getStats().getRange() + delta));
+            // 'speed' removed: movement per turn replaces speed concept
+        } else {
+            throw new IllegalArgumentException("Unknown stat: " + statKey);
         }
 
         // persist/update player's gold (basic example: overwrite with decreased gold)
@@ -54,7 +60,7 @@ public final class ShopService {
         Character c = opt.get();
 
         Ability ability = AbilityFactory.create(abilityKey);
-        if (ability == null) return false;
+        if (ability == null) return false; // keep single check in case factory returns null for unknown keys
         c.addAbility(ability);
 
         playerDao.createOrUpdatePlayer(playerName, Math.max(0, getPlayerGold(playerName) - cost), 1);

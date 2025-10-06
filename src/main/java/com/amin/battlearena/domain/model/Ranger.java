@@ -10,13 +10,13 @@ import com.amin.battlearena.domain.abilities.PiercingVolley;
 public final class Ranger extends Character {
 
     public Ranger(String name, Position position) {
-        super(name, new Stats(110, 16, 8, 5, 4), position, 55, 6, 30);
+        super(name, new Stats(110, 16, 8, 4), position, 55, 6, 30);
         addAbility(new PiercingVolley());
     }
 
     @Override
     protected int calculateBaseDamage() {
-        return 3;
+        return 5; // Increased from 3 for better combat balance
     }
 
     /**

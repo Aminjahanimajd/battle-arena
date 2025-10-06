@@ -1,7 +1,7 @@
 package com.amin.battlearena.infra;
 
 import com.amin.battlearena.domain.model.Character;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 
 /**
  * Validator that checks if the target is valid for the action.

@@ -1,10 +1,11 @@
 package com.amin.battlearena.domain.actions;
 
-import com.amin.battlearena.engine.GameEngine;
+import java.util.Objects;
+
+import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
-import com.amin.battlearena.domain.model.Character;
-import java.util.Objects;
 
 /**
  * Simple defend action: grants temporary defense to the actor (one-turn buff).
@@ -27,5 +28,11 @@ public final class DefendAction implements Action {
 
         actor.addTemporaryDefense(defenseAmount);
         engine.log(actor.getName() + " defends and gains +" + defenseAmount + " temporary defense.");
+        try {
+            engine.getCaretaker().saveState(engine);
+        } catch (Throwable t) {
+            // non-fatal but log at a low level for diagnostics
+            engine.log("Save state after defend failed: " + t.getMessage());
+        }
     }
 }

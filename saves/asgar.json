@@ -1,0 +1,60 @@
+{
+  "playerName": "asgar",
+  "gold": 1000,
+  "upgrades": {
+    "Spell Power": 0,
+    "Armor Boost": 0,
+    "Swift Steps": 0,
+    "Quick Cast": 0,
+    "Eagle Eye": 0,
+    "Precision Shot": 0,
+    "Mana Pool": 0,
+    "Health Boost": 0,
+    "Attack Power": 0
+  },
+  "upgradeCosts": {
+    "Spell Power": 250,
+    "Armor Boost": 175,
+    "Swift Steps": 220,
+    "Quick Cast": 350,
+    "Eagle Eye": 180,
+    "Precision Shot": 300,
+    "Mana Pool": 160,
+    "Health Boost": 150,
+    "Attack Power": 200
+  },
+  "settings": {
+    "gameHintsEnabled": true,
+    "masterVolume": 70.0,
+    "fullScreenMode": false,
+    "musicEnabled": true,
+    "dialogueEnabled": true,
+    "language": "English",
+    "musicVolume": 60.0,
+    "soundEnabled": true,
+    "sfxVolume": 80.0
+  },
+  "currentLevel": 1,
+  "victories": 0,
+  "levelCompleted": {},
+  "accountId": "asgar_1756895974286",
+  "createdAt": 1756895974289,
+  "lastLoginAt": 1756895978976,
+  "totalPlayTime": 0,
+  "statistics": {
+    "battlesLost": 0,
+    "totalDamageDealt": 0,
+    "goldEarned": 0,
+    "totalDamageTaken": 0,
+    "upgradesPurchased": 0,
+    "abilitiesUsed": 0,
+    "battlesWon": 0
+  },
+  "purchasedUpgrades": {},
+  "upgradeTimestamps": {},
+  "consumables": {
+    "health_potion": 3,
+    "strength_elixir": 1,
+    "mana_potion": 2
+  }
+}

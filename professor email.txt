@@ -1,0 +1,45 @@
+Dear Mohammadamin
+a game is perfect for OOP.
+OOP paradigm is, indeed, bottom-up, and is meant for distributed patterns like simulations, games , graphical apps, p2p systems, social networks, event driven programming, where different multiple entities interact with each other directly rather than centralized ones like repository model based (DB and similar like yours).
+However, in a game/simulation, especially in non graphical ones,  I usually ask to implement   customization, adding multiple (new)  elements, rules, enemies, obstacles, weapons, bonuses, scenarios, levels, ...  
+In particular if you don't implement a GUI I expect a quite rich and complex  logic, full of entities, customizable objects and elements as above and even customizable rules.
+
+
+The guidelines and requirements for the OOP project are:
+1.	150 hr/student.
+2.	implementing ALL OOP concepts in a proper and meaningful way, including
+a.	encapsulation, inf. hiding, inheritance, composition, abstraction, subtyping (multityping with interface), all kinds of polimorphism (coercion, overloading, parametric, by inclusion), exception handling, extensibility, ...
+3.	avoid LLM and vibe-coding 
+4.	Only Java, any other language is not  allowed.
+5.	Once you have implement your prj, you have to write down a report with a section for each of such oop properties, describing the properties by examples and code snippets taken from the implementation, properly describing and motivating your choice. Add a section also describing the game logic and your extensions/customization.
+6.	You have to propose an idea, preferably be email, and submit it to me. Don't start implementing anything before my proposal acknowledgment.
+7.	I will not be able to do the code inspection by email, but a DEEP code inspection will be done during the oral exam and you need to know any single line of code of your program, as well as the OOP theory behind this, otherwise you will FAIL the exam without any further question. It is also possible you will be asked to modify the code during the exam.
+8.	Therefore for the exam you need to BYOD (bring your own device) to show your working project and code.
+9.	To be considered for the exam you must deliver the project with the report AT LEAST  5 WORKING DAYS/1WEEK BEFORE THE EXAM DATE 
+10.	In ALL your emails: 
+a.	Use ONLY the Institutional email (@studenti.unime.it)
+b.	put all the other team members (if any) in cc
+c.	ALWAYS keep the SAME  thread for all future emails.
+11.	Independence is a parameter affecting the assessment
+The slides online, on moodle provide further info on that.
+Try to revise your proposal accordingly and send me a refined idea highlighting your extensions and customizability features.
+BR
+  SD 
+
+
+Dr. Salvatore Distefano
+Professor
+Dipartimento di Scienze Matematiche e Informatiche, Scienze Fisiche e Scienze della Terra - MIFT
+University of Messina
+Viale F. Stagno d'Alcontres, 31 98166 Messina, Italy
+________________________________________
+From: MOHAMMADAMIN JAHANIMAJD 557910 <mohammadamin.jahanimajd@studenti.unime.it>
+Sent: Sunday, August 17, 2025 1:34 PM
+To: Salvatore Distefano <salvatore.distefano@unime.it>
+Subject: project proposal
+ 
+Dear Professor Distefano,
+
+I am Mohammadamin Jahanimajd (ID: 557910), a second-year student, and I would like to propose a project related to video games for the final exam of the Object-Oriented Programming course. My chosen subject is Battle Arena ( a turn-based strategy game ) , and I plan to implement it using OOP concepts in Java. I intend to work on this project alone. Would this be acceptable?
+
+Best regards,

@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.amin.battlearena.economy.Wallet;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * PlayerProgress holds the persistent bits of a player's state:
@@ -17,6 +18,7 @@ import com.amin.battlearena.economy.Wallet;
  * This is a plain data object with mutation helpers used by ProgressService
  * and other higher-level services.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class PlayerProgress implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,12 +34,15 @@ public final class PlayerProgress implements Serializable {
     }
 
     public String playerId() { return playerId; }
+    public String getPlayerId() { return playerId; }
     public void setPlayerId(String id) { this.playerId = Objects.requireNonNull(id, "playerId"); }
 
     public Wallet wallet() { return wallet; }
+    public Wallet getWallet() { return wallet; }
 
     /** Return an immutable view of unlocked levels. */
     public Set<String> unlockedLevels() { return Collections.unmodifiableSet(unlockedLevels); }
+    public Set<String> getUnlockedLevels() { return Collections.unmodifiableSet(unlockedLevels); }
 
     /** Add a level id (e.g., "L03"). */
     public void unlockLevel(String levelId) {

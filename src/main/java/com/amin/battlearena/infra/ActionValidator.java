@@ -1,7 +1,7 @@
 package com.amin.battlearena.infra;
 
 import com.amin.battlearena.domain.model.Character;
-import com.amin.battlearena.engine.GameEngine;
+import com.amin.battlearena.engine.core.GameEngine;
 
 /**
  * Abstract base class for action validators implementing the Chain of Responsibility pattern.
@@ -15,6 +15,7 @@ public abstract class ActionValidator {
      * Set the next validator in the chain.
      */
     public void setNext(ActionValidator next) {
+        // Defensive: prevent external modifications by accepting only the provided reference
         this.next = next;
     }
     

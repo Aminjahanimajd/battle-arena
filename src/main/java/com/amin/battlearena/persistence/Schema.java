@@ -10,10 +10,10 @@ public final class Schema {
         try (Connection conn = Database.getConnection(); Statement st = conn.createStatement()) {
             st.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS player(
-                  player_id TEXT PRIMARY KEY,
-                  gold INTEGER NOT NULL,
-                  unlocked_level INTEGER NOT NULL,
-                  last_played TEXT
+                  name TEXT PRIMARY KEY,
+                  gold INTEGER DEFAULT 0,
+                  unlocked_level INTEGER DEFAULT 1,
+                  unlocked_levels TEXT DEFAULT ''
                 );
             """);
             st.executeUpdate("""
@@ -24,7 +24,6 @@ public final class Schema {
                   hp INTEGER NOT NULL,
                   attack INTEGER NOT NULL,
                   defense INTEGER NOT NULL,
-                  speed INTEGER NOT NULL,
                   abilities TEXT,
                   PRIMARY KEY(player_id, character_name)
                 );

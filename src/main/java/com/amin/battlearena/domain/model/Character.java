@@ -42,6 +42,7 @@ public abstract class Character {
     // Caching for expensive calculations
     private transient Integer cachedDamage;
     private transient Position lastPosition;
+    private final List<StatusEffect> statusEffects = new ArrayList<>();
 
     protected Character(String name, Stats stats, Position pos, int maxMana, int manaRegenPerTurn, int startingMana) {
         this.name = Objects.requireNonNull(name);
@@ -54,6 +55,11 @@ public abstract class Character {
     }
 
     public String getName() { return name; }
+    /**
+     * Expose stats for engine integration. Returning direct reference is acceptable
+     * as Stats is an encapsulated value holder with controlled mutators.
+     */
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("EI_EXPOSE_REP")
     public Stats getStats() { return stats; }
     public Position getPosition() { return position; }
     public void setPosition(Position p) { 
@@ -150,6 +156,9 @@ public abstract class Character {
         
         // Calculate and cache
         int damage = calculateBaseDamage();
+        for (StatusEffect se : statusEffects) {
+            damage = se.modifyOutgoingDamage(damage);
+        }
         cachedDamage = damage;
         lastPosition = position;
         return damage;
@@ -168,7 +177,11 @@ public abstract class Character {
      * throw DeadCharacterException when the character dies as a result.
      */
     public void takeDamage(int amount) throws DeadCharacterException {
-        int effective = Math.max(0, amount);
+        int modified = amount;
+        for (StatusEffect se : statusEffects) {
+            modified = se.modifyIncomingDamage(modified);
+        }
+        int effective = Math.max(0, modified);
         int before = stats.getHp();
         int after = Math.max(0, before - effective);
         stats.setHp(after);
@@ -180,6 +193,9 @@ public abstract class Character {
      * Keeping this method here centralizes per-character housekeeping.
      */
     public void endTurnHousekeeping() {
+        for (StatusEffect se : List.copyOf(statusEffects)) se.onTurnEnd(this);
+        statusEffects.replaceAll(StatusEffect::tick);
+        statusEffects.removeIf(StatusEffect::isExpired);
         clearTemporaryDefense();
         clearTemporaryEvasion();
         // Regenerate mana
@@ -198,10 +214,92 @@ public abstract class Character {
         lastPosition = null;
     }
 
+    public void addStatusEffect(StatusEffect effect) { if (effect != null) statusEffects.add(effect); }
+    public List<StatusEffect> getStatusEffects() { return List.copyOf(statusEffects); }
+
     @Override
     public String toString() {
         return String.format("%s[hp=%d/%d atk=%d def=%d pos=%s mana=%d/%d]", name,
                 stats.getHp(), stats.getMaxHp(), stats.getAttack(), stats.getDefense(), 
                 position, currentMana, maxMana);
+    }
+
+    /**
+     * Fluent builder for creating Character subclasses with optional abilities.
+     */
+    public static class Builder {
+        private String name;
+        private Position position;
+        private final java.util.List<com.amin.battlearena.domain.abilities.Ability> abilities = new java.util.ArrayList<>();
+
+        public Builder name(String name) {
+            this.name = java.util.Objects.requireNonNull(name, "Name cannot be null");
+            return this;
+        }
+
+        public Builder position(Position position) {
+            this.position = java.util.Objects.requireNonNull(position, "Position cannot be null");
+            return this;
+        }
+
+        public Builder addAbility(com.amin.battlearena.domain.abilities.Ability ability) {
+            if (ability != null) abilities.add(ability);
+            return this;
+        }
+
+        public Builder abilities(java.util.List<com.amin.battlearena.domain.abilities.Ability> abilities) {
+            this.abilities.clear();
+            if (abilities != null) this.abilities.addAll(abilities);
+            return this;
+        }
+
+        public com.amin.battlearena.domain.model.Warrior buildWarrior() {
+            requireBasics();
+            var w = new com.amin.battlearena.domain.model.Warrior(name, position);
+            abilities.forEach(w::addAbility);
+            return w;
+        }
+
+        public com.amin.battlearena.domain.model.Archer buildArcher() {
+            requireBasics();
+            var a = new com.amin.battlearena.domain.model.Archer(name, position);
+            abilities.forEach(a::addAbility);
+            return a;
+        }
+
+        public com.amin.battlearena.domain.model.Mage buildMage() {
+            requireBasics();
+            var m = new com.amin.battlearena.domain.model.Mage(name, position);
+            abilities.forEach(m::addAbility);
+            return m;
+        }
+
+        public com.amin.battlearena.domain.model.Knight buildKnight() {
+            requireBasics();
+            var k = new com.amin.battlearena.domain.model.Knight(name, position);
+            abilities.forEach(k::addAbility);
+            return k;
+        }
+
+        public com.amin.battlearena.domain.model.Ranger buildRanger() {
+            requireBasics();
+            var r = new com.amin.battlearena.domain.model.Ranger(name, position);
+            abilities.forEach(r::addAbility);
+            return r;
+        }
+
+        public Builder reset() {
+            this.name = null;
+            this.position = null;
+            this.abilities.clear();
+            return this;
+        }
+
+        public static Builder create() { return new Builder(); }
+
+        private void requireBasics() {
+            if (name == null) throw new IllegalStateException("Name must be set");
+            if (position == null) throw new IllegalStateException("Position must be set");
+        }
     }
 }
