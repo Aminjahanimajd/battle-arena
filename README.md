@@ -53,29 +53,143 @@ This project emphasizes **clean design** and **software engineering best practic
 ---
 
 ## 📂 Project Structure
+```
 battle-arena/
+├── pom.xml                           # Maven configuration with JavaFX
+├── battle_arena.db                   # SQLite database for game state
+├── FEATURES.md                       # Detailed feature showcase
+├── README.md                         # This file
+├── saves/                           # Player save files
+│   ├── amin.json                    # Player progress data
+│   └── *.json                       # Additional player saves
+└── src/
+    ├── main/
+    │   ├── java/com/amin/battlearena/
+    │   │   ├── uifx/                    # JavaFX GUI Implementation
+    │   │   │   ├── MainApp.java         # JavaFX Application entry point
+    │   │   │   ├── GameLauncher.java    # Game launcher utility
+    │   │   │   ├── controller/          # FXML Controllers
+    │   │   │   │   ├── GameController.java      # Main game logic
+    │   │   │   │   ├── MainMenuController.java  # Main menu
+    │   │   │   │   ├── CampaignController.java  # Campaign mode
+    │   │   │   │   ├── ShopController.java      # Shop system
+    │   │   │   │   ├── CombatActionHandler.java # Combat mechanics
+    │   │   │   │   └── TurnFlowHandler.java     # Turn management
+    │   │   │   ├── handler/             # UI Logic Handlers
+    │   │   │   │   ├── BoardRenderHandler.java  # Game board rendering
+    │   │   │   │   ├── AbilityUIHandler.java    # Ability interface
+    │   │   │   │   ├── ShopUIHandler.java       # Shop interface
+    │   │   │   │   └── CharacterAnimationHandler.java
+    │   │   │   ├── util/                # UI Utilities
+    │   │   │   │   ├── CharacterRenderer.java   # Character visuals
+    │   │   │   │   └── VisualEffectsManager.java
+    │   │   │   └── rendering/           # Advanced Rendering
+    │   │   │       ├── CharacterAnimator.java
+    │   │   │       └── CharacterDesigner.java
+    │   │   │
+    │   │   ├── domain/                  # Core Game Logic
+    │   │   │   ├── model/               # Game Entities
+    │   │   │   │   ├── Character.java   # Base character class
+    │   │   │   │   ├── Warrior.java     # Character classes
+    │   │   │   │   ├── Mage.java        # with unique abilities
+    │   │   │   │   ├── Archer.java      # and mana systems
+    │   │   │   │   ├── Knight.java
+    │   │   │   │   ├── Ranger.java
+    │   │   │   │   ├── Master.java
+    │   │   │   │   ├── Stats.java       # Character statistics
+    │   │   │   │   ├── Board.java       # Game board
+    │   │   │   │   └── Position.java    # Grid positioning
+    │   │   │   │
+    │   │   │   ├── abilities/           # Character Abilities
+    │   │   │   │   ├── Ability.java     # Base ability interface
+    │   │   │   │   ├── ArcaneBurst.java # Mage abilities
+    │   │   │   │   ├── PowerStrike.java # Warrior abilities
+    │   │   │   │   └── DoubleShot.java  # Archer abilities
+    │   │   │   │
+    │   │   │   ├── actions/             # Game Actions
+    │   │   │   │   ├── Action.java      # Base action interface
+    │   │   │   │   ├── AttackAction.java
+    │   │   │   │   └── UseConsumableAction.java
+    │   │   │   │
+    │   │   │   ├── items/               # Consumable Items
+    │   │   │   │   ├── Consumable.java  # Base item interface
+    │   │   │   │   ├── HealthPotion.java
+    │   │   │   │   └── ManaPotion.java
+    │   │   │   │
+    │   │   │   └── level/               # Level System
+    │   │   │       ├── LevelSpec.java   # Level definitions
+    │   │   │       └── LevelRepository.java
+    │   │   │
+    │   │   ├── engine/                  # Game Engine
+    │   │   │   ├── core/                # Core Engine Systems
+    │   │   │   │   ├── GameEngine.java  # Main game engine
+    │   │   │   │   ├── GameState.java   # Game state management
+    │   │   │   │   └── TurnManager.java # Turn-based logic
+    │   │   │   ├── ai/                  # AI System
+    │   │   │   │   ├── AIStrategy.java  # AI behavior interface
+    │   │   │   │   └── SimpleAIStrategy.java
+    │   │   │   └── events/              # Event System
+    │   │   │       ├── EventPublisher.java
+    │   │   │       └── GameEventListener.java
+    │   │   │
+    │   │   ├── economy/                 # Economy System
+    │   │   │   ├── Shop.java           # Shop mechanics
+    │   │   │   ├── EconomyManager.java # Economy logic
+    │   │   │   └── UpgradeCatalog.java # Available upgrades
+    │   │   │
+    │   │   ├── persistence/             # Data Persistence
+    │   │   │   ├── Database.java       # Database connection
+    │   │   │   ├── PlayerDAO.java      # Player data access
+    │   │   │   └── PlayerDataManager.java
+    │   │   │
+    │   │   └── players/                 # Player Management
+    │   │       ├── Player.java         # Base player class
+    │   │       ├── HumanPlayer.java    # Human player
+    │   │       ├── AIPlayer.java       # AI player
+    │   │       └── Inventory.java      # Player inventory
+    │   │
+    │   └── resources/
+    │       ├── application.properties   # App configuration
+    │       ├── balance.json            # Game balance data
+    │       ├── audio/                  # Sound Effects & Music
+    │       │   ├── music/              # Background music
+    │       │   └── sfx/                # Sound effects
+    │       ├── com/amin/battlearena/
+    │       │   └── levels/             # Level definitions
+    │       │       └── Levels.json     # Campaign levels
+    │       └── uifx/                   # JavaFX Resources
+    │           ├── styles.css          # Application styling
+    │           ├── main_menu.fxml      # Main menu layout
+    │           ├── game.fxml           # Game interface
+    │           ├── campaign.fxml       # Campaign selection
+    │           ├── shop.fxml           # Shop interface
+    │           ├── signin.fxml         # Player signin
+    │           └── help.fxml           # Help screen
+    │
+    └── test/java/                      # Unit Tests
+        └── com/amin/battlearena/
+            ├── engine/                 # Engine tests
+            └── persistence/            # Database tests
+```
 
-├── pom.xml # Maven configuration
+---
 
-├── src/
+## 🏗️ **Architecture Overview**
 
-│ ├── main/java/com/amin/battlearena/
+### **Core Modules**
+- **`uifx/`**: Complete JavaFX GUI implementation with FXML controllers
+- **`domain/`**: Business logic and game entities (character classes, abilities, items)
+- **`engine/`**: Game engine with AI, events, and core game mechanics
+- **`economy/`**: Shop system, upgrades, and gold management
+- **`persistence/`**: SQLite database integration for save/load functionality
+- **`players/`**: Player management with inventory and progression systems
 
-│ │ ├── Game.java # Entry point
-
-│ │ ├── model/ # Entities: Hero, Monster, Unit, Arena
-
-│ │ ├── service/ # Battle logic, turn management
-
-│ │ ├── ui/ # Console UI (later: GUI)
-
-│ │ └── util/ # Helpers, factories
-
-│ └── test/java/... # Unit tests
-
-├── .gitignore
-
-└── README.md
+### **Key Design Patterns**
+- **MVC Pattern**: Clean separation between UI (FXML), Controllers, and Models
+- **Factory Pattern**: Character creation and ability instantiation
+- **Strategy Pattern**: AI behavior and combat calculations
+- **Observer Pattern**: Event-driven updates for UI and game state
+- **Command Pattern**: Action system for game mechanics
 
 ---
 
