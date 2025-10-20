@@ -536,9 +536,35 @@
 
 /* Description Styles */
 .consumable-description {
-    -fx-text-fill: #CCCCCC; /* Light gray for descriptions */
+    -fx-text-fill: #000000; /* Dark text for readability on light backgrounds */
     -fx-font-size: 10px;
     -fx-wrap-text: true;
+}
+
+/* Tab description and item description should also be dark on light backgrounds */
+.tab-description {
+    -fx-text-fill: #000000; /* Dark note text */
+    -fx-font-size: 14px;
+}
+
+.item-desc {
+    -fx-text-fill: #000000; /* Dark item descriptions */
+}
+
+/* Item icon and name styles for consumable cards */
+.item-icon-large {
+    -fx-font-size: 24px; /* match FXML font size */
+    -fx-text-fill: #000000; /* Dark icon color for visibility */
+}
+
+.item-name {
+    -fx-text-fill: #000000; /* Dark item name */
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.item-price {
+    -fx-text-fill: #1a202c; /* Dark price text for contrast */
 }
 
 /* Use Consumable Button */
