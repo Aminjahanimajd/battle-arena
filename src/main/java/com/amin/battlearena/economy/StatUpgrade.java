@@ -3,9 +3,7 @@ package com.amin.battlearena.economy;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Stats;
 
-/**
- * Simple stat upgrades that work with the existing Stats API.
- */
+// Simple stat upgrades that work with the existing Stats API
 public final class StatUpgrade {
 
     private final int hpPlus;

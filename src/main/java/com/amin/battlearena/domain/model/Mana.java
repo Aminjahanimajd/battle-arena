@@ -1,8 +1,6 @@
 package com.amin.battlearena.domain.model;
 
-/**
- * Simple mana value object encapsulating mana pool behavior.
- */
+// Mana pool value object
 public final class Mana {
     private int current;
     private final int max;
@@ -18,10 +16,8 @@ public final class Mana {
     public int getMax() { return max; }
     public int getRegenPerTurn() { return regenPerTurn; }
 
-    /** Check if there is enough mana for a cost. */
     public boolean isEnough(int cost) { return current >= Math.max(0, cost); }
 
-    /** Try to use mana; returns true if successful. */
     public boolean useMana(int amount) {
         int a = Math.max(0, amount);
         if (current < a) return false;
@@ -29,12 +25,10 @@ public final class Mana {
         return true;
     }
 
-    /** Regenerate per-turn amount up to max. */
     public void regen() {
         current = Math.min(max, current + regenPerTurn);
     }
 
-    /** Restore a specific amount up to max. */
     public void restore(int amount) {
         if (amount <= 0) return;
         current = Math.min(max, current + amount);

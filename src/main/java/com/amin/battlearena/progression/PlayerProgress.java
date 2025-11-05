@@ -9,15 +9,7 @@ import java.util.Set;
 import com.amin.battlearena.economy.Wallet;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/**
- * PlayerProgress holds the persistent bits of a player's state:
- * - playerId (name)
- * - wallet (gold)
- * - unlockedLevels (set of level IDs such as "L01", "L02")
- *
- * This is a plain data object with mutation helpers used by ProgressService
- * and other higher-level services.
- */
+// PlayerProgress holds persistent player state: playerId, wallet, unlockedLevels
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class PlayerProgress implements Serializable {
 

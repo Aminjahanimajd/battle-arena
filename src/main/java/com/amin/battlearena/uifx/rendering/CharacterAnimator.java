@@ -7,20 +7,9 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-/**
- * CharacterAnimator handles action animations for character nodes.
- * 
- * Responsibilities:
- * - Attack animations (thrust movements)
- * - Ability animations (scaling, glowing effects)
- * - Movement animations (smooth gliding)
- * - Death animations (delegated to VisualEffectsManager)
- */
+// CharacterAnimator handles action animations for character nodes
 public class CharacterAnimator {
     
-    /**
-     * Show character action animation based on action type
-     */
     public static void showActionAnimation(StackPane characterNode, String actionType) {
         if (actionType == null) {
             return;

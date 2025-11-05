@@ -1,14 +1,11 @@
 package com.amin.battlearena.uifx.handler;
 
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-/**
- * Handles UI state management for game interaction modes
- * Follows Single Responsibility Principle by managing UI state only
- */
+// Handles UI state management for game interaction modes
 public class UIStateHandler {
     
     private final VBox informationContainer;
@@ -20,25 +17,16 @@ public class UIStateHandler {
         updateDisplay();
     }
     
-    /**
-     * Sets current interaction mode
-     */
     public void setMode(String mode) {
         this.currentMode = mode;
         updateDisplay();
     }
     
-    /**
-     * Sets status message
-     */
     public void setStatusMessage(String message) {
         this.statusMessage = message;
         updateDisplay();
     }
     
-    /**
-     * Updates the information display based on current state
-     */
     private void updateDisplay() {
         if (informationContainer != null) {
             informationContainer.getChildren().clear();
@@ -64,9 +52,6 @@ public class UIStateHandler {
         }
     }
     
-    /**
-     * Gets instructions for current mode
-     */
     private String getModeInstructions() {
         return switch (currentMode) {
             case "SELECT" -> "Click on a character to select them";
@@ -78,23 +63,14 @@ public class UIStateHandler {
         };
     }
     
-    /**
-     * Gets current mode
-     */
     public String getCurrentMode() {
         return currentMode;
     }
     
-    /**
-     * Checks if in specific mode
-     */
     public boolean isInMode(String mode) {
         return currentMode.equals(mode);
     }
     
-    /**
-     * Resets to default select mode
-     */
     public void resetToSelectMode() {
         setMode("SELECT");
         setStatusMessage("Select a character to start");

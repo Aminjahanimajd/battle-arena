@@ -11,13 +11,7 @@ import com.amin.battlearena.domain.model.Position;
 import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.players.Player;
 
-/**
- * Enhanced AI strategy that properly handles abilities and range checking:
- * - selects first alive character
- * - tries to use abilities if in range and has mana
- * - if it can attack a reachable enemy (for archer considers range), it attacks weakest in range
- * - otherwise it moves towards nearest enemy (one step)
- */
+// Enhanced AI strategy that properly handles abilities and range checking
 public final class SimpleAIStrategy implements AIStrategy {
 
     @Override

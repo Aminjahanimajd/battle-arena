@@ -7,10 +7,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
 
-/**
- * Strategy pattern implementation for highlight effects
- * Follows OOP principle of polymorphism and strategy design pattern
- */
+// Strategy pattern implementation for highlight effects
 public abstract class HighlightEffect {
     
     protected final Color color;
@@ -23,9 +20,6 @@ public abstract class HighlightEffect {
         this.spread = spread;
     }
     
-    /**
-     * Template method pattern - defines the algorithm structure
-     */
     public final void apply(Node target) {
         if (target == null) return;
         
@@ -39,9 +33,6 @@ public abstract class HighlightEffect {
         }
     }
     
-    /**
-     * Factory method pattern - subclasses define specific effect creation
-     */
     protected DropShadow createEffect() {
         DropShadow effect = new DropShadow();
         effect.setBlurType(BlurType.GAUSSIAN);
@@ -59,26 +50,14 @@ public abstract class HighlightEffect {
         return effect;
     }
     
-    /**
-     * Template method - subclasses define animation behavior
-     */
     protected abstract Timeline createAnimation(DropShadow effect);
     
-    /**
-     * Template method - subclasses define their unique key
-     */
     protected abstract String getEffectKey();
     
-    /**
-     * Hook method - subclasses can override
-     */
     protected boolean shouldAddInnerGlow() {
         return true;
     }
     
-    /**
-     * Removes the effect from target
-     */
     public void remove(Node target) {
         if (target == null) return;
         

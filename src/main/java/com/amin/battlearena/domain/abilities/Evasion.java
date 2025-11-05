@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Master ability: grants temporary evasion chance.
- */
+// Master ability: grants temporary evasion chance
 public final class Evasion extends AbstractAbility {
 
     public Evasion() {

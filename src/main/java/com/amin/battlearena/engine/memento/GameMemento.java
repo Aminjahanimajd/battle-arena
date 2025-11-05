@@ -9,10 +9,7 @@ import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
 import com.amin.battlearena.players.Player;
 
-/**
- * Memento class for saving and restoring game state.
- * Implements the Memento pattern for undo/redo functionality.
- */
+// Memento class for saving and restoring game state
 public final class GameMemento {
     
     // Original shallow references kept for backward compatibility/logging
@@ -65,10 +62,7 @@ public final class GameMemento {
                            timestamp);
     }
 
-    /**
-     * Minimal immutable snapshot of a character's mutable state
-     * used for undo/redo. We avoid cloning abilities/state effects for simplicity.
-     */
+    // Minimal immutable snapshot of a character's mutable state for undo/redo
     public static final class CharacterSnapshot {
         public final String name;
         public final int x;

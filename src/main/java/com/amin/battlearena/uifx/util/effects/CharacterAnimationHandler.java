@@ -11,15 +11,9 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-/**
- * Handles character-specific animations using delegation pattern
- * Separates animation concerns from main VisualEffectsManager
- */
+// Handles character-specific animations using delegation pattern
 public class CharacterAnimationHandler {
     
-    /**
-     * Hit effect with screen shake and red flash
-     */
     public void performHitAnimation(Node character) {
         if (character == null) return;
         
@@ -47,9 +41,6 @@ public class CharacterAnimationHandler {
         delay.play();
     }
     
-    /**
-     * Death animation with fade and scale
-     */
     public void performDeathAnimation(Node character) {
         if (character == null) return;
         
@@ -76,9 +67,6 @@ public class CharacterAnimationHandler {
         deathAnimation.play();
     }
     
-    /**
-     * Ability casting animation with color-coded effects
-     */
     public void performCastAnimation(Node caster, String abilityType) {
         if (caster == null) return;
         
@@ -103,9 +91,6 @@ public class CharacterAnimationHandler {
         castScale.play();
     }
     
-    /**
-     * Level up celebration animation
-     */
     public void performLevelUpAnimation(Node character) {
         if (character == null) return;
         
@@ -135,9 +120,6 @@ public class CharacterAnimationHandler {
         levelUpAnimation.play();
     }
     
-    /**
-     * Selection highlight effect
-     */
     public void performSelectionAnimation(Node target) {
         if (target == null) return;
         
@@ -150,9 +132,6 @@ public class CharacterAnimationHandler {
         target.getProperties().put("selection_highlight", selection);
     }
     
-    /**
-     * Clear selection highlight
-     */
     public void clearSelectionAnimation(Node target) {
         if (target == null) return;
         
@@ -162,10 +141,7 @@ public class CharacterAnimationHandler {
         }
     }
     
-    /**
-     * Factory method for ability color determination
-     * Uses strategy pattern for color mapping
-     */
+    // Factory method for ability color determination
     private Color determineAbilityColor(String abilityType) {
         if (abilityType == null) return Color.WHITE;
         

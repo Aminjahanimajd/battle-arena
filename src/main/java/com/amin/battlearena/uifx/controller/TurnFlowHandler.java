@@ -1,5 +1,11 @@
 package com.amin.battlearena.uifx.controller;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
 import com.amin.battlearena.engine.core.GameEngine;
@@ -8,22 +14,16 @@ import com.amin.battlearena.persistence.PlayerDataManager;
 import com.amin.battlearena.players.AIPlayer;
 import com.amin.battlearena.players.HumanPlayer;
 import com.amin.battlearena.uifx.MainApp;
-import javafx.animation.Timeline;
+
 import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.util.Duration;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.*;
-
-/**
- * Handles turn flow, game end conditions, victory/defeat logic, and timer management.
- * Delegates turn management from GameController to improve code organization.
- */
+// Handles turn flow, game end conditions, victory/defeat logic, and timer management
 public class TurnFlowHandler {
     
     // Dependencies injected from GameController
@@ -103,9 +103,6 @@ public class TurnFlowHandler {
     public void setBfsPath(BiFunction<Position, Position, List<Position>> bfsPath) { this.bfsPath = bfsPath; }
     public void setFindCharacterAt(BiFunction<Integer, Integer, Character> findCharacterAt) { this.findCharacterAt = findCharacterAt; }
     
-    /**
-     * Runs the CPU turn with AI logic
-     */
     public void runCpuTurn() {
         if (engine == null || cpu == null) return;
 
@@ -186,10 +183,7 @@ public class TurnFlowHandler {
         appendLog.accept("CPU turn completed.\n");
     }
     
-    /**
-     * Checks if the game has ended and handles victory/defeat
-     * @return true if game ended, false if game continues
-     */
+    // Checks if the game has ended and handles victory/defeat
     public boolean checkAndHandleGameEnd() {
         if (gameEnded) return true; // Already handled
         
@@ -219,9 +213,6 @@ public class TurnFlowHandler {
         return true;
     }
     
-    /**
-     * Handles victory logic and rewards
-     */
     private void handleVictory() {
         // Calculate rewards
         int goldReward = calculateGoldReward();
@@ -271,9 +262,6 @@ public class TurnFlowHandler {
         });
     }
     
-    /**
-     * Handles defeat logic
-     */
     private void handleDefeat() {
         appendLog.accept("💀 Defeat! Better luck next time.\n");
         
@@ -296,9 +284,6 @@ public class TurnFlowHandler {
         });
     }
     
-    /**
-     * Calculates gold reward based on level difficulty
-     */
     private int calculateGoldReward() {
         // Base reward scales with level difficulty
         int baseReward = Math.max(50, currentLevelNumber * 25);
@@ -313,9 +298,6 @@ public class TurnFlowHandler {
         return baseReward + aliveBonus;
     }
     
-    /**
-     * Starts the turn timer
-     */
     public void startTurnTimer() {
         secondsLeft = 60;
         updateTimerHud();
@@ -333,17 +315,11 @@ public class TurnFlowHandler {
         turnTimer.playFromStart();
     }
 
-    /**
-     * Restarts the turn timer
-     */
     public void restartTurnTimer() {
         if (turnTimer != null) turnTimer.stop();
         startTurnTimer();
     }
 
-    /**
-     * Updates the timer display
-     */
     private void updateTimerHud() {
         if (timerLabel != null) timerLabel.setText(Integer.toString(Math.max(0, secondsLeft)));
         if (timerProgress != null) {
@@ -364,25 +340,16 @@ public class TurnFlowHandler {
         }
     }
     
-    /**
-     * Stops the turn timer
-     */
     public void stopTimer() {
         if (turnTimer != null) {
             turnTimer.stop();
         }
     }
     
-    /**
-     * Gets whether the game has ended
-     */
     public boolean isGameEnded() {
         return gameEnded;
     }
     
-    /**
-     * Sets the game ended state (used for resetting)
-     */
     public void setGameEnded(boolean gameEnded) {
         this.gameEnded = gameEnded;
     }

@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.amin.battlearena.domain.model.Character;
 
-/**
- * Shop system for purchasing upgrades and applying them to characters.
- */
+// Shop system for purchasing upgrades and applying them to characters
 public final class Shop {
     private final UpgradeCatalog catalog;
 
@@ -16,23 +14,14 @@ public final class Shop {
 
     public UpgradeCatalog getCatalog() { return catalog; }
 
-    /**
-     * Get all available upgrades for a specific character type.
-     */
     public List<Upgrade> getUpgradesForCharacter(String characterType) {
         return UpgradeCatalog.getUpgradesForCharacter(characterType);
     }
 
-    /**
-     * Get all available upgrades.
-     */
     public List<Upgrade> getAllUpgrades() {
         return UpgradeCatalog.getAllUpgrades();
     }
 
-    /**
-     * Purchase and apply an upgrade to a character.
-     */
     public boolean purchaseUpgrade(Wallet wallet, Character character, String upgradeId) {
         Upgrade upgrade = UpgradeCatalog.findUpgradeById(upgradeId);
         if (upgrade == null) return false;
@@ -48,9 +37,6 @@ public final class Shop {
         return true;
     }
     
-    /**
-     * Purchase upgrade using PlayerData system.
-     */
     public boolean purchaseUpgrade(com.amin.battlearena.persistence.PlayerData playerData, String upgradeId) {
         Upgrade upgrade = UpgradeCatalog.findUpgradeById(upgradeId);
         if (upgrade == null) return false;
@@ -76,9 +62,6 @@ public final class Shop {
         return (int) (upgrade.getBaseCost() * Math.pow(upgrade.getCostMultiplier(), level - 1));
     }
 
-    /**
-     * Apply an upgrade to a character's stats or abilities.
-     */
     private void applyUpgradeToCharacter(Character character, Upgrade upgrade) {
         if (upgrade.getType() == Upgrade.Type.STAT_HP) {
             // Increase max HP and restore current HP proportionally
@@ -119,9 +102,6 @@ public final class Shop {
         }
     }
     
-    /**
-     * Apply all purchased upgrades to a character based on player data.
-     */
     public void applyPurchasedUpgrades(Character character, com.amin.battlearena.persistence.PlayerData playerData) {
         String characterType = character.getClass().getSimpleName();
         List<Upgrade> characterUpgrades = UpgradeCatalog.getUpgradesForCharacter(characterType);
@@ -143,9 +123,6 @@ public final class Shop {
         }
     }
 
-    /**
-     * Get the cost of an upgrade.
-     */
     public int getUpgradeCost(String upgradeId) {
         Upgrade upgrade = UpgradeCatalog.findUpgradeById(upgradeId);
         return upgrade != null ? upgrade.getUpgradeCost() : Integer.MAX_VALUE;

@@ -9,29 +9,16 @@ import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
-/**
- * CharacterRenderer creates visual representations of characters
- * with distinct designs based on their class and concept
- * Refactored to use delegation pattern with specialized handlers
- */
+// CharacterRenderer creates visual representations with delegation pattern
 public class CharacterRenderer {
     
-    // Delegation pattern: Specialized handlers for different responsibilities
     private static final CharacterDesignHandler designHandler = new CharacterDesignHandler();
     private static final CharacterHealthHandler healthHandler = new CharacterHealthHandler();
     
-        /**
-     * Creates the info overlay with character name, health bar, and mana bar
-     */
     private VBox createInfoOverlay(Character character) {
         VBox info = new VBox(2);
         info.setAlignment(Pos.CENTER);
@@ -56,17 +43,11 @@ public class CharacterRenderer {
     }
 
     
-    /**
-     * Update character visual based on health status
-     */
     public static void updateCharacterHealth(StackPane characterNode, Character character) {
         // Delegate health visualization to specialized handler
         healthHandler.updateCharacterHealth(characterNode, character);
     }
     
-    /**
-     * Show character action animation
-     */
     public static void showActionAnimation(StackPane characterNode, String actionType) {
         String key = actionType == null ? "" : actionType.toLowerCase(java.util.Locale.ROOT);
         if ("attack".equals(key)) {

@@ -13,9 +13,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-/**
- * Manages saving and loading player data to/from JSON files.
- */
+// Manages saving and loading player data to/from JSON files
 public class PlayerDataManager {
     private static final String SAVE_DIRECTORY = "saves";
     private static final String FILE_EXTENSION = ".json";
@@ -105,16 +103,10 @@ public class PlayerDataManager {
         return loadedData.get(playerName);
     }
     
-    /**
-     * Clear all loaded data to ensure proper account isolation
-     */
     public void clearLoadedData() {
         loadedData.clear();
     }
     
-    /**
-     * Reset all data for a specific player account
-     */
     public void resetPlayerData(String playerName) {
         if (playerName == null || playerName.trim().isEmpty()) {
             return;
@@ -140,9 +132,6 @@ public class PlayerDataManager {
         savePlayerData(newData);
     }
     
-    /**
-     * Check if a player account exists
-     */
     public boolean playerExists(String playerName) {
         if (playerName == null || playerName.trim().isEmpty()) {
             return false;
@@ -151,9 +140,6 @@ public class PlayerDataManager {
         return Files.exists(filePath);
     }
     
-    /**
-     * Get list of all existing player accounts
-     */
     public java.util.List<String> getAllPlayerNames() {
         java.util.List<String> playerNames = new java.util.ArrayList<>();
         try {

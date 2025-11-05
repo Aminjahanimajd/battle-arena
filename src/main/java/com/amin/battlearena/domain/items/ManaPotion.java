@@ -3,7 +3,6 @@ package com.amin.battlearena.domain.items;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
 
-/** Simple mana potion: restores fixed mana to the user (or target). */
 public final class ManaPotion implements Consumable {
     private final int manaAmount;
 
@@ -14,7 +13,7 @@ public final class ManaPotion implements Consumable {
     @Override public String key() { return "MANA_POTION_" + manaAmount; }
     @Override public String displayName() { return "Mana Potion (" + manaAmount + ")"; }
     @Override public String description() { return "Restore " + manaAmount + " Mana"; }
-    @Override public int getCost() { return manaAmount + 3; } // Base cost formula
+    @Override public int getCost() { return manaAmount + 3; }
 
     @Override
     public void use(GameEngine engine, Character user, Character target) {

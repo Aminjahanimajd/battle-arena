@@ -3,9 +3,9 @@ package com.amin.battlearena.uifx.controller;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
 import com.amin.battlearena.uifx.MainApp;
-import com.amin.battlearena.uifx.handler.UpgradePurchaseHandler;
 import com.amin.battlearena.uifx.handler.ConsumablePurchaseHandler;
 import com.amin.battlearena.uifx.handler.ShopUIHandler;
+import com.amin.battlearena.uifx.handler.UpgradePurchaseHandler;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
@@ -13,10 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
-/**
- * Refactored Shop Controller using delegation patterns
- * Follows OOP principles: Single Responsibility, Delegation, Strategy Pattern
- */
+// Refactored Shop Controller using delegation patterns
 public class ShopController {
     
     private MainApp app;
@@ -188,9 +185,6 @@ public class ShopController {
         purchaseConsumable("revival_token", 100, "💫 Revival Token added to inventory!");
     }
     
-    /**
-     * Delegated upgrade purchase using UpgradePurchaseHandler
-     */
     private void purchaseUpgrade(String upgradeName, String successMessage) {
         if (upgradeHandler.purchaseUpgrade(playerData, upgradeName, successMessage, uiHandler)) {
             updateGoldDisplay();
@@ -198,9 +192,6 @@ public class ShopController {
         }
     }
     
-    /**
-     * Delegated consumable purchase using ConsumablePurchaseHandler
-     */
     private void purchaseConsumable(String itemId, int cost, String successMessage) {
         if (consumableHandler.purchaseConsumable(playerData, itemId, cost, successMessage, uiHandler)) {
             updateGoldDisplay();
@@ -223,9 +214,6 @@ public class ShopController {
         updateUpgradeButton("Quick Cast", cooldownUpgradeBtn);
     }
     
-    /**
-     * Delegated upgrade button update using ShopUIHandler
-     */  
     private void updateUpgradeButton(String upgradeName, Button button) {
         uiHandler.updateUpgradeButton(upgradeName, button, playerData, upgradeHandler);
         updatePriceLabel(upgradeName);
@@ -277,9 +265,6 @@ public class ShopController {
         }
     }
     
-    /**
-     * Delegated gold display update using ShopUIHandler
-     */
     private void updateGoldDisplay() {
         uiHandler.updateGoldDisplay(playerData);
         // Update affordability states
@@ -291,9 +276,6 @@ public class ShopController {
 
     @FXML private Button healthBuyBtn, manaBuyBtn, strengthBuyBtn, shieldBuyBtn, hasteBuyBtn, revivalBuyBtn;
 
-    /**
-     * Delegated consumable button updates using ShopUIHandler
-     */
     private void updateConsumableButtons() {
         if (playerData == null) return;
         uiHandler.updateConsumableButton(healthBuyBtn, consumableHandler.getConsumableCost("health_potion"), playerData);
@@ -314,9 +296,6 @@ public class ShopController {
     
     // showSuccessMessage and showErrorMessage methods removed - now delegated to ShopUIHandler
     
-    /**
-     * Load player's current gold amount
-     */
     public void loadPlayerGold(int gold) {
         if (playerData != null) {
             playerData.setGold(gold);
@@ -324,9 +303,6 @@ public class ShopController {
         }
     }
     
-    /**
-     * Get current gold amount (for saving)
-     */
     public int getCurrentGold() {
         return playerData != null ? playerData.getGold() : 0;
     }

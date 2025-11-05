@@ -3,9 +3,7 @@ package com.amin.battlearena.infra;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
 
-/**
- * Validator that checks if the actor is alive before allowing actions.
- */
+// Validator that checks if the actor is alive before allowing actions
 public class AliveValidator extends ActionValidator {
     
     @Override

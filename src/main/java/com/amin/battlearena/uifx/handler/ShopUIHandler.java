@@ -1,15 +1,14 @@
 package com.amin.battlearena.uifx.handler;
 
 import com.amin.battlearena.persistence.PlayerData;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
-/**
- * Handler for shop UI operations with delegation pattern
- */
+// Handler for shop UI operations with delegation pattern
 public class ShopUIHandler {
     
     private Label playerGold;
@@ -20,9 +19,6 @@ public class ShopUIHandler {
         this.statusMessage = statusMessage;
     }
     
-    /**
-     * Update gold display with animation
-     */
     public void updateGoldDisplay(PlayerData playerData) {
         if (playerData != null && playerGold != null) {
             playerGold.setText(String.valueOf(playerData.getGold()));
@@ -39,9 +35,6 @@ public class ShopUIHandler {
         }
     }
     
-    /**
-     * Show success message with animation
-     */
     public void showSuccessMessage(String message) {
         if (statusMessage != null) {
             statusMessage.setText(message);
@@ -58,9 +51,6 @@ public class ShopUIHandler {
         }
     }
     
-    /**
-     * Show error message with animation
-     */
     public void showErrorMessage(String message) {
         if (statusMessage != null) {
             statusMessage.setText(message);
@@ -77,9 +67,6 @@ public class ShopUIHandler {
         }
     }
     
-    /**
-     * Update upgrade button state and text based on affordability
-     */
     public void updateUpgradeButton(String upgradeName, Button button, PlayerData playerData, 
                                   UpgradePurchaseHandler upgradeHandler) {
         if (button == null || playerData == null) return;
@@ -98,9 +85,6 @@ public class ShopUIHandler {
         }
     }
     
-    /**
-     * Update consumable button state based on affordability
-     */
     public void updateConsumableButton(Button button, int cost, PlayerData playerData) {
         if (button != null && playerData != null) {
             button.setDisable(playerData.getGold() < cost);

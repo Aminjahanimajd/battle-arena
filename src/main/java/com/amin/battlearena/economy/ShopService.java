@@ -8,15 +8,7 @@ import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.persistence.PlayerDAO;
 import com.amin.battlearena.players.Player;
 
-/**
- * Simple shop service that applies upgrades to characters and (optionally) persists player gold/records.
- *
- * Usage:
- * - call purchaseStatUpgrade(player, characterName, "attack", delta, cost)
- * - call purchaseAbility(player, characterName, "PowerStrike", cost)
- *
- * This implementation assumes PlayerDAO manages player gold externally; here we only mutate in-memory characters.
- */
+// Simple shop service that applies upgrades to characters and persists player gold
 public final class ShopService {
 
     private final PlayerDAO playerDao = new PlayerDAO();

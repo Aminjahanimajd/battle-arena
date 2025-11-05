@@ -6,16 +6,9 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-/**
- * Handler responsible for managing character health visualization
- * Includes health bar updates and visual feedback for wounded characters
- * Follows Single Responsibility Principle
- */
+// Handler responsible for managing character health visualization
 public class CharacterHealthHandler {
     
-    /**
-     * Update character visual based on health status
-     */
     public void updateCharacterHealth(StackPane characterNode, Character character) {
         // Find health bar and update
         characterNode.getChildren().stream()

@@ -3,9 +3,7 @@ package com.amin.battlearena.persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Persistent data for a player account including gold, upgrades, and settings.
- */
+// Persistent data for a player account including gold, upgrades, and settings
 public class PlayerData {
     private String playerName;
     private int gold = 1000; // Starting gold

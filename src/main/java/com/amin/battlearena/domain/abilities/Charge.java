@@ -6,9 +6,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Knight ability: charge towards an enemy and deal bonus damage.
- */
+// Knight ability: charge towards enemy and deal bonus damage
 public final class Charge extends AbstractAbility {
 
     public Charge() {

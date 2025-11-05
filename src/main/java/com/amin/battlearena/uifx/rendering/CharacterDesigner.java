@@ -10,21 +10,9 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
-/**
- * CharacterDesigner handles the visual design creation for different character types.
- * Each character class has a unique visual representation with distinct colors, shapes, and icons.
- * 
- * Responsibilities:
- * - Character type-specific visual designs
- * - Base circle styling
- * - Class-specific shape creation
- * - Icon and symbol rendering
- */
+// CharacterDesigner handles visual design for different character types
 public class CharacterDesigner {
     
-    /**
-     * Create character-specific design based on character class
-     */
     public static void applyCharacterDesign(StackPane parent, Circle base, Character character) {
         String characterType = character.getClass().getSimpleName().toLowerCase(java.util.Locale.ROOT);
         if ("warrior".equals(characterType)) {

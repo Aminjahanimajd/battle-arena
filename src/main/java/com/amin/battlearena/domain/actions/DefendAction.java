@@ -7,9 +7,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Simple defend action: grants temporary defense to the actor (one-turn buff).
- */
+// Simple defend action: grants temporary defense to the actor
 public final class DefendAction implements Action {
 
     private final int defenseAmount;

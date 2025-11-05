@@ -5,10 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Catalog of all available upgrades in the game.
- * Provides upgrades for different character types and stats.
- */
+// Catalog of all available upgrades in the game
 public final class UpgradeCatalog {
     
     private static final Map<String, List<Upgrade>> upgradesByCharacter = new HashMap<>();
@@ -101,32 +98,20 @@ public final class UpgradeCatalog {
         upgradesByCharacter.put("Global", abilityUpgrades);
     }
     
-    /**
-     * Get all available upgrades for a specific character type.
-     */
     public static List<Upgrade> getUpgradesForCharacter(String characterType) {
         return upgradesByCharacter.getOrDefault(characterType, new ArrayList<>());
     }
     
-    /**
-     * Get all available upgrades in the game.
-     */
     public static List<Upgrade> getAllUpgrades() {
         List<Upgrade> allUpgrades = new ArrayList<>();
         upgradesByCharacter.values().forEach(allUpgrades::addAll);
         return allUpgrades;
     }
     
-    /**
-     * Get available character types that have upgrades.
-     */
     public static List<String> getAvailableCharacterTypes() {
         return new ArrayList<>(upgradesByCharacter.keySet());
     }
     
-    /**
-     * Find a specific upgrade by ID.
-     */
     public static Upgrade findUpgradeById(String upgradeId) {
         return getAllUpgrades().stream()
                 .filter(u -> u.getId().equals(upgradeId))

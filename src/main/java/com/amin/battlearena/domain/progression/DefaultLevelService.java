@@ -10,7 +10,6 @@ import com.amin.battlearena.progression.CampaignMap;
 import com.amin.battlearena.progression.LevelNode;
 import com.amin.battlearena.progression.PlayerProgress;
 
-/** Default in-memory implementation backed by an existing CampaignMap. */
 public final class DefaultLevelService implements LevelService {
     private final CampaignMap map;
     private final Map<String, LevelNode> byId = new LinkedHashMap<>();

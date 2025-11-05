@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Archer ability: fires two arrows in quick succession.
- */
+// Archer ability: fires two arrows in quick succession
 public final class DoubleShot extends AbstractAbility {
 
     public DoubleShot() {

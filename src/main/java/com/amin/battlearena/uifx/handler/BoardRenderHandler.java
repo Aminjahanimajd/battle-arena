@@ -1,8 +1,13 @@
 package com.amin.battlearena.uifx.handler;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
+import com.amin.battlearena.domain.model.Board;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.domain.model.Board;
+
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -11,14 +16,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.geometry.Pos;
-import java.util.List;
-import java.util.function.BiConsumer;
 
-/**
- * Handles board rendering and tile interactions
- * Delegates board-specific operations from GameController
- */
+// Handles board rendering and tile interactions
 public class BoardRenderHandler {
     
     private final GridPane boardGrid;
@@ -33,16 +32,10 @@ public class BoardRenderHandler {
         initializeBoardButtons();
     }
     
-    /**
-     * Sets the handler for tile clicks
-     */
     public void setTileClickHandler(BiConsumer<Integer, Integer> handler) {
         this.tileClickHandler = handler;
     }
     
-    /**
-     * Initializes board buttons with click handlers
-     */
     private void initializeBoardButtons() {
         boardGrid.getChildren().clear();
         
@@ -55,9 +48,6 @@ public class BoardRenderHandler {
         }
     }
     
-    /**
-     * Creates a single tile button
-     */
     private Button createTileButton(int row, int col) {
         Button button = new Button();
         button.setPrefSize(40, 40);
@@ -73,9 +63,6 @@ public class BoardRenderHandler {
         return button;
     }
     
-    /**
-     * Renders the complete board state
-     */
     public void renderBoard(Board board, List<Character> players) {
         if (board == null) return;
         
@@ -89,9 +76,6 @@ public class BoardRenderHandler {
         renderCharacters(players);
     }
     
-    /**
-     * Clears all tile visuals
-     */
     private void clearAllTiles() {
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
@@ -104,17 +88,12 @@ public class BoardRenderHandler {
         }
     }
     
-    /**
-     * Renders terrain features (simplified - no terrain tiles in current board model)
-     */
+    // Renders terrain features (simplified - no terrain tiles in current board model)
     private void renderTerrain() {
         // Current Board model doesn't have terrain tiles
         // This method is kept for future terrain feature expansion
     }
     
-    /**
-     * Renders all characters on board
-     */
     private void renderCharacters(List<Character> players) {
         if (players == null) return;
         
@@ -125,9 +104,6 @@ public class BoardRenderHandler {
         }
     }
     
-    /**
-     * Renders a single character on the board
-     */
     private void renderCharacter(Character character) {
         Position pos = character.getPosition();
         if (pos == null || !isValidPosition(pos)) return;
@@ -177,18 +153,12 @@ public class BoardRenderHandler {
         tile.setGraphic(characterDisplay);
     }
     
-    /**
-     * Gets health color based on health ratio
-     */
     private Color getHealthColor(double healthRatio) {
         if (healthRatio > 0.7) return Color.GREEN;
         if (healthRatio > 0.3) return Color.YELLOW;
         return Color.RED;
     }
     
-    /**
-     * Gets character symbol for display
-     */
     private String getCharacterSymbol(Character character) {
         String name = character.getName().toLowerCase();
         if (name.contains("warrior")) return "⚔";
@@ -199,9 +169,6 @@ public class BoardRenderHandler {
         return character.getName().substring(0, 1).toUpperCase();
     }
     
-    /**
-     * Highlights valid moves for selected character
-     */
     public void highlightValidMoves(List<Position> validMoves) {
         clearHighlights();
         
@@ -214,9 +181,6 @@ public class BoardRenderHandler {
         }
     }
     
-    /**
-     * Highlights valid attack targets
-     */
     public void highlightValidAttacks(List<Position> validTargets) {
         if (validTargets != null) {
             for (Position pos : validTargets) {
@@ -227,9 +191,6 @@ public class BoardRenderHandler {
         }
     }
     
-    /**
-     * Highlights selected character position
-     */
     public void highlightSelectedCharacter(Position position) {
         clearHighlights();
         
@@ -238,9 +199,6 @@ public class BoardRenderHandler {
         }
     }
     
-    /**
-     * Clears all highlights
-     */
     public void clearHighlights() {
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
@@ -250,17 +208,11 @@ public class BoardRenderHandler {
         }
     }
     
-    /**
-     * Checks if position is valid on board
-     */
     private boolean isValidPosition(Position pos) {
         return pos.x() >= 0 && pos.x() < boardSize && 
                pos.y() >= 0 && pos.y() < boardSize;
     }
     
-    /**
-     * Gets button at specific position
-     */
     public Button getTileButton(Position position) {
         if (isValidPosition(position)) {
             return boardButtons[position.x()][position.y()];

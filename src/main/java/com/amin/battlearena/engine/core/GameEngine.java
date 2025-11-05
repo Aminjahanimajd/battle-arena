@@ -18,15 +18,7 @@ import com.amin.battlearena.players.AIPlayer;
 import com.amin.battlearena.players.HumanPlayer;
 import com.amin.battlearena.players.Player;
 
-/**
- * Central game engine responsible for coordinating game components.
- * Now follows Single Responsibility Principle by delegating to specialized components.
- *
- * Responsibilities:
- * - Coordinates game components
- * - Provides game services to domain logic
- * - Manages damage application and character state
- */
+// Central game engine coordinating game components
 public final class GameEngine {
 
     private static final Logger LOG = Logger.getLogger(GameEngine.class.getName());
@@ -95,16 +87,10 @@ public final class GameEngine {
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("EI_EXPOSE_REP")
     public GameCaretaker getCaretaker() { return caretaker; }
 
-    /**
-     * Main turn loop: delegate to TurnManager.
-     */
     public void runBattleLoop() {
         turnManager.runTurns(this);
     }
 
-    /**
-     * Move a character to a new position using MovementValidator.
-     */
     public boolean move(Character character, Position newPosition) {
         // Extra safety: disallow moving onto alive character even if validator missed it
         if (board.isPositionOccupied(newPosition, gameState.getAllCharacters())) {
@@ -123,18 +109,12 @@ public final class GameEngine {
         return success;
     }
 
-    /**
-     * Get the opponent of a given player.
-     */
     public Player getOpponentOf(Player player) {
         if (player == human) return ai;
         if (player == ai) return human;
         throw new IllegalArgumentException("Unknown player: " + player.getName());
     }
 
-    /**
-     * Apply damage to a character and handle death events.
-     */
     public void applyDamage(Character target, int amount) {
         if (target == null || amount <= 0) {
             LOG.warning(String.format("applyDamage called with non-positive amount: %d for %s", 
@@ -170,30 +150,18 @@ public final class GameEngine {
         }
     }
 
-    /**
-     * Log a message to the game log.
-     */
     public void log(String message) {
         LOG.log(java.util.logging.Level.INFO, "[Engine] {0}", message);
     }
 
-    /**
-     * Get a random number for game mechanics.
-     */
     public int getRandom(int min, int max) {
         return randomProvider.nextInt(min, max);
     }
 
-    /**
-     * Check if a random event occurs based on probability.
-     */
     public boolean randomEvent(double probability) {
         return randomProvider.nextDouble() < probability;
     }
 
-    /**
-     * Notify that a battle has ended (called by TurnManager).
-     */
     public void notifyBattleEnded(Player winner, Player loser) {
         eventPublisher.notifyBattleEnded(winner, loser);
         try {
@@ -203,16 +171,10 @@ public final class GameEngine {
         }
     }
 
-    /**
-     * Add an event listener.
-     */
     public void addEventListener(GameEventListener listener) {
         eventPublisher.addEventListener(listener);
     }
 
-    /**
-     * Remove an event listener.
-     */
     public void removeEventListener(GameEventListener listener) {
         eventPublisher.removeEventListener(listener);
     }

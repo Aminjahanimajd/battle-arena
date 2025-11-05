@@ -7,10 +7,7 @@ import com.amin.battlearena.domain.model.Board;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
 
-/**
- * Validates and executes character movement.
- * Separates movement validation responsibility from GameEngine.
- */
+// Validates and executes character movement
 public final class MovementValidator {
     
     private final Board board;
@@ -21,44 +18,32 @@ public final class MovementValidator {
         this.allCharacters = Objects.requireNonNull(allCharacters, "Character collection cannot be null");
     }
     
-    /**
-     * Validates and executes movement if valid.
-     * @return true if movement was successful, false otherwise
-     */
     public boolean validateAndMove(Character character, Position newPosition) {
         if (!canMove(character, newPosition)) {
             return false;
         }
         
-        // Execute the move
         character.setPosition(newPosition);
         return true;
     }
     
-    /**
-     * Checks if a character can move to the specified position.
-     */
     public boolean canMove(Character character, Position newPosition) {
         if (character == null || newPosition == null) {
             return false;
         }
         
-        // Check if character is alive
         if (!character.isAlive()) {
             return false;
         }
         
-        // Check if new position is within board bounds
         if (!board.isWithinBounds(newPosition)) {
             return false;
         }
         
-        // Check if new position is occupied
         if (board.isPositionOccupied(newPosition, allCharacters)) {
             return false;
         }
         
-        // Check movement range using Chebyshev distance (allows diagonal as 1 step)
         Position currentPos = character.getPosition();
         int dx = Math.abs(newPosition.x() - currentPos.x());
         int dy = Math.abs(newPosition.y() - currentPos.y());
@@ -68,7 +53,6 @@ public final class MovementValidator {
             return false;
         }
 
-        // For multi-step movement, ensure path is clear (no passing through other units)
         if (steps > 1) {
             if (!isPathClear(currentPos, newPosition)) {
                 return false;
@@ -78,9 +62,6 @@ public final class MovementValidator {
         return true;
     }
     
-    /**
-     * Get the movement range for a character based on their class.
-     */
     private int getMovementRange(Character character) {
         String className = character.getClass().getSimpleName();
         if ("Archer".equals(className)) {
@@ -90,16 +71,15 @@ public final class MovementValidator {
         } else if ("Master".equals(className)) {
             return 2;
         } else {
-            return 1; // Warrior, Knight, Mage
+            return 1;
         }
     }
 
     private boolean isPathClear(Position from, Position to) {
-        int dx = Integer.compare(to.x(), from.x()); // -1, 0, 1
+        int dx = Integer.compare(to.x(), from.x());
         int dy = Integer.compare(to.y(), from.y());
         int x = from.x();
         int y = from.y();
-        // step until just before destination
         while (true) {
             x += dx; y += dy;
             if (x == to.x() && y == to.y()) break;
@@ -110,9 +90,6 @@ public final class MovementValidator {
         return true;
     }
     
-    /**
-     * Check if a position is valid for movement.
-     */
     public boolean isValidPosition(Position position) {
         return board.isWithinBounds(position) && 
                !board.isPositionOccupied(position, allCharacters);

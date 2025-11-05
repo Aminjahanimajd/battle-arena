@@ -7,10 +7,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-/**
- * Concrete strategy for movement highlight effects
- * Uses blue gentle pulsing animation
- */
+// Concrete strategy for movement highlight effects (blue pulsing)
 public class MovementHighlight extends HighlightEffect {
     
     public MovementHighlight() {

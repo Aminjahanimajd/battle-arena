@@ -7,10 +7,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-/**
- * Concrete strategy for ability highlight effects
- * Uses purple pulsing animation
- */
+// Concrete strategy for ability highlight effects (purple pulsing)
 public class AbilityHighlight extends HighlightEffect {
     
     public AbilityHighlight() {

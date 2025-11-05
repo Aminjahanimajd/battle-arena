@@ -2,10 +2,7 @@ package com.amin.battlearena.domain.model;
 
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * State implementation for alive characters.
- * Characters in this state can perform all normal actions.
- */
+// State implementation for alive characters
 public class AliveState implements CharacterState {
     
     private static final AliveState INSTANCE = new AliveState();

@@ -2,10 +2,7 @@ package com.amin.battlearena.economy;
 
 import java.util.Objects;
 
-/**
- * Represents an upgrade that can be purchased to improve character stats or abilities.
- * Supports multiple upgrade stages with increasing costs.
- */
+// Represents an upgrade that can be purchased to improve character stats or abilities
 public final class Upgrade {
     
     public enum Type {
@@ -68,39 +65,24 @@ public final class Upgrade {
     public int getBaseCost() { return baseCost; }
     public double getCostMultiplier() { return costMultiplier; }
     
-    /**
-     * Check if this upgrade can be upgraded further.
-     */
     public boolean canUpgrade() {
         return currentStage < maxStages;
     }
     
-    /**
-     * Get the current total value of this upgrade.
-     */
     public int getCurrentValue() {
         return baseValue + (currentStage * valuePerStage);
     }
     
-    /**
-     * Get the value if upgraded to the next stage.
-     */
     public int getNextStageValue() {
         if (!canUpgrade()) return getCurrentValue();
         return baseValue + ((currentStage + 1) * valuePerStage);
     }
     
-    /**
-     * Get the cost to upgrade to the next stage.
-     */
     public int getUpgradeCost() {
         if (!canUpgrade()) return Integer.MAX_VALUE;
         return (int) (baseCost * Math.pow(costMultiplier, currentStage));
     }
     
-    /**
-     * Create a new upgrade instance representing the next stage.
-     */
     public Upgrade upgrade() {
         if (!canUpgrade()) {
             throw new IllegalStateException("Cannot upgrade beyond max stage: " + maxStages);
@@ -109,9 +91,6 @@ public final class Upgrade {
                           baseValue, valuePerStage, baseCost, costMultiplier);
     }
     
-    /**
-     * Get a display string showing current vs next stage.
-     */
     public String getUpgradeDisplay() {
         if (!canUpgrade()) {
             return String.format("%s: %d (MAX)", type.getDisplayName(), getCurrentValue());

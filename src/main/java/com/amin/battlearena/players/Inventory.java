@@ -6,9 +6,7 @@ import java.util.List;
 
 import com.amin.battlearena.domain.items.Consumable;
 
-/**
- * Simple per-player inventory for consumable items used in battle.
- */
+// Simple per-player inventory for consumable items used in battle
 public final class Inventory {
     private final List<Consumable> items = new ArrayList<>();
 

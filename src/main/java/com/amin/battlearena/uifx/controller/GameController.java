@@ -1,12 +1,8 @@
 package com.amin.battlearena.uifx.controller;
 
 
-import com.amin.battlearena.domain.model.Archer;
 import com.amin.battlearena.domain.model.Board;
-import com.amin.battlearena.domain.model.Knight;
-import com.amin.battlearena.domain.model.Mage;
 import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.domain.model.Warrior;
 import com.amin.battlearena.engine.ai.SimpleAIStrategy;
 import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.engine.memento.GameCaretaker;
@@ -191,11 +187,15 @@ public class GameController implements Initializable {
     }
     
     private void setupPlayerTeam(com.amin.battlearena.persistence.PlayerData playerData) {
-        // Create base characters
-        Warrior warrior = new Warrior("Garen", new Position(0, 2));
-        Archer archer = new Archer("Ashe", new Position(0, 3));
-        Mage mage = new Mage("Ryze", new Position(1, 3));
-        Knight knight = new Knight("Braum", new Position(0, 4));
+        // Create base characters using CharacterFactory for extensibility
+        com.amin.battlearena.domain.model.Character warrior = 
+            com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Garen", new Position(0, 2));
+        com.amin.battlearena.domain.model.Character archer = 
+            com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Ashe", new Position(0, 3));
+        com.amin.battlearena.domain.model.Character mage = 
+            com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Ryze", new Position(1, 3));
+        com.amin.battlearena.domain.model.Character knight = 
+            com.amin.battlearena.domain.model.CharacterFactory.create("knight", "Braum", new Position(0, 4));
         
         // Apply purchased upgrades if player data exists
         if (playerData != null) {
@@ -219,25 +219,37 @@ public class GameController implements Initializable {
         int baseAttack = 10 + (level * 2);
         int baseDefense = 5 + level;
         
-        // Create different enemy compositions based on level
+        // Create different enemy compositions based on level using CharacterFactory
         if (level >= 1 && level <= 3) {
             // Training levels - basic enemies
-            Warrior enemy1 = new Warrior("Trainee-1", new Position(board.getWidth() - 1, 2));
-            Archer enemy2 = new Archer("Recruit-1", new Position(board.getWidth() - 1, 3));
+            com.amin.battlearena.domain.model.Character enemy1 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Trainee-1", 
+                    new Position(board.getWidth() - 1, 2));
+            com.amin.battlearena.domain.model.Character enemy2 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Recruit-1", 
+                    new Position(board.getWidth() - 1, 3));
             scaleEnemyStats(enemy1, baseHp, baseAttack, baseDefense);
             scaleEnemyStats(enemy2, baseHp, baseAttack, baseDefense);
             cpu.addToTeam(enemy1);
             cpu.addToTeam(enemy2);
             if (level >= 3) {
-                Mage enemy3 = new Mage("Novice-1", new Position(board.getWidth() - 2, 3));
+                com.amin.battlearena.domain.model.Character enemy3 = 
+                    com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Novice-1", 
+                        new Position(board.getWidth() - 2, 3));
                 scaleEnemyStats(enemy3, baseHp - 20, baseAttack + 3, baseDefense - 1);
                 cpu.addToTeam(enemy3);
             }
         } else if (level >= 4 && level <= 6) {
             // Forest levels - balanced team
-            Warrior enemy1 = new Warrior("Forest-Brute", new Position(board.getWidth() - 1, 2));
-            Archer enemy2 = new Archer("Forest-Ranger", new Position(board.getWidth() - 1, 3));
-            Mage enemy3 = new Mage("Forest-Shaman", new Position(board.getWidth() - 2, 3));
+            com.amin.battlearena.domain.model.Character enemy1 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Forest-Brute", 
+                    new Position(board.getWidth() - 1, 2));
+            com.amin.battlearena.domain.model.Character enemy2 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Forest-Ranger", 
+                    new Position(board.getWidth() - 1, 3));
+            com.amin.battlearena.domain.model.Character enemy3 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Forest-Shaman", 
+                    new Position(board.getWidth() - 2, 3));
             scaleEnemyStats(enemy1, baseHp, baseAttack, baseDefense);
             scaleEnemyStats(enemy2, baseHp - 10, baseAttack + 2, baseDefense);
             scaleEnemyStats(enemy3, baseHp - 15, baseAttack + 4, baseDefense - 1);
@@ -245,16 +257,26 @@ public class GameController implements Initializable {
             cpu.addToTeam(enemy2);
             cpu.addToTeam(enemy3);
             if (level >= 5) {
-                Knight boss = new Knight("Ancient-Guardian", new Position(board.getWidth() - 1, 4));
+                com.amin.battlearena.domain.model.Character boss = 
+                    com.amin.battlearena.domain.model.CharacterFactory.create("knight", "Ancient-Guardian", 
+                        new Position(board.getWidth() - 1, 4));
                 scaleEnemyStats(boss, baseHp + 50, baseAttack + 3, baseDefense + 5);
                 cpu.addToTeam(boss);
             }
         } else if (level >= 7 && level <= 9) {
             // Mountain levels - tough enemies
-            Warrior enemy1 = new Warrior("Mountain-Warrior", new Position(board.getWidth() - 1, 2));
-            Archer enemy2 = new Archer("Mountain-Sniper", new Position(board.getWidth() - 1, 3));
-            Mage enemy3 = new Mage("Mountain-Sage", new Position(board.getWidth() - 2, 3));
-            Knight enemy4 = new Knight("Mountain-Guard", new Position(board.getWidth() - 1, 4));
+            com.amin.battlearena.domain.model.Character enemy1 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Mountain-Warrior", 
+                    new Position(board.getWidth() - 1, 2));
+            com.amin.battlearena.domain.model.Character enemy2 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Mountain-Sniper", 
+                    new Position(board.getWidth() - 1, 3));
+            com.amin.battlearena.domain.model.Character enemy3 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Mountain-Sage", 
+                    new Position(board.getWidth() - 2, 3));
+            com.amin.battlearena.domain.model.Character enemy4 = 
+                com.amin.battlearena.domain.model.CharacterFactory.create("knight", "Mountain-Guard", 
+                    new Position(board.getWidth() - 1, 4));
             scaleEnemyStats(enemy1, baseHp, baseAttack, baseDefense);
             scaleEnemyStats(enemy2, baseHp - 5, baseAttack + 3, baseDefense);
             scaleEnemyStats(enemy3, baseHp - 10, baseAttack + 5, baseDefense);
@@ -264,16 +286,26 @@ public class GameController implements Initializable {
             cpu.addToTeam(enemy3);
             cpu.addToTeam(enemy4);
             if (level == 8) {
-                Warrior dragon = new Warrior("Ancient-Dragon", new Position(board.getWidth() - 2, 2));
+                com.amin.battlearena.domain.model.Character dragon = 
+                    com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Ancient-Dragon", 
+                        new Position(board.getWidth() - 2, 2));
                 scaleEnemyStats(dragon, baseHp + 100, baseAttack + 8, baseDefense + 8);
                 cpu.addToTeam(dragon);
             }
         } else {
                 // Arena levels - elite enemies
-                Warrior enemy1 = new Warrior("Arena-Champion", new Position(board.getWidth() - 1, 2));
-                Archer enemy2 = new Archer("Elite-Marksman", new Position(board.getWidth() - 1, 3));
-                Mage enemy3 = new Mage("Grand-Mage", new Position(board.getWidth() - 2, 3));
-                Knight enemy4 = new Knight("Arena-Guardian", new Position(board.getWidth() - 1, 4));
+                com.amin.battlearena.domain.model.Character enemy1 = 
+                    com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Arena-Champion", 
+                        new Position(board.getWidth() - 1, 2));
+                com.amin.battlearena.domain.model.Character enemy2 = 
+                    com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Elite-Marksman", 
+                        new Position(board.getWidth() - 1, 3));
+                com.amin.battlearena.domain.model.Character enemy3 = 
+                    com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Grand-Mage", 
+                        new Position(board.getWidth() - 2, 3));
+                com.amin.battlearena.domain.model.Character enemy4 = 
+                    com.amin.battlearena.domain.model.CharacterFactory.create("knight", "Arena-Guardian", 
+                        new Position(board.getWidth() - 1, 4));
                 scaleEnemyStats(enemy1, baseHp + 20, baseAttack + 5, baseDefense + 3);
                 scaleEnemyStats(enemy2, baseHp + 10, baseAttack + 7, baseDefense + 2);
                 scaleEnemyStats(enemy3, baseHp, baseAttack + 10, baseDefense + 1);
@@ -283,7 +315,9 @@ public class GameController implements Initializable {
                 cpu.addToTeam(enemy3);
                 cpu.addToTeam(enemy4);
                 if (level == 12) {
-                    Warrior finalBoss = new Warrior("Arena-Master", new Position(board.getWidth() - 2, 2));
+                    com.amin.battlearena.domain.model.Character finalBoss = 
+                        com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Arena-Master", 
+                            new Position(board.getWidth() - 2, 2));
                     scaleEnemyStats(finalBoss, baseHp + 150, baseAttack + 15, baseDefense + 10);
                     cpu.addToTeam(finalBoss);
                 }
@@ -574,9 +608,6 @@ public class GameController implements Initializable {
     
 
 
-    /**
-     * Tile click handler for BoardRenderHandler delegation
-     */
     private void onTileClick(Integer row, Integer col) {
         onCellClicked(row, col);
     }
@@ -1578,9 +1609,7 @@ public class GameController implements Initializable {
 
     }
     
-    /**
-     * Initialize CombatActionHandler with all necessary dependencies and callbacks
-     */
+    // Initialize CombatActionHandler with callbacks
     private void initializeCombatHandler() {
         // Set callbacks for UI interaction
         combatHandler.setAppendLog(this::append);
@@ -1598,9 +1627,6 @@ public class GameController implements Initializable {
         updateCombatHandlerState();
     }
     
-    /**
-     * Update CombatActionHandler with current game state
-     */
     private void updateCombatHandlerState() {
         if (combatHandler == null) return;
         
@@ -1615,9 +1641,7 @@ public class GameController implements Initializable {
         combatHandler.setCurrentPlayerName(currentPlayerName);
     }
     
-    /**
-     * Initialize TurnFlowHandler with all necessary dependencies and callbacks
-     */
+    // Initialize TurnFlowHandler with callbacks
     private void initializeTurnHandler() {
         // Set UI components
         turnHandler.setTimerLabel(timerLabel);
@@ -1646,9 +1670,6 @@ public class GameController implements Initializable {
         updateTurnHandlerState();
     }
     
-    /**
-     * Update TurnFlowHandler with current game state
-     */
     private void updateTurnHandlerState() {
         if (turnHandler == null) return;
         

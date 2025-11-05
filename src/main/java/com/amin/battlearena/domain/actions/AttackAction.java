@@ -7,9 +7,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Simple attack action that delegates to Character.attack(...) and logs result.
- */
+// Simple attack action with improved damage calculation
 public final class AttackAction implements Action {
 
     @Override

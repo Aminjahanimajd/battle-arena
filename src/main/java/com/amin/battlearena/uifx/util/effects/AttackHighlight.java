@@ -7,10 +7,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-/**
- * Concrete strategy for attack highlight effects
- * Uses red pulsing animation
- */
+// Concrete strategy for attack highlight effects (red pulsing)
 public class AttackHighlight extends HighlightEffect {
     
     public AttackHighlight() {

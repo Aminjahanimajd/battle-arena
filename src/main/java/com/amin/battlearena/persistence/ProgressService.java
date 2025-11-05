@@ -10,13 +10,7 @@ import com.amin.battlearena.progression.PlayerProgress;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-/**
- * ProgressService persists PlayerProgress to JSON files under ./saves/<player>.json
- * and keeps DB gold/unlocked_level in sync via PlayerDAO.
- *
- * Requires Jackson (jackson-databind) on the classpath. If you cannot add Jackson,
- * I can provide a properties-file fallback implementation.
- */
+// ProgressService persists PlayerProgress to JSON files
 public final class ProgressService {
 
     private final PlayerDAO dao;

@@ -8,33 +8,21 @@ import com.amin.battlearena.domain.events.GameEvent;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.players.Player;
 
-/**
- * Manages game event publishing and listener management.
- * Separates event handling responsibility from GameEngine.
- */
+// Manages game event publishing and listener management
 public final class EventPublisher {
     
     private final List<GameEventListener> listeners = new ArrayList<>();
     
-    /**
-     * Add an event listener.
-     */
     public void addEventListener(GameEventListener listener) {
         if (listener != null) {
             listeners.add(listener);
         }
     }
     
-    /**
-     * Remove an event listener.
-     */
     public void removeEventListener(GameEventListener listener) {
         listeners.remove(listener);
     }
     
-    /**
-     * Publish a game event to all listeners.
-     */
     public void publish(GameEvent event) {
         if (event == null) return;
         
@@ -52,9 +40,6 @@ public final class EventPublisher {
         });
     }
     
-    /**
-     * Notify listeners of battle end.
-     */
     public void notifyBattleEnded(Player winner, Player loser) {
         Objects.requireNonNull(winner, "Winner cannot be null");
         Objects.requireNonNull(loser, "Loser cannot be null");
@@ -68,9 +53,6 @@ public final class EventPublisher {
         });
     }
     
-    /**
-     * Notify listeners of character death.
-     */
     public void notifyCharacterKilled(Character character) {
         Objects.requireNonNull(character, "Character cannot be null");
         
@@ -83,16 +65,10 @@ public final class EventPublisher {
         });
     }
     
-    /**
-     * Get the number of registered listeners.
-     */
     public int getListenerCount() {
         return listeners.size();
     }
     
-    /**
-     * Clear all listeners.
-     */
     public void clearListeners() {
         listeners.clear();
     }

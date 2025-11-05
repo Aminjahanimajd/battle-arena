@@ -274,6 +274,39 @@ mvn surefire-report:report
 
 ---
 
+## 🔧 **Extensibility Features**
+
+Battle Arena now includes a **comprehensive factory pattern system** that makes extending the game incredibly easy:
+
+### **Factory Classes**
+1. **CharacterFactory** - Create and register new character types
+2. **AbilityFactory** - Add custom abilities to the game
+3. **ConsumableFactory** - Create new consumable items
+4. **LevelFactory** - Build levels programmatically
+
+### **Quick Example**
+```java
+// Register a custom character type
+CharacterFactory.registerType("necromancer", Necromancer::new);
+
+// Register a custom ability
+AbilityFactory.registerAbility("firestorm", Firestorm::new);
+
+// Create a custom level
+LevelSpec level = LevelFactory.builder("my_level")
+    .name("Custom Level")
+    .addEnemy("necromancer", 5, 2)
+    .withRewards(500, 250)
+    .build();
+```
+
+**📚 For complete documentation**, see:
+- **[Factory Extensibility Guide](docs/FACTORY_EXTENSIBILITY_GUIDE.md)** - Complete usage guide with examples
+- **[Factory Implementation Summary](docs/FACTORY_IMPLEMENTATION_SUMMARY.md)** - Technical details and design decisions
+- **[Extension Example](src/main/java/com/amin/battlearena/examples/ExtensionExample.java)** - Working code example
+
+---
+
 ## 🏆 **Quality Metrics**
 
 | Metric | Status | Details |

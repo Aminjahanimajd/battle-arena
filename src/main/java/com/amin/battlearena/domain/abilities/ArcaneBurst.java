@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Mage ability: powerful magical burst attack.
- */
+// Mage ability: powerful magical burst attack that ignores some defense
 public final class ArcaneBurst extends AbstractAbility {
 
     public ArcaneBurst() {

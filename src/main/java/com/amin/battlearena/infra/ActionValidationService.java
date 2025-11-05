@@ -3,10 +3,7 @@ package com.amin.battlearena.infra;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
 
-/**
- * Service that uses the Chain of Responsibility pattern to validate actions.
- * Provides a centralized way to validate all game actions.
- */
+// Centralized service for validating actions using Chain of Responsibility
 public final class ActionValidationService {
     
     private final ActionValidator validationChain;
@@ -20,13 +17,6 @@ public final class ActionValidationService {
         );
     }
     
-    /**
-     * Validate an action using the validation chain.
-     * @param actor the character performing the action
-     * @param target the target character (may be null for non-targeted actions)
-     * @param engine the game engine
-     * @return true if validation passes, false otherwise
-     */
     public boolean validateAction(Character actor, Character target, GameEngine engine) {
         if (validationChain == null) {
             return true; // No validators configured
@@ -35,33 +25,15 @@ public final class ActionValidationService {
         return validationChain.validate(actor, target, engine);
     }
     
-    /**
-     * Validate an action that requires a target.
-     * @param actor the character performing the action
-     * @param target the target character
-     * @param engine the game engine
-     * @return true if validation passes, false otherwise
-     */
     public boolean validateTargetedAction(Character actor, Character target, GameEngine engine) {
         return validateAction(actor, target, engine);
     }
     
-    /**
-     * Validate an action that doesn't require a target.
-     * @param actor the character performing the action
-     * @param engine the game engine
-     * @return true if validation passes, false otherwise
-     */
     public boolean validateNonTargetedAction(Character actor, GameEngine engine) {
         return validateAction(actor, null, engine);
     }
     
-    /**
-     * Get the validation chain for custom validation.
-     * @return the first validator in the chain
-     */
     public ActionValidator getValidationChain() {
-        // Returning the chain head is safe for read-only traversal; callers should not mutate it.
         return validationChain;
     }
 }

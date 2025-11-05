@@ -8,15 +8,7 @@ import com.amin.battlearena.domain.abilities.Ability;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Core abstract character model.
- *
- * Design notes:
- * - Uses composition (Stats) for numeric state.
- * - Exposes a tight public API: move, attack, takeDamage, abilities, temporary buffs.
- * - Provides both baseDamage() and getBaseDamage() for compatibility with subclasses.
- * - Includes mana system for ability usage.
- */
+// Core abstract character model with stats composition and mana system
 public abstract class Character {
 
     private final String name;
@@ -55,10 +47,6 @@ public abstract class Character {
     }
 
     public String getName() { return name; }
-    /**
-     * Expose stats for engine integration. Returning direct reference is acceptable
-     * as Stats is an encapsulated value holder with controlled mutators.
-     */
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings("EI_EXPOSE_REP")
     public Stats getStats() { return stats; }
     public Position getPosition() { return position; }
@@ -67,10 +55,7 @@ public abstract class Character {
         this.position = p;
     }
     
-    /**
-     * Validate and set position using state pattern.
-     * This method should be used for external movement validation.
-     */
+    // Validate and set position using state pattern
     public void moveTo(Position p) throws InvalidActionException {
         // Validate move through state pattern
         currentState.move(this, p);
@@ -100,7 +85,6 @@ public abstract class Character {
     public void addTemporaryDefense(int amount) { this.temporaryDefense += Math.max(0, amount); }
     public void clearTemporaryDefense() { this.temporaryDefense = 0; }
 
-    /** Evasion: turn-limited chance to fully avoid incoming damage (0.0 - 1.0) */
     public double getTemporaryEvasion() { return temporaryEvasion; }
     public void addTemporaryEvasion(double frac) {
         if (frac <= 0.0) return;
@@ -122,32 +106,18 @@ public abstract class Character {
         return alive; 
     }
     
-    /**
-     * Check if the character can perform actions in their current state.
-     */
     public boolean canAct() {
         return currentState.canAct();
     }
     
-    /**
-     * Get the current state of the character.
-     */
     public CharacterState getCurrentState() {
         return currentState;
     }
 
-    /**
-     * Backwards-compatible accessor used widely in subclasses.
-     * Subclasses can override baseDamage() to customize.
-     */
     public int baseDamage() {
         return getBaseDamage();
     }
 
-    /**
-     * Modern accessor name. Subclasses may override this instead,
-     * but for maximum compatibility both methods are provided.
-     */
     public int getBaseDamage() { 
         // Use cached value if available and position hasn't changed
         if (cachedDamage != null && lastPosition != null && lastPosition.equals(position)) {
@@ -164,18 +134,10 @@ public abstract class Character {
         return damage;
     }
     
-    /**
-     * Calculate the base damage for this character.
-     * Subclasses should override this method.
-     */
     protected int calculateBaseDamage() {
         return 0; // Default implementation
     }
 
-    /**
-     * Apply damage to this Character. Implementations should use Stats and
-     * throw DeadCharacterException when the character dies as a result.
-     */
     public void takeDamage(int amount) throws DeadCharacterException {
         int modified = amount;
         for (StatusEffect se : statusEffects) {
@@ -188,10 +150,7 @@ public abstract class Character {
         if (after == 0) throw new DeadCharacterException(name + " has been slain.");
     }
 
-    /**
-     * Called at end of character's turn to count down cooldowns and clear per-turn temporary buffs.
-     * Keeping this method here centralizes per-character housekeeping.
-     */
+    // End-of-turn cleanup: cooldowns, buffs, mana regen
     public void endTurnHousekeeping() {
         for (StatusEffect se : List.copyOf(statusEffects)) se.onTurnEnd(this);
         statusEffects.replaceAll(StatusEffect::tick);
@@ -206,9 +165,6 @@ public abstract class Character {
         invalidateCache();
     }
     
-    /**
-     * Invalidate the damage cache.
-     */
     public void invalidateCache() {
         cachedDamage = null;
         lastPosition = null;
@@ -224,9 +180,7 @@ public abstract class Character {
                 position, currentMana, maxMana);
     }
 
-    /**
-     * Fluent builder for creating Character subclasses with optional abilities.
-     */
+    // Fluent builder for creating Character subclasses
     public static class Builder {
         private String name;
         private Position position;

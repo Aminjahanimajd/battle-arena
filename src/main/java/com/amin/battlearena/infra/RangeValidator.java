@@ -5,9 +5,7 @@ import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Ranger;
 import com.amin.battlearena.engine.core.GameEngine;
 
-/**
- * Validator that checks if the target is within range for ranged attacks.
- */
+// Validator that checks if the target is within range for ranged attacks
 public class RangeValidator extends ActionValidator {
     
     @Override

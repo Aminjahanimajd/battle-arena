@@ -1,6 +1,6 @@
 package com.amin.battlearena.domain.level.winconditions;
 
-/** Factory for win conditions by type string. */
+// Factory for win conditions
 public final class WinConditions {
     private WinConditions() {}
     public static WinCondition byType(String type) {

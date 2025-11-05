@@ -89,9 +89,6 @@ public class MainApp extends Application {
         }
     }
     
-    /**
-     * Switch back to sign-in for account change
-     */
     public void switchToSignIn() {
         try {
             // Save all loaded data before clearing to prevent data loss

@@ -8,14 +8,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-/**
- * Handler for number animation effects with delegation pattern
- */
+// Handler for number animation effects with delegation pattern
 public class NumberAnimationHandler {
     
-    /**
-     * Show damage number animation with critical hit support
-     */
     public void showDamageNumber(Pane parent, double x, double y, int damage, boolean isCritical) {
         Label damageLabel = new Label("-" + damage);
         damageLabel.setLayoutX(x - 15);
@@ -56,9 +51,6 @@ public class NumberAnimationHandler {
         fadeOut.play();
     }
     
-    /**
-     * Show healing number animation
-     */
     public void showHealingNumber(Pane parent, double x, double y, int healing) {
         Label healLabel = new Label("+" + healing);
         healLabel.setLayoutX(x - 15);

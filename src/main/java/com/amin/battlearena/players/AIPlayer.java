@@ -3,9 +3,7 @@ package com.amin.battlearena.players;
 import com.amin.battlearena.engine.ai.AIStrategy;
 import com.amin.battlearena.engine.core.GameEngine;
 
-/**
- * Simple AI player delegating decision-making to an AIStrategy.
- */
+// Simple AI player delegating decision-making to an AIStrategy
 public final class AIPlayer extends Player {
 
     private final AIStrategy strategy;

@@ -2,11 +2,7 @@ package com.amin.battlearena.domain.model;
 
 import com.amin.battlearena.domain.abilities.ArcaneBurst;
 
-/**
- * Magical damage dealer with powerful spells.
- * Movement: 1 space per turn
- * Mana: High mana pool, fast regeneration
- */
+// Magical damage dealer with powerful spells
 public final class Mage extends Character {
 
     public Mage(String name, Position position) {
@@ -19,9 +15,6 @@ public final class Mage extends Character {
         return 6; // Increased from 1 for better combat balance - mages hit hard but are fragile
     }
 
-    /**
-     * Mages can move 1 space per turn
-     */
     public int getMovementRange() {
         return 1;
     }

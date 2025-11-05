@@ -1,19 +1,19 @@
 package com.amin.battlearena.uifx.handler;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
-import javafx.animation.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-/**
- * Handler for character animation effects with delegation pattern
- */
+// Handler for character animation effects with delegation pattern
 public class CharacterAnimationHandler {
     
-    /**
-     * Character hit animation with shake and flash effects
-     */
     public void performHitAnimation(Node character) {
         // Screen shake effect on hit
         TranslateTransition shake = new TranslateTransition(Duration.millis(50), character);
@@ -39,9 +39,6 @@ public class CharacterAnimationHandler {
         delay.play();
     }
     
-    /**
-     * Character death animation with fade and scale effects
-     */
     public void performDeathAnimation(Node character) {
         // Dramatic fade to gray with scale down
         FadeTransition fade = new FadeTransition(Duration.millis(800), character);
@@ -66,9 +63,6 @@ public class CharacterAnimationHandler {
         deathAnimation.play();
     }
     
-    /**
-     * Ability cast animation with color-coded effects
-     */
     public void performCastAnimation(Node caster, String abilityType) {
         Color effectColor;
         String key = abilityType == null ? "" : abilityType.toLowerCase(java.util.Locale.ROOT);
@@ -103,9 +97,6 @@ public class CharacterAnimationHandler {
         castScale.play();
     }
     
-    /**
-     * Selection highlight animation
-     */
     public void performSelectionAnimation(Node target) {
         DropShadow selection = new DropShadow();
         selection.setColor(Color.GOLD);
@@ -116,9 +107,6 @@ public class CharacterAnimationHandler {
         target.getProperties().put("selection_highlight", selection);
     }
     
-    /**
-     * Clear selection highlight animation
-     */
     public void clearSelectionAnimation(Node target) {
         if (target.getProperties().containsKey("selection_highlight")) {
             target.setEffect(null);
@@ -126,9 +114,6 @@ public class CharacterAnimationHandler {
         }
     }
     
-    /**
-     * Level up animation with celebration effects
-     */
     public void performLevelUpAnimation(Node character) {
         // Golden sparkles effect
         DropShadow levelGlow = new DropShadow();

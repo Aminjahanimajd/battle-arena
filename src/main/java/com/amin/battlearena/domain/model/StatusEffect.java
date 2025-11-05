@@ -1,8 +1,6 @@
 package com.amin.battlearena.domain.model;
 
-/**
- * Status effect with duration that can modify damage taken/dealt and per-turn behavior.
- */
+// Status effect with duration that can modify damage and per-turn behavior
 public interface StatusEffect {
     String name();
     int remainingTurns();

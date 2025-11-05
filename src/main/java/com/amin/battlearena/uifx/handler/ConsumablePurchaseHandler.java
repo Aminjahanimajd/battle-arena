@@ -3,14 +3,9 @@ package com.amin.battlearena.uifx.handler;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
 
-/**
- * Handler for consumable purchase operations with delegation pattern
- */
+// Handler for consumable purchase operations with delegation pattern
 public class ConsumablePurchaseHandler {
     
-    /**
-     * Purchase a consumable item
-     */
     public boolean purchaseConsumable(PlayerData playerData, String itemId, int cost, 
                                     String successMessage, ShopUIHandler uiHandler) {
         if (playerData == null) return false;
@@ -30,9 +25,6 @@ public class ConsumablePurchaseHandler {
         }
     }
     
-    /**
-     * Get standard consumable costs
-     */
     public int getConsumableCost(String itemId) {
         return switch (itemId) {
             case "health_potion" -> 25;
@@ -45,9 +37,6 @@ public class ConsumablePurchaseHandler {
         };
     }
     
-    /**
-     * Check if consumable can be purchased
-     */
     public boolean canPurchaseConsumable(PlayerData playerData, String itemId) {
         if (playerData == null) return false;
         int cost = getConsumableCost(itemId);

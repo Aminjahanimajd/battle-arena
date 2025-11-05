@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Ranger ability: fires a volley of arrows that can hit multiple targets.
- */
+// Ranger ability: fires a volley of arrows that can hit multiple targets
 public final class PiercingVolley extends AbstractAbility {
 
     public PiercingVolley() {

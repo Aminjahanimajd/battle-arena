@@ -15,10 +15,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Simple console-driven human player. Prompts user to choose an acting character and an action.
- * This is intentionally simple and can be replaced by a GUI controller later.
- */
+// Simple console-driven human player
 public final class HumanPlayer extends Player {
 
     private final Scanner scanner;
@@ -226,9 +223,6 @@ public final class HumanPlayer extends Player {
         }
     }
 
-    /**
-     * Get the movement range for a character based on their class.
-     */
     private int getMovementRange(Character character) {
         if (character instanceof Archer) return 2;
         if (character instanceof Ranger) return 3;
@@ -237,9 +231,6 @@ public final class HumanPlayer extends Player {
         return 1;
     }
 
-    /**
-     * Clean up resources when the player is no longer needed
-     */
     public void cleanup() {
         if (scanner != null) {
             scanner.close();

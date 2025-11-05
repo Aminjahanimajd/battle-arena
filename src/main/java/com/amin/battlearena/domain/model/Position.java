@@ -1,9 +1,6 @@
 package com.amin.battlearena.domain.model;
 
-/**
- * Immutable 2D grid position used by characters and the board.
- * Uses simple Manhattan-like utilities (distance) and stepTowards helper.
- */
+// Immutable 2D grid position with distance utilities
 public final class Position {
     private final int x;
     private final int y;
@@ -16,10 +13,6 @@ public final class Position {
     public int x() { return x; }
     public int y() { return y; }
 
-    /**
-     * Euclidean distance (rounded up to int) — used for range checks.
-     * You may switch to Manhattan if you prefer grid-only movement.
-     */
     public int distanceTo(Position other) {
         int dx = other.x - this.x;
         int dy = other.y - this.y;
@@ -27,10 +20,7 @@ public final class Position {
         return (int) Math.ceil(d);
     }
 
-    /**
-     * Returns a neighboring Position one step towards target (8-directional).
-     * If already at target, returns this.
-     */
+    // Returns a neighboring Position one step towards target (8-directional)
     public Position stepTowards(Position target) {
         if (target == null) return this;
         int nx = this.x;

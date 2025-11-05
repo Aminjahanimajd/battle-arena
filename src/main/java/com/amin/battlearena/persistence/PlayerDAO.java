@@ -9,19 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * PlayerDAO: small, practical JDBC DAO for players.
- *
- * Default uses an embedded SQLite DB file "battle_arena.db" (jdbc:sqlite:battle_arena.db).
- * You can override by constructing with a different JDBC URL (e.g., jdbc:postgresql://...).
- *
- * Methods:
- *  - findGold(player) -> Optional<Integer>
- *  - findUnlockedLevel(player) -> Optional<Integer>  (numeric fallback)
- *  - createOrUpdatePlayer(player,gold,unlockedLevel)
- *  - setUnlockedLevels(player, csv)  (stores CSV or JSON text)
- *  - getUnlockedLevels(player) -> List<String>
- */
+// PlayerDAO: small, practical JDBC DAO for players
 public final class PlayerDAO {
 
     public PlayerDAO() {
@@ -77,9 +65,7 @@ public final class PlayerDAO {
         }
     }
 
-    /**
-     * Upsert a player row. unlockedLevelsCsv may be null or empty.
-     */
+    // Upsert a player row
     public void createOrUpdatePlayer(String playerName, int gold, int unlockedLevel, String unlockedLevelsCsv) {
         final String sql = """
             INSERT INTO player(name, gold, unlocked_level, unlocked_levels) VALUES (?, ?, ?, ?)

@@ -2,10 +2,7 @@ package com.amin.battlearena.domain.level;
 
 import java.util.List;
 
-/**
- * Single source of truth for a level configuration.
- * Replaces legacy LevelDefinition/LevelNode split.
- */
+// Single source of truth for a level configuration
 public record LevelSpec(
         String id,
         String name,

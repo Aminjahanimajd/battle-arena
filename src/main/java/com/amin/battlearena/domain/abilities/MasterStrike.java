@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Master ability: devastating attack that deals massive damage.
- */
+// Master ability: devastating attack with massive damage
 public final class MasterStrike extends AbstractAbility {
 
     public MasterStrike() {

@@ -1,24 +1,21 @@
 package com.amin.battlearena.uifx.controller;
 
-import com.amin.battlearena.domain.actions.AttackAction;
-import com.amin.battlearena.engine.core.GameEngine;
-import com.amin.battlearena.infra.DeadCharacterException;
-import com.amin.battlearena.infra.InvalidActionException;
-import com.amin.battlearena.domain.model.Character;
-import com.amin.battlearena.players.Player;
-import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.persistence.PlayerData;
-import com.amin.battlearena.persistence.PlayerDataManager;
-
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/**
- * Handles all combat-related actions in the game: attacks, abilities, and consumables.
- * Delegates combat logic from GameController to improve code organization and maintainability.
- */
+import com.amin.battlearena.domain.actions.AttackAction;
+import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.domain.model.Position;
+import com.amin.battlearena.engine.core.GameEngine;
+import com.amin.battlearena.infra.DeadCharacterException;
+import com.amin.battlearena.infra.InvalidActionException;
+import com.amin.battlearena.persistence.PlayerData;
+import com.amin.battlearena.persistence.PlayerDataManager;
+import com.amin.battlearena.players.Player;
+
+// Handles all combat-related actions in the game
 public class CombatActionHandler {
     
     // Dependencies injected from GameController
@@ -75,9 +72,6 @@ public class CombatActionHandler {
     public void setCheckAndHandleGameEnd(Runnable checkAndHandleGameEnd) { this.checkAndHandleGameEnd = checkAndHandleGameEnd; }
     public void setMovesPerTurn(Function<Character, Integer> movesPerTurn) { this.movesPerTurn = movesPerTurn; }
     
-    /**
-     * Handles attack action on target character
-     */
     public void handleAttack(Character target) {
         if (engine == null) { 
             appendLog.accept("Setup the board first.\n"); 
@@ -133,9 +127,6 @@ public class CombatActionHandler {
         }
     }
     
-    /**
-     * Handles ability usage on target character
-     */
     public void handleAbility(Character target) {
         if (engine == null) { 
             appendLog.accept("Setup the board first.\n"); 
@@ -235,9 +226,6 @@ public class CombatActionHandler {
         }
     }
     
-    /**
-     * Handles consumable usage on target character
-     */
     public void handleConsumableUse(Character target) {
         if (target == null) { 
             appendLog.accept("Click a character to apply the consumable.\n"); 
@@ -273,9 +261,6 @@ public class CombatActionHandler {
         }
     }
     
-    /**
-     * Applies the effect of a consumable to a character
-     */
     private boolean applyConsumableEffect(String consumableId, Character character) {
         if ("health_potion".equals(consumableId)) {
             if (character.getStats().getHp() < character.getStats().getMaxHp()) {
@@ -336,9 +321,6 @@ public class CombatActionHandler {
         }
     }
     
-    /**
-     * Gets the display name for a consumable
-     */
     private String getConsumableName(String consumableId) {
         return switch (consumableId) {
             case "health_potion" -> "Health Potion";
@@ -351,9 +333,6 @@ public class CombatActionHandler {
         };
     }
     
-    /**
-     * Adds visual effect for ability usage
-     */
     private void addAbilityEffect(Position position) {
         // Add visual effect for ability usage (similar to death effect but different color)
         // This creates a purple sparkle effect that fades over time

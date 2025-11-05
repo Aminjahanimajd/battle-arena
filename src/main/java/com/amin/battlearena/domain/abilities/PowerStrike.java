@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Warrior ability: powerful melee strike with bonus damage.
- */
+// Warrior ability: powerful melee strike with bonus damage
 public final class PowerStrike extends AbstractAbility {
 
     public PowerStrike() {

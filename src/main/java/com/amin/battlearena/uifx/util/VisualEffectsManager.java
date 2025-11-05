@@ -1,11 +1,12 @@
 package com.amin.battlearena.uifx.util;
 
+import com.amin.battlearena.uifx.handler.CharacterAnimationHandler;
+import com.amin.battlearena.uifx.handler.NumberAnimationHandler;
 import com.amin.battlearena.uifx.util.effects.AbilityHighlight;
 import com.amin.battlearena.uifx.util.effects.AttackHighlight;
 import com.amin.battlearena.uifx.util.effects.HighlightEffect;
 import com.amin.battlearena.uifx.util.effects.MovementHighlight;
-import com.amin.battlearena.uifx.handler.CharacterAnimationHandler;
-import com.amin.battlearena.uifx.handler.NumberAnimationHandler;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
@@ -17,10 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-/**
- * Refactored Visual Effects Manager using delegation and strategy patterns
- * Follows OOP principles: Single Responsibility, Delegation, Strategy Pattern
- */
+// Visual Effects Manager using delegation and strategy patterns
 public class VisualEffectsManager {
     
     private static volatile VisualEffectsManager instance;
@@ -54,30 +52,18 @@ public class VisualEffectsManager {
         return result;
     }
     
-    /**
-     * Create purple ability highlight effect using delegation
-     */
     public void showAbilityHighlight(Node target) {
         Platform.runLater(() -> abilityHighlight.apply(target));
     }
     
-    /**
-     * Create red attack highlight effect using delegation
-     */
     public void showAttackHighlight(Node target) {
         Platform.runLater(() -> attackHighlight.apply(target));
     }
     
-    /**
-     * Create blue movement highlight effect using delegation
-     */
     public void showMovementHighlight(Node target) {
         Platform.runLater(() -> movementHighlight.apply(target));
     }
     
-    /**
-     * Remove all highlights from target using delegation
-     */
     public void clearHighlights(Node target) {
         Platform.runLater(() -> {
             abilityHighlight.remove(target);
@@ -86,23 +72,14 @@ public class VisualEffectsManager {
         });
     }
     
-    /**
-     * Show damage number animation using delegation
-     */
     public void showDamageNumber(Pane parent, double x, double y, int damage, boolean isCritical) {
         Platform.runLater(() -> numberAnimations.showDamageNumber(parent, x, y, damage, isCritical));
     }
     
-    /**
-     * Show healing number animation using delegation
-     */
     public void showHealingNumber(Pane parent, double x, double y, int healing) {
         Platform.runLater(() -> numberAnimations.showHealingNumber(parent, x, y, healing));
     }
     
-    /**
-     * Show ability range indicator
-     */
     public void showAbilityRange(Pane parent, double centerX, double centerY, int range) {
         Platform.runLater(() -> {
             Circle rangeIndicator = new Circle(centerX, centerY, range * 40); // Scale up for visibility
@@ -124,9 +101,6 @@ public class VisualEffectsManager {
         });
     }
     
-    /**
-     * Show ability effect area
-     */
     public void showAbilityEffectArea(Pane parent, double centerX, double centerY, int width, int height) {
         Platform.runLater(() -> {
             Rectangle effectArea = new Rectangle(centerX - (width / 2.0), centerY - (height / 2.0), width * 40.0, height * 40.0);
@@ -157,9 +131,6 @@ public class VisualEffectsManager {
         });
     }
     
-    /**
-     * Clear all range and effect indicators
-     */
     public void clearRangeIndicators(Pane parent) {
         Platform.runLater(() -> {
             Node rangeIndicator = (Node) parent.getProperties().get("range_indicator");
@@ -189,44 +160,26 @@ public class VisualEffectsManager {
         });
     }
     
-    /**
-     * Character hit effect using delegation
-     */
     public void showHitEffect(Node character) {
         Platform.runLater(() -> characterAnimations.performHitAnimation(character));
     }
     
-    /**
-     * Character death effect using delegation
-     */
     public void showDeathEffect(Node character) {
         Platform.runLater(() -> characterAnimations.performDeathAnimation(character));
     }
     
-    /**
-     * Ability cast effect using delegation
-     */
     public void showAbilityCastEffect(Node caster, String abilityType) {
         Platform.runLater(() -> characterAnimations.performCastAnimation(caster, abilityType));
     }
     
-    /**
-     * Selection highlight effect using delegation
-     */
     public void showSelectionHighlight(Node target) {
         Platform.runLater(() -> characterAnimations.performSelectionAnimation(target));
     }
     
-    /**
-     * Clear selection highlight using delegation
-     */
     public void clearSelectionHighlight(Node target) {
         Platform.runLater(() -> characterAnimations.clearSelectionAnimation(target));
     }
     
-    /**
-     * Level up effect using delegation
-     */
     public void showLevelUpEffect(Node character) {
         Platform.runLater(() -> characterAnimations.performLevelUpAnimation(character));
     }

@@ -10,10 +10,7 @@ import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.players.Player;
 
-/**
- * Simple telemetry listener that logs key events to a file for analysis.
- * Registers as a GameEventListener on the engine.
- */
+// Simple telemetry listener that logs key events to a file
 public final class TelemetryListener implements AutoCloseable, GameEventListener {
     private static final Logger LOG = Logger.getLogger(TelemetryListener.class.getName());
     private FileHandler handler;

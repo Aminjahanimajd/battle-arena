@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-/**
- * Type-safe minimal event bus.
- * subscribe() returns a Runnable that unsubscribes, avoiding unchecked cast warnings.
- */
+// Type-safe minimal event bus
 public final class EventBus {
 
     private final Map<Class<? extends GameEvent>, List<Consumer<? super GameEvent>>> map = new HashMap<>();

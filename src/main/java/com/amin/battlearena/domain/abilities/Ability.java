@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Ability contract. Activation can throw domain exceptions (attack may kill).
- */
+// Ability contract
 public interface Ability {
     String getName();
     String getDescription();

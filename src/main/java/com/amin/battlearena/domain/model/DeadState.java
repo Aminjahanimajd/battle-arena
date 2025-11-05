@@ -2,10 +2,7 @@ package com.amin.battlearena.domain.model;
 
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * State implementation for dead characters.
- * Characters in this state cannot perform any actions.
- */
+// State implementation for dead characters
 public class DeadState implements CharacterState {
     
     private static final DeadState INSTANCE = new DeadState();

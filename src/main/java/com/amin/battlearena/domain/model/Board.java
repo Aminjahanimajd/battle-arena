@@ -4,17 +4,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * Lightweight Board utility for grid bounds and occupancy checks.
- *
- * Responsibilities:
- * - Know board dimensions.
- * - Validate positions (within bounds).
- * - Provide occupancy checks against a collection of characters (players' teams).
- *
- * Note: This class intentionally does not mutate Character positions directly.
- * Use GameEngine.move(...) which will consult Board when needed before calling character.moveTo(...).
- */
+// Lightweight Board utility for grid bounds and occupancy checks
 public final class Board {
     private final int width;
     private final int height;
@@ -33,9 +23,6 @@ public final class Board {
         return p.x() >= 0 && p.x() < width && p.y() >= 0 && p.y() < height;
     }
 
-    /**
-     * Check whether any alive character in the provided collection occupies the given position.
-     */
     public boolean isPositionOccupied(Position p, Collection<Character> characters) {
         Objects.requireNonNull(p);
         if (characters == null || characters.isEmpty()) return false;
@@ -45,9 +32,6 @@ public final class Board {
                 .anyMatch(c -> p.equals(c.getPosition()));
     }
 
-    /**
-     * Find a character located at the given position among the provided collection.
-     */
     public Optional<Character> getCharacterAt(Position p, Collection<Character> characters) {
         Objects.requireNonNull(p);
         if (characters == null || characters.isEmpty()) return Optional.empty();

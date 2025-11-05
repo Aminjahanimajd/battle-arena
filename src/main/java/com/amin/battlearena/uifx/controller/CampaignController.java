@@ -14,10 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
-/**
- * Controller for the Campaign Map interface
- * Handles level selection and campaign progression
- */
+// Controller for the Campaign Map interface
 public class CampaignController {
     
     private MainApp app;
@@ -263,9 +260,6 @@ public class CampaignController {
         }
     }
     
-    /**
-     * Update the player's current level progress
-     */
     public void setCurrentLevel(int level) {
         if (playerData != null) {
             playerData.setCurrentLevel(Math.min(level, LEVELS.length));
@@ -273,9 +267,6 @@ public class CampaignController {
         }
     }
     
-    /**
-     * Get the currently selected level number
-     */
     public int getSelectedLevel() {
         return selectedLevelNum;
     }

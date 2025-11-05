@@ -12,15 +12,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
-/**
- * Handles floating number animations using delegation pattern
- * Separates number animation concerns from main effects manager
- */
+// Handles floating number animations using delegation pattern
 public class NumberAnimationHandler {
     
-    /**
-     * Show damage number with floating animation
-     */
     public void showDamageNumber(Pane parent, double x, double y, int damage, boolean isCritical) {
         if (parent == null) return;
         
@@ -31,9 +25,6 @@ public class NumberAnimationHandler {
         animateFloatingNumber(parent, damageLabel, -50, 1000);
     }
     
-    /**
-     * Show healing number with floating animation
-     */
     public void showHealingNumber(Pane parent, double x, double y, int healing) {
         if (parent == null) return;
         
@@ -44,9 +35,6 @@ public class NumberAnimationHandler {
         animateFloatingNumber(parent, healLabel, -40, 800);
     }
     
-    /**
-     * Factory method for damage labels
-     */
     private Label createDamageLabel(int damage, boolean isCritical) {
         Label label = new Label("-" + damage);
         label.setFont(Font.font("System", FontWeight.BOLD, isCritical ? 18 : 14));
@@ -59,9 +47,6 @@ public class NumberAnimationHandler {
         return label;
     }
     
-    /**
-     * Factory method for healing labels
-     */
     private Label createHealingLabel(int healing) {
         Label label = new Label("+" + healing);
         label.setFont(Font.font("System", FontWeight.BOLD, 14));
@@ -71,17 +56,11 @@ public class NumberAnimationHandler {
         return label;
     }
     
-    /**
-     * Utility method for positioning labels
-     */
     private void positionLabel(Label label, double x, double y) {
         label.setLayoutX(x);
         label.setLayoutY(y);
     }
     
-    /**
-     * Template method for floating number animation
-     */
     private void animateFloatingNumber(Pane parent, Label label, double floatDistance, int durationMs) {
         // Animation: float up and fade out
         TranslateTransition floatUp = new TranslateTransition(Duration.millis(durationMs), label);

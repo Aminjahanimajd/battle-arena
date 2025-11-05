@@ -8,9 +8,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.InvalidActionException;
 import com.amin.battlearena.players.Player;
 
-/**
- * Domain-level action to use a consumable item from a player's inventory.
- */
+// Domain-level action to use a consumable item from a player's inventory
 public final class UseConsumableAction {
     private final Player owner;
     private final Consumable item;

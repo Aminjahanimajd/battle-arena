@@ -7,15 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-/**
- * Small configuration loader.
- * Order of precedence (highest first):
- * 1) System property
- * 2) Environment variable
- * 3) application.properties in working dir (./config/application.properties then ./application.properties)
- * 4) application.properties on classpath
- * 5) provided default
- */
+// Small configuration loader with multiple precedence levels
 public final class Config {
 
     private Config() {}

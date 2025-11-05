@@ -2,10 +2,7 @@ package com.amin.battlearena.domain.model;
 
 import java.util.Locale;
 
-/**
- * Single entry point for spawning characters by type.
- * Replaces the previous factory-based approach (centralized, type-safe).
- */
+// Single entry point for spawning characters by type
 public final class Units {
 
     public enum Kind {

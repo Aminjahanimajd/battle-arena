@@ -1,22 +1,17 @@
 package com.amin.battlearena.uifx.handler;
 
 import com.amin.battlearena.domain.model.Character;
-import javafx.scene.layout.VBox;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-/**
- * Handles ability-related UI operations and display
- * Follows Single Responsibility Principle from OOP
- */
+// Handles ability-related UI operations and display
 public class AbilityUIHandler {
     
-    /**
-     * Functional interface for ability selection callback
-     */
     @FunctionalInterface
     public interface AbilitySelectionCallback {
         void onAbilitySelected(int index, String abilityName);
@@ -31,16 +26,10 @@ public class AbilityUIHandler {
         this.abilitiesContainer = abilitiesContainer;
     }
     
-    /**
-     * Sets the callback to be invoked when an ability is selected
-     */
     public void setSelectionCallback(AbilitySelectionCallback callback) {
         this.selectionCallback = callback;
     }
     
-    /**
-     * Updates abilities list display for selected character
-     */
     public void updateAbilitiesDisplay(Character character) {
         if (abilitiesContainer != null) {
             abilitiesContainer.getChildren().clear();
@@ -55,9 +44,6 @@ public class AbilityUIHandler {
         }
     }
     
-    /**
-     * Creates enhanced ability display with icons and status
-     */
     private VBox createAbilityDisplay(com.amin.battlearena.domain.abilities.Ability ability, int index) {
         VBox abilityBox = new VBox(3);
         abilityBox.setAlignment(Pos.CENTER_LEFT);
@@ -130,9 +116,6 @@ public class AbilityUIHandler {
         return abilityBox;
     }
     
-    /**
-     * Gets appropriate icon for ability type
-     */
     private String getAbilityIcon(com.amin.battlearena.domain.abilities.Ability ability) {
         String name = ability.getName().toLowerCase();
         if (name.contains("heal")) return "💚";
@@ -146,9 +129,6 @@ public class AbilityUIHandler {
         return "🎯"; // Default ability icon
     }
     
-    /**
-     * Estimates damage type for ability display
-     */
     private String estimateAbilityDamage(com.amin.battlearena.domain.abilities.Ability ability) {
         String name = ability.getName().toLowerCase();
         
@@ -171,9 +151,6 @@ public class AbilityUIHandler {
         return "Damage";
     }
     
-    /**
-     * Estimates damage value for ability display
-     */
     private String getEstimatedDamageValue(com.amin.battlearena.domain.abilities.Ability ability) {
         String name = ability.getName().toLowerCase();
         
@@ -204,9 +181,6 @@ public class AbilityUIHandler {
         return String.valueOf(manaCost + 3);
     }
     
-    /**
-     * Selects ability for use
-     */
     public void selectAbility(int index, String abilityName) {
         selectedAbilityIndex = index;
         selectedAbility = abilityName;
@@ -220,9 +194,6 @@ public class AbilityUIHandler {
         refreshSelectionDisplay();
     }
     
-    /**
-     * Refreshes the visual selection display
-     */
     private void refreshSelectionDisplay() {
         // Update visual selection highlighting for all ability boxes
         for (int i = 0; i < abilitiesContainer.getChildren().size(); i++) {
@@ -240,23 +211,14 @@ public class AbilityUIHandler {
         }
     }
     
-    /**
-     * Gets currently selected ability name
-     */
     public String getSelectedAbility() {
         return selectedAbility;
     }
     
-    /**
-     * Gets selected ability index
-     */
     public int getSelectedAbilityIndex() {
         return selectedAbilityIndex;
     }
     
-    /**
-     * Clears ability selection
-     */
     public void clearSelection() {
         selectedAbilityIndex = -1;
         selectedAbility = null;

@@ -6,10 +6,7 @@ import java.util.logging.Logger;
 
 import com.amin.battlearena.players.Player;
 
-/**
- * Manages turn orchestration and player switching.
- * Separates turn management responsibility from GameEngine.
- */
+// Manages turn orchestration and player switching
 public final class TurnManager {
     
     private static final Logger LOG = Logger.getLogger(TurnManager.class.getName());
@@ -22,9 +19,6 @@ public final class TurnManager {
         this.players = players;
     }
     
-    /**
-     * Run the battle loop until one player has no alive characters.
-     */
     public void runTurns(GameEngine engine) {
         LOG.info(String.format("Battle started between %s and %s", 
             players.get(0).getName(), players.get(1).getName()));

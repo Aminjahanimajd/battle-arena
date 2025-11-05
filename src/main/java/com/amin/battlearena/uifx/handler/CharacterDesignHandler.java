@@ -9,18 +9,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
-/**
- * Handler responsible for creating character-specific visual designs
- * Implements Strategy pattern for different character class designs
- * Follows Single Responsibility Principle
- */
+// Handler responsible for creating character-specific visual designs
 public class CharacterDesignHandler {
     
-    /**
-     * Apply character-specific design to the base character node
-     */
     public void applyCharacterDesign(StackPane parent, Circle base, Character character) {
         String characterType = character.getClass().getSimpleName().toLowerCase(java.util.Locale.ROOT);
         

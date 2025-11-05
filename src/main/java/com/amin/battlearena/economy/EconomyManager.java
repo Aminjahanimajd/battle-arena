@@ -12,15 +12,7 @@ import com.amin.battlearena.persistence.PlayerProgressUtil;
 import com.amin.battlearena.persistence.ProgressService;
 import com.amin.battlearena.players.Player;
 
-/**
- * EconomyManager now follows DIP:
- *  - depends on ProgressService (injected) for persistence
- *  - subscribes to the EventBus for CharacterKilled and BattleEnded
- *
- * Responsibilities:
- *  - Award gold on kills and victory
- *  - Persist wallet state via ProgressService so changes survive process exit
- */
+// EconomyManager: awards gold on kills and victory, persists wallet state via ProgressService
 public final class EconomyManager implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(EconomyManager.class.getName());
@@ -33,17 +25,12 @@ public final class EconomyManager implements AutoCloseable {
     private final Runnable killUnsub;
     private final Runnable endUnsub;
 
-    /**
-     * Backwards-compatible ctor that creates a ProgressService internally.
-     * Prefer the constructor that accepts ProgressService for testability.
-     */
+    // Backwards-compatible ctor that creates a ProgressService internally
     public EconomyManager(EventBus bus, Player p1, Player p2) {
         this(bus, p1, p2, new ProgressService(), 10, 50);
     }
 
-    /**
-     * Preferred constructor: inject ProgressService and tune gold values.
-     */
+    // Preferred constructor: inject ProgressService and tune gold values
     public EconomyManager(EventBus bus, Player p1, Player p2, ProgressService progressService, int goldPerKill, int goldForWin) {
         this.progressService = Objects.requireNonNull(progressService, "progressService");
         this.goldPerKill = goldPerKill;

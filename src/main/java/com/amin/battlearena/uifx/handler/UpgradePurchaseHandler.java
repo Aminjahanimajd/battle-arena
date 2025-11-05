@@ -3,14 +3,9 @@ package com.amin.battlearena.uifx.handler;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
 
-/**
- * Handler for upgrade purchase operations with delegation pattern
- */
+// Handler for upgrade purchase operations with delegation pattern
 public class UpgradePurchaseHandler {
     
-    /**
-     * Process upgrade purchase with level-based pricing
-     */
     public boolean purchaseUpgrade(PlayerData playerData, String upgradeName, String successMessage, 
                                  ShopUIHandler uiHandler) {
         if (playerData == null) return false;
@@ -40,17 +35,11 @@ public class UpgradePurchaseHandler {
         }
     }
     
-    /**
-     * Calculate upgrade cost based on current level with exponential scaling
-     */
     public int calculateUpgradeCost(String upgradeName, int currentLevel) {
         int baseCost = getBaseUpgradeCost(upgradeName);
         return (int) (baseCost * Math.pow(1.5, currentLevel));
     }
     
-    /**
-     * Get base cost for each upgrade type
-     */
     private int getBaseUpgradeCost(String upgradeName) {
         return switch (upgradeName) {
             case "Health Boost" -> 150;
@@ -66,9 +55,6 @@ public class UpgradePurchaseHandler {
         };
     }
     
-    /**
-     * Get maximum upgrade level for each upgrade type
-     */
     public int getMaxUpgradeLevel(String upgradeName) {
         return switch (upgradeName) {
             case "Health Boost", "Attack Power", "Armor Boost" -> 10; // Core stats can go higher
@@ -78,9 +64,6 @@ public class UpgradePurchaseHandler {
         };
     }
     
-    /**
-     * Check if upgrade is available for purchase
-     */
     public boolean canPurchaseUpgrade(PlayerData playerData, String upgradeName) {
         if (playerData == null) return false;
         

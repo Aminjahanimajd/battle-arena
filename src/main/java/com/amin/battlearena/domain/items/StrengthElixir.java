@@ -3,10 +3,9 @@ package com.amin.battlearena.domain.items;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
 
-/** Strength elixir: temporarily boosts attack power. */
 public final class StrengthElixir implements Consumable {
     private final int attackBoost;
-    private final int duration; // turns
+    private final int duration;
 
     public StrengthElixir(int attackBoost, int duration) {
         this.attackBoost = Math.max(1, attackBoost);
@@ -14,7 +13,7 @@ public final class StrengthElixir implements Consumable {
     }
 
     public StrengthElixir() {
-        this(5, 3); // Default: +5 attack for 3 turns
+        this(5, 3);
     }
 
     @Override public String key() { return "STRENGTH_ELIXIR_" + attackBoost; }
@@ -26,7 +25,6 @@ public final class StrengthElixir implements Consumable {
     public void use(GameEngine engine, Character user, Character target) {
         Character receiver = (target != null) ? target : user;
         receiver.getStats().modifyAttack(attackBoost);
-        // TODO: Add temporary effect system for duration tracking
         engine.log(user.getName() + " uses Strength Elixir on " + receiver.getName() + " (+" + attackBoost + " Attack)");
     }
 }

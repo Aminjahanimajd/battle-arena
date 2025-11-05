@@ -2,14 +2,7 @@ package com.amin.battlearena.domain.model;
 
 import java.util.Objects;
 
-/**
- * Encapsulates numeric attributes for a Character: HP, attack, defense, and range.
- *
- * Design notes:
- * - Encapsulation / information hiding: fields are private and mutations are through methods.
- * - Single responsibility: this class only manages numeric stats and basic operations (damage/heal/modify).
- * - Safe guards ensure HP never exceeds max HP and never goes below zero.
- */
+// Encapsulates numeric attributes: HP, attack, defense, range, and critical stats
 public final class Stats {
 
     private int hp;        // current hit points
@@ -51,42 +44,25 @@ public final class Stats {
 
     // ---------- Mutators (controlled) ----------
 
-    /**
-     * Apply damage to this stats object. HP is reduced by amount (non-negative).
-     * HP is floored at 0.
-     */
     public void damage(int amount) {
         if (amount <= 0) return;
         hp = Math.max(0, hp - amount);
     }
 
-    /**
-     * Heal the character by amount. HP cannot exceed maxHp.
-     */
     public void heal(int amount) {
         if (amount <= 0) return;
         hp = Math.min(maxHp, hp + amount);
     }
 
-    /**
-     * Set current HP directly (clamped between 0 and maxHp).
-     */
     public void setHp(int hp) {
         this.hp = Math.max(0, Math.min(maxHp, hp));
     }
 
-    /**
-     * Increase the maximum HP by delta (can be negative). If maxHp reduced below 1, it is clamped to 1.
-     * Current HP is clamped to new max as well.
-     */
     public void setMaxHp(int newMaxHp) {
         this.maxHp = Math.max(1, newMaxHp);
         if (hp > maxHp) hp = maxHp;
     }
 
-    /**
-     * Convenience to modify the max HP by a delta (positive or negative).
-     */
     public void modifyMaxHp(int delta) {
         setMaxHp(this.maxHp + delta);
     }

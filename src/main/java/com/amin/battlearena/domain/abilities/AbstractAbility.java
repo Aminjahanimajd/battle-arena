@@ -5,9 +5,7 @@ import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
-/**
- * Base class providing cooldown handling and basic helpers.
- */
+// Base class providing cooldown handling and mana management
 public abstract class AbstractAbility implements Ability {
     protected final String name;
     protected final String description;
