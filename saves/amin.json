@@ -1,6 +1,6 @@
 {
   "playerName": "amin",
-  "gold": 595,
+  "gold": 685,
   "upgrades": {
     "Spell Power": 0,
     "Armor Boost": 0,
@@ -42,28 +42,28 @@
     "autoSave": "Every 3 Turns"
   },
   "currentLevel": 3,
-  "victories": 11,
+  "victories": 12,
   "levelCompleted": {
     "1": true,
     "2": true
   },
   "accountId": "amin_1756985177340",
   "createdAt": 1756985177342,
-  "lastLoginAt": 1759758313466,
+  "lastLoginAt": 1760957818471,
   "totalPlayTime": 0,
   "statistics": {
     "battlesLost": 0,
     "totalDamageDealt": 0,
-    "goldEarned": 1240,
+    "goldEarned": 1330,
     "totalDamageTaken": 0,
     "upgradesPurchased": 0,
     "abilitiesUsed": 0,
-    "battlesWon": 11
+    "battlesWon": 12
   },
   "purchasedUpgrades": {},
   "upgradeTimestamps": {},
   "consumables": {
-    "health_potion": 1,
+    "health_potion": 0,
     "strength_elixir": 2,
     "mana_potion": 3
   }

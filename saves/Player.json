@@ -63,7 +63,7 @@
   },
   "upgradeTimestamps": {},
   "consumables": {
-    "health_potion": 3,
+    "health_potion": 2,
     "strength_elixir": 1,
     "mana_potion": 2
   }
