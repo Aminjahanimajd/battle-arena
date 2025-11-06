@@ -83,6 +83,9 @@ public final class LevelFactory {
     public static class LevelBuilder {
         private final String id;
         private String name;
+        private String description = "";
+        private String chapter = "Custom Levels";
+        private int difficulty = 1;
         private final List<String> prereqs = new ArrayList<>();
         private LevelRewards rewards;
         private int requiresPlayerLevel = 1;
@@ -100,6 +103,21 @@ public final class LevelFactory {
         
         public LevelBuilder name(String name) {
             this.name = name;
+            return this;
+        }
+        
+        public LevelBuilder description(String description) {
+            this.description = (description != null) ? description : "";
+            return this;
+        }
+        
+        public LevelBuilder chapter(String chapter) {
+            this.chapter = (chapter != null) ? chapter : "Custom Levels";
+            return this;
+        }
+        
+        public LevelBuilder difficulty(int difficulty) {
+            this.difficulty = Math.max(1, Math.min(5, difficulty));
             return this;
         }
         
@@ -159,6 +177,9 @@ public final class LevelFactory {
             return new LevelSpec(
                 id,
                 name,
+                description,
+                chapter,
+                difficulty,
                 new ArrayList<>(prereqs),
                 rewards,
                 requiresPlayerLevel,

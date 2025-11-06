@@ -1,5 +1,7 @@
 package com.amin.battlearena.uifx.controller;
 
+import com.amin.battlearena.domain.level.LevelRepository;
+import com.amin.battlearena.domain.level.LevelSpec;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
 import com.amin.battlearena.uifx.MainApp;
@@ -14,12 +16,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
-// Controller for the Campaign Map interface
+import java.util.List;
+
+// Controller for the Campaign Map interface (data-driven from LevelRepository)
 public class CampaignController {
     
     private MainApp app;
     private PlayerData playerData;
     private String currentPlayerName;
+    private final LevelRepository levelRepository;
+    private final List<LevelSpec> allLevels;
     
     // Header elements
     @FXML private Label playerGold;
@@ -41,21 +47,10 @@ public class CampaignController {
     
     private int selectedLevelNum = 1;
     
-    // Level data - Balanced rewards for progressive upgrades
-    private static final LevelInfo[] LEVELS = {
-        new LevelInfo(1, "First Steps", "Training Grounds", "Learn the basics of combat. Master movement and basic attacks.", 1, "2-3", 80),
-        new LevelInfo(2, "Warrior's Trial", "Training Grounds", "Face basic enemies and test your warrior skills.", 2, "3-4", 120),
-        new LevelInfo(3, "Archer's Test", "Training Grounds", "Master ranged combat with precision and tactics.", 2, "3-4", 160),
-        new LevelInfo(4, "Forest Ambush", "Dark Forest", "Survive the darkness and enemy ambushes in the forest.", 3, "4-5", 200),
-        new LevelInfo(5, "Ancient Guardian", "Dark Forest", "Face the ancient forest guardian in epic combat.", 3, "1 Boss", 250),
-        new LevelInfo(6, "Mystic Clearing", "Dark Forest", "Magical enemies await in this mystical battleground.", 3, "4-6", 300),
-        new LevelInfo(7, "Rocky Ascent", "Mountain Peak", "Climb the treacherous mountain paths while fighting foes.", 4, "5-6", 400),
-        new LevelInfo(8, "Dragon's Lair", "Mountain Peak", "Enter the dragon's domain and face the ancient beast.", 4, "1 Dragon", 500),
-        new LevelInfo(9, "Summit Battle", "Mountain Peak", "Reach the mountain peak in this ultimate test.", 4, "6-8", 650),
-        new LevelInfo(10, "Arena Champion", "Grand Arena", "Face the reigning arena champion in single combat.", 5, "1 Champion", 800),
-        new LevelInfo(11, "Master's Trial", "Grand Arena", "The ultimate test of skill against multiple masters.", 5, "3 Masters", 1000),
-        new LevelInfo(12, "ARENA MASTER", "Grand Arena", "Become the ultimate champion of the battle arena!", 5, "Final Boss", 1500)
-    };
+    public CampaignController() {
+        this.levelRepository = new LevelRepository();
+        this.allLevels = levelRepository.jsonLevelsOnly();
+    }
     
     public void setApp(MainApp app) {
         this.app = app;
@@ -112,32 +107,30 @@ public class CampaignController {
 
     @FXML void onStartSelectedLevel(ActionEvent e) {
         if (app == null) return;
-        int lvl = Math.max(1, Math.min(selectedLevelNum, LEVELS.length));
+        int lvl = Math.max(1, Math.min(selectedLevelNum, allLevels.size()));
         app.switchToGameWithLevel(currentPlayerName != null ? currentPlayerName : "Player", lvl);
     }
-
-
 
     private void selectLevel(int level) {
         selectedLevelNum = level;
         int unlockedUpTo = playerData != null ? Math.max(1, playerData.getCurrentLevel()) : 1;
-        if (level <= unlockedUpTo) {
-            showLevelInfo(LEVELS[level - 1]);
+        if (level <= unlockedUpTo && level <= allLevels.size()) {
+            showLevelInfo(allLevels.get(level - 1));
         } else {
             showLockedLevelInfo(level);
         }
         if (levelInfoPanel != null) levelInfoPanel.setVisible(true);
     }
     
-    private void showLevelInfo(LevelInfo info) {
-        if (selectedLevelName != null) selectedLevelName.setText(info.name);
-        if (selectedLevelChapter != null) selectedLevelChapter.setText(info.chapter);
-        if (selectedLevelDescription != null) selectedLevelDescription.setText(info.description);
-        if (enemyCount != null) enemyCount.setText(info.enemies);
-        if (rewardAmount != null) rewardAmount.setText(String.valueOf(info.reward));
+    private void showLevelInfo(LevelSpec level) {
+        if (selectedLevelName != null) selectedLevelName.setText(level.name());
+        if (selectedLevelChapter != null) selectedLevelChapter.setText(level.chapter());
+        if (selectedLevelDescription != null) selectedLevelDescription.setText(level.description());
+        if (enemyCount != null) enemyCount.setText(level.getEnemyCountLabel());
+        if (rewardAmount != null) rewardAmount.setText(String.valueOf(level.rewards().winGold()));
         
         // Update difficulty stars
-        updateDifficultyDisplay(info.difficulty);
+        updateDifficultyDisplay(level.difficulty());
         
         // Enable start button
         if (startLevelBtn != null) {
@@ -154,13 +147,21 @@ public class CampaignController {
     }
     
     private void showLockedLevelInfo(int levelNum) {
-        LevelInfo info = LEVELS[levelNum - 1];
-        
-        if (selectedLevelName != null) selectedLevelName.setText("🔒 " + info.name);
-        if (selectedLevelChapter != null) selectedLevelChapter.setText(info.chapter);
-        if (selectedLevelDescription != null) {
-            selectedLevelDescription.setText("Complete previous levels to unlock this challenge!");
+        if (levelNum > allLevels.size()) {
+            if (selectedLevelName != null) selectedLevelName.setText("🔒 Coming Soon");
+            if (selectedLevelChapter != null) selectedLevelChapter.setText("Future Content");
+            if (selectedLevelDescription != null) {
+                selectedLevelDescription.setText("This level is not yet available.");
+            }
+        } else {
+            LevelSpec level = allLevels.get(levelNum - 1);
+            if (selectedLevelName != null) selectedLevelName.setText("🔒 " + level.name());
+            if (selectedLevelChapter != null) selectedLevelChapter.setText(level.chapter());
+            if (selectedLevelDescription != null) {
+                selectedLevelDescription.setText("Complete previous levels to unlock this challenge!");
+            }
         }
+        
         if (enemyCount != null) enemyCount.setText("???");
         if (rewardAmount != null) rewardAmount.setText("???");
         
@@ -222,47 +223,23 @@ public class CampaignController {
     
     private void updateCampaignProgress() {
         int currentLevel = playerData != null ? playerData.getCurrentLevel() : 1;
-        double progress = (double) (currentLevel - 1) / LEVELS.length;
+        double progress = (double) (currentLevel - 1) / allLevels.size();
         if (campaignProgress != null) {
             campaignProgress.setProgress(progress);
         }
         if (progressText != null) {
-            progressText.setText((currentLevel - 1) + "/" + LEVELS.length + " complete");
+            progressText.setText((currentLevel - 1) + "/" + allLevels.size() + " complete");
         }
     }
 
-    // Language manager removed for simplified architecture
-
     private void updateLabels() {
-        // Add keys as needed; showing example using available keys
-        // For now, keep static labels; hook exists for future FXML label key mapping
         updatePlayerStats();
         updateCampaignProgress();
     }
     
-    // Helper class for level information
-    private static class LevelInfo {
-        final String name;
-        final String chapter;
-        final String description;
-        final int difficulty;
-        final String enemies;
-        final int reward;
-        
-        LevelInfo(int number, String name, String chapter, String description, 
-                 int difficulty, String enemies, int reward) {
-            this.name = name;
-            this.chapter = chapter;
-            this.description = description;
-            this.difficulty = difficulty;
-            this.enemies = enemies;
-            this.reward = reward;
-        }
-    }
-    
     public void setCurrentLevel(int level) {
         if (playerData != null) {
-            playerData.setCurrentLevel(Math.min(level, LEVELS.length));
+            playerData.setCurrentLevel(Math.min(level, allLevels.size()));
             updateCampaignProgress();
         }
     }
@@ -270,6 +247,4 @@ public class CampaignController {
     public int getSelectedLevel() {
         return selectedLevelNum;
     }
-    
-    // Removed unused method showAlert
 }

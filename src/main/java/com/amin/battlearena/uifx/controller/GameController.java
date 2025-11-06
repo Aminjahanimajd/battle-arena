@@ -1,6 +1,8 @@
 package com.amin.battlearena.uifx.controller;
 
 
+import com.amin.battlearena.domain.level.LevelRepository;
+import com.amin.battlearena.domain.level.LevelSpec;
 import com.amin.battlearena.domain.model.Board;
 import com.amin.battlearena.domain.model.Position;
 import com.amin.battlearena.engine.ai.SimpleAIStrategy;
@@ -38,10 +40,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.List;
+
 public class GameController implements Initializable {
     private MainApp app;
     private String currentPlayerName = "Player";
     private int currentLevelNumber = 1;
+    private LevelRepository levelRepository = new LevelRepository();
     
     // Main UI Components
     @FXML private TextArea logArea;
@@ -214,113 +219,81 @@ public class GameController implements Initializable {
     }
     
     private void setupEnemyTeam(int level) {
-        // Create enemies with stats scaled to level difficulty
+        // Load level configuration from repository
+        String levelId = String.format("L%02d", level);
+        LevelSpec levelSpec;
+        
+        try {
+            levelSpec = levelRepository.require(levelId);
+        } catch (IllegalArgumentException e) {
+            append("Error: Level " + levelId + " not found. Using fallback configuration.\n");
+            createFallbackEnemies(level);
+            return;
+        }
+        
+        // Create enemies from level specification
+        List<String> enemies = levelSpec.enemies();
+        List<List<Integer>> positions = levelSpec.enemyPositions();
+        
+        if (enemies.size() != positions.size()) {
+            append("Error: Enemy count mismatch in level " + levelId + ". Using fallback.\n");
+            createFallbackEnemies(level);
+            return;
+        }
+        
+        // Calculate stats based on level difficulty
         int baseHp = 80 + (level * 15);
         int baseAttack = 10 + (level * 2);
         int baseDefense = 5 + level;
         
-        // Create different enemy compositions based on level using CharacterFactory
-        if (level >= 1 && level <= 3) {
-            // Training levels - basic enemies
-            com.amin.battlearena.domain.model.Character enemy1 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Trainee-1", 
-                    new Position(board.getWidth() - 1, 2));
-            com.amin.battlearena.domain.model.Character enemy2 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Recruit-1", 
-                    new Position(board.getWidth() - 1, 3));
-            scaleEnemyStats(enemy1, baseHp, baseAttack, baseDefense);
-            scaleEnemyStats(enemy2, baseHp, baseAttack, baseDefense);
-            cpu.addToTeam(enemy1);
-            cpu.addToTeam(enemy2);
-            if (level >= 3) {
-                com.amin.battlearena.domain.model.Character enemy3 = 
-                    com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Novice-1", 
-                        new Position(board.getWidth() - 2, 3));
-                scaleEnemyStats(enemy3, baseHp - 20, baseAttack + 3, baseDefense - 1);
-                cpu.addToTeam(enemy3);
+        for (int i = 0; i < enemies.size(); i++) {
+            String enemyType = enemies.get(i);
+            List<Integer> pos = positions.get(i);
+            int row = pos.get(0);
+            int col = pos.get(1);
+            
+            String enemyName = enemyType + "-" + (i + 1);
+            com.amin.battlearena.domain.model.Character enemy = 
+                com.amin.battlearena.domain.model.CharacterFactory.create(
+                    enemyType.toLowerCase(), enemyName, new Position(row, col));
+            
+            // Scale stats based on enemy type
+            if (enemyType.equalsIgnoreCase("mage")) {
+                scaleEnemyStats(enemy, baseHp - 20, baseAttack + 3, baseDefense - 1);
+            } else if (enemyType.equalsIgnoreCase("archer")) {
+                scaleEnemyStats(enemy, baseHp - 10, baseAttack + 2, baseDefense);
+            } else if (enemyType.equalsIgnoreCase("knight")) {
+                scaleEnemyStats(enemy, baseHp + 20, baseAttack, baseDefense + 3);
+            } else if (enemyType.equalsIgnoreCase("master") || 
+                       enemyType.equalsIgnoreCase("dragon") ||
+                       enemyType.equalsIgnoreCase("warlord")) {
+                scaleEnemyStats(enemy, baseHp + 100, baseAttack + 8, baseDefense + 8);
+            } else {
+                scaleEnemyStats(enemy, baseHp, baseAttack, baseDefense);
             }
-        } else if (level >= 4 && level <= 6) {
-            // Forest levels - balanced team
-            com.amin.battlearena.domain.model.Character enemy1 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Forest-Brute", 
-                    new Position(board.getWidth() - 1, 2));
+            
+            cpu.addToTeam(enemy);
+        }
+    }
+    
+    private void createFallbackEnemies(int level) {
+        // Fallback enemy creation if JSON fails
+        int baseHp = 80 + (level * 15);
+        int baseAttack = 10 + (level * 2);
+        int baseDefense = 5 + level;
+        
+        com.amin.battlearena.domain.model.Character enemy1 = 
+            com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Enemy-1", 
+                new Position(board.getWidth() - 1, 2));
+        scaleEnemyStats(enemy1, baseHp, baseAttack, baseDefense);
+        cpu.addToTeam(enemy1);
+        
+        if (level > 1) {
             com.amin.battlearena.domain.model.Character enemy2 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Forest-Ranger", 
+                com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Enemy-2", 
                     new Position(board.getWidth() - 1, 3));
-            com.amin.battlearena.domain.model.Character enemy3 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Forest-Shaman", 
-                    new Position(board.getWidth() - 2, 3));
-            scaleEnemyStats(enemy1, baseHp, baseAttack, baseDefense);
             scaleEnemyStats(enemy2, baseHp - 10, baseAttack + 2, baseDefense);
-            scaleEnemyStats(enemy3, baseHp - 15, baseAttack + 4, baseDefense - 1);
-            cpu.addToTeam(enemy1);
             cpu.addToTeam(enemy2);
-            cpu.addToTeam(enemy3);
-            if (level >= 5) {
-                com.amin.battlearena.domain.model.Character boss = 
-                    com.amin.battlearena.domain.model.CharacterFactory.create("knight", "Ancient-Guardian", 
-                        new Position(board.getWidth() - 1, 4));
-                scaleEnemyStats(boss, baseHp + 50, baseAttack + 3, baseDefense + 5);
-                cpu.addToTeam(boss);
-            }
-        } else if (level >= 7 && level <= 9) {
-            // Mountain levels - tough enemies
-            com.amin.battlearena.domain.model.Character enemy1 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Mountain-Warrior", 
-                    new Position(board.getWidth() - 1, 2));
-            com.amin.battlearena.domain.model.Character enemy2 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Mountain-Sniper", 
-                    new Position(board.getWidth() - 1, 3));
-            com.amin.battlearena.domain.model.Character enemy3 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Mountain-Sage", 
-                    new Position(board.getWidth() - 2, 3));
-            com.amin.battlearena.domain.model.Character enemy4 = 
-                com.amin.battlearena.domain.model.CharacterFactory.create("knight", "Mountain-Guard", 
-                    new Position(board.getWidth() - 1, 4));
-            scaleEnemyStats(enemy1, baseHp, baseAttack, baseDefense);
-            scaleEnemyStats(enemy2, baseHp - 5, baseAttack + 3, baseDefense);
-            scaleEnemyStats(enemy3, baseHp - 10, baseAttack + 5, baseDefense);
-            scaleEnemyStats(enemy4, baseHp + 20, baseAttack, baseDefense + 3);
-            cpu.addToTeam(enemy1);
-            cpu.addToTeam(enemy2);
-            cpu.addToTeam(enemy3);
-            cpu.addToTeam(enemy4);
-            if (level == 8) {
-                com.amin.battlearena.domain.model.Character dragon = 
-                    com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Ancient-Dragon", 
-                        new Position(board.getWidth() - 2, 2));
-                scaleEnemyStats(dragon, baseHp + 100, baseAttack + 8, baseDefense + 8);
-                cpu.addToTeam(dragon);
-            }
-        } else {
-                // Arena levels - elite enemies
-                com.amin.battlearena.domain.model.Character enemy1 = 
-                    com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Arena-Champion", 
-                        new Position(board.getWidth() - 1, 2));
-                com.amin.battlearena.domain.model.Character enemy2 = 
-                    com.amin.battlearena.domain.model.CharacterFactory.create("archer", "Elite-Marksman", 
-                        new Position(board.getWidth() - 1, 3));
-                com.amin.battlearena.domain.model.Character enemy3 = 
-                    com.amin.battlearena.domain.model.CharacterFactory.create("mage", "Grand-Mage", 
-                        new Position(board.getWidth() - 2, 3));
-                com.amin.battlearena.domain.model.Character enemy4 = 
-                    com.amin.battlearena.domain.model.CharacterFactory.create("knight", "Arena-Guardian", 
-                        new Position(board.getWidth() - 1, 4));
-                scaleEnemyStats(enemy1, baseHp + 20, baseAttack + 5, baseDefense + 3);
-                scaleEnemyStats(enemy2, baseHp + 10, baseAttack + 7, baseDefense + 2);
-                scaleEnemyStats(enemy3, baseHp, baseAttack + 10, baseDefense + 1);
-                scaleEnemyStats(enemy4, baseHp + 40, baseAttack + 3, baseDefense + 6);
-                cpu.addToTeam(enemy1);
-                cpu.addToTeam(enemy2);
-                cpu.addToTeam(enemy3);
-                cpu.addToTeam(enemy4);
-                if (level == 12) {
-                    com.amin.battlearena.domain.model.Character finalBoss = 
-                        com.amin.battlearena.domain.model.CharacterFactory.create("warrior", "Arena-Master", 
-                            new Position(board.getWidth() - 2, 2));
-                    scaleEnemyStats(finalBoss, baseHp + 150, baseAttack + 15, baseDefense + 10);
-                    cpu.addToTeam(finalBoss);
-                }
         }
     }
     
