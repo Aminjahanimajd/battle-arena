@@ -8,7 +8,7 @@ public class PlayerData {
     private String playerName;
     private int gold = 1000; // Starting gold
     private final Map<String, Integer> upgrades = new HashMap<>(); // upgrade_name -> level
-    private final Map<String, Integer> upgradeCosts = new HashMap<>(); // upgrade_name -> current_cost
+    // NOTE: upgradeCosts REMOVED - now calculated dynamically from UpgradeCatalog
     private final Map<String, Object> settings = new HashMap<>();
     
     // Campaign progress
@@ -43,19 +43,15 @@ public class PlayerData {
     }
     
     private void initializeDefaults() {
-        // Initialize upgrade costs
-        upgradeCosts.put("Health Boost", 150);
-        upgradeCosts.put("Attack Power", 200);
-        upgradeCosts.put("Armor Boost", 175);
-        upgradeCosts.put("Eagle Eye", 180);
-        upgradeCosts.put("Swift Steps", 220);
-        upgradeCosts.put("Precision Shot", 300);
-        upgradeCosts.put("Mana Pool", 160);
-        upgradeCosts.put("Spell Power", 250);
-        upgradeCosts.put("Quick Cast", 350);
+        // Initialize upgrade levels for all known upgrades
+        // Upgrade costs are now calculated dynamically from UpgradeCatalog
+        String[] knownUpgrades = {
+            "Health Boost", "Attack Power", "Armor Boost",
+            "Eagle Eye", "Swift Steps", "Precision Shot",
+            "Mana Pool", "Spell Power", "Quick Cast"
+        };
         
-        // Initialize upgrade levels
-        for (String upgrade : upgradeCosts.keySet()) {
+        for (String upgrade : knownUpgrades) {
             upgrades.put(upgrade, 0);
         }
         
@@ -113,15 +109,8 @@ public class PlayerData {
         upgrades.put(upgradeName, Math.max(0, level));
     }
     
-    public int getUpgradeCost(String upgradeName) {
-        return upgradeCosts.getOrDefault(upgradeName, 100);
-    }
-    
-    public void increaseUpgradeCost(String upgradeName) {
-        int currentCost = getUpgradeCost(upgradeName);
-        int newCost = (int)(currentCost * 1.5); // 50% increase each time
-        upgradeCosts.put(upgradeName, newCost);
-    }
+    // NOTE: getUpgradeCost() and increaseUpgradeCost() REMOVED
+    // Costs are now calculated dynamically via UpgradeCatalog.calculateUpgradeCost()
     
     public Object getSetting(String key) {
         return settings.get(key);
@@ -132,7 +121,7 @@ public class PlayerData {
     }
     
     public Map<String, Integer> getUpgrades() { return new HashMap<>(upgrades); }
-    public Map<String, Integer> getUpgradeCosts() { return new HashMap<>(upgradeCosts); }
+    // NOTE: getUpgradeCosts() REMOVED - costs calculated dynamically from UpgradeCatalog
     public Map<String, Object> getSettings() { return new HashMap<>(settings); }
     
     // Campaign progress methods

@@ -1,5 +1,6 @@
 package com.amin.battlearena.uifx.controller;
 
+import com.amin.battlearena.economy.UpgradeCatalog;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
 import com.amin.battlearena.uifx.MainApp;
@@ -14,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 // Refactored Shop Controller using delegation patterns
+// NOW USES UpgradeCatalog as single source of truth for pricing
 public class ShopController {
     
     private MainApp app;
@@ -81,6 +83,10 @@ public class ShopController {
         // Initialize the shop
         loadPlayerData();
         updateGoldDisplay();
+        
+        // Populate all prices from UpgradeCatalog (single source of truth)
+        populateUpgradePricesFromCatalog();
+        
         updateUpgradeButtons();
         updateConsumableButtons();
         updateLabels();
@@ -92,6 +98,20 @@ public class ShopController {
             fade.setToValue(1.0);
             fade.play();
         }
+    }
+    
+    // Populate ALL upgrade prices from UpgradeCatalog on initialization
+    private void populateUpgradePricesFromCatalog() {
+        // All prices now loaded from UpgradeCatalog - single source of truth
+        updatePriceLabel("Health Boost");
+        updatePriceLabel("Attack Power");
+        updatePriceLabel("Armor Boost");
+        updatePriceLabel("Eagle Eye");
+        updatePriceLabel("Swift Steps");
+        updatePriceLabel("Precision Shot");
+        updatePriceLabel("Mana Pool");
+        updatePriceLabel("Spell Power");
+        updatePriceLabel("Quick Cast");
     }
     
     @FXML
@@ -222,10 +242,10 @@ public class ShopController {
     private void updatePriceLabel(String upgradeName) {
         if (playerData == null) return;
         int currentLevel = playerData.getUpgradeLevel(upgradeName);
-        int maxLevel = upgradeHandler.getMaxUpgradeLevel(upgradeName);
+        int maxLevel = UpgradeCatalog.getMaxUpgradeLevel(upgradeName);
         
-        String text = (currentLevel >= maxLevel) ? "" : 
-                     "💰 " + upgradeHandler.calculateUpgradeCost(upgradeName, currentLevel);
+        String text = (currentLevel >= maxLevel) ? "MAX" : 
+                     "💰 " + UpgradeCatalog.calculateUpgradeCost(upgradeName, currentLevel);
         setPriceLabel(upgradeName, text);
     }
 

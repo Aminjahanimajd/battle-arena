@@ -10,8 +10,30 @@ public final class UpgradeCatalog {
     
     private static final Map<String, List<Upgrade>> upgradesByCharacter = new HashMap<>();
     
+    // Maps UI display names (from shop.fxml) to actual upgrade IDs
+    private static final Map<String, String> UI_NAME_TO_ID = new HashMap<>();
+    
     static {
         initializeUpgrades();
+        initializeUIMapping();
+    }
+    
+    // Initialize mapping from UI display names to upgrade IDs
+    private static void initializeUIMapping() {
+        // Warrior upgrades (shop.fxml uses these names)
+        UI_NAME_TO_ID.put("Health Boost", "warrior_hp");
+        UI_NAME_TO_ID.put("Attack Power", "warrior_attack");
+        UI_NAME_TO_ID.put("Armor Boost", "warrior_defense");
+        
+        // Archer upgrades
+        UI_NAME_TO_ID.put("Eagle Eye", "archer_attack");      // Range/precision upgrade
+        UI_NAME_TO_ID.put("Swift Steps", "archer_hp");         // Speed/endurance upgrade
+        UI_NAME_TO_ID.put("Precision Shot", "archer_mana");    // Critical/mana upgrade
+        
+        // Mage upgrades
+        UI_NAME_TO_ID.put("Mana Pool", "mage_mana");
+        UI_NAME_TO_ID.put("Spell Power", "mage_attack");
+        UI_NAME_TO_ID.put("Quick Cast", "mage_mana_regen");    // Cooldown/regen upgrade
     }
     
     private static void initializeUpgrades() {
@@ -117,5 +139,39 @@ public final class UpgradeCatalog {
                 .filter(u -> u.getId().equals(upgradeId))
                 .findFirst()
                 .orElse(null);
+    }
+    
+    // Find upgrade by UI display name (used in shop.fxml)
+    public static Upgrade findUpgradeByUIName(String uiDisplayName) {
+        if (uiDisplayName == null) return null;
+        String upgradeId = UI_NAME_TO_ID.get(uiDisplayName);
+        if (upgradeId == null) return null;
+        return findUpgradeById(upgradeId);
+    }
+    
+    // Get base cost for an upgrade by UI display name
+    public static int getBaseCostByUIName(String uiDisplayName) {
+        Upgrade upgrade = findUpgradeByUIName(uiDisplayName);
+        return upgrade != null ? upgrade.getBaseCost() : 100;
+    }
+    
+    // Calculate upgrade cost at a given level
+    public static int calculateUpgradeCost(String uiDisplayName, int currentLevel) {
+        Upgrade upgrade = findUpgradeByUIName(uiDisplayName);
+        if (upgrade == null) return 100;
+        
+        // Use the upgrade's cost calculation formula
+        return (int) (upgrade.getBaseCost() * Math.pow(upgrade.getCostMultiplier(), currentLevel));
+    }
+    
+    // Get maximum upgrade level for UI display name
+    public static int getMaxUpgradeLevel(String uiDisplayName) {
+        Upgrade upgrade = findUpgradeByUIName(uiDisplayName);
+        return upgrade != null ? upgrade.getMaxStages() : 5;
+    }
+    
+    // Get all UI display names that are mapped
+    public static List<String> getAllUIDisplayNames() {
+        return new ArrayList<>(UI_NAME_TO_ID.keySet());
     }
 }

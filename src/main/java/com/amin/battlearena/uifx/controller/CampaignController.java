@@ -1,5 +1,7 @@
 package com.amin.battlearena.uifx.controller;
 
+import java.util.List;
+
 import com.amin.battlearena.domain.level.LevelRepository;
 import com.amin.battlearena.domain.level.LevelSpec;
 import com.amin.battlearena.persistence.PlayerData;
@@ -15,8 +17,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-
-import java.util.List;
 
 // Controller for the Campaign Map interface (data-driven from LevelRepository)
 public class CampaignController {

@@ -1,6 +1,8 @@
 package com.amin.battlearena.uifx.controller;
 
 
+import java.util.List;
+
 import com.amin.battlearena.domain.level.LevelRepository;
 import com.amin.battlearena.domain.level.LevelSpec;
 import com.amin.battlearena.domain.model.Board;
@@ -39,8 +41,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import java.util.List;
 
 public class GameController implements Initializable {
     private MainApp app;

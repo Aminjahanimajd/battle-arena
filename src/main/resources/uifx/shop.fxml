@@ -73,7 +73,7 @@
                                         </HBox>
                                         <Label text="+20 Max Health" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="healthPrice" text="💰 150" styleClass="upgrade-price"/>
+                                            <Label fx:id="healthPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="healthUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyHealthUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -86,7 +86,7 @@
                                         </HBox>
                                         <Label text="+5 Attack Damage" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="attackPrice" text="💰 200" styleClass="upgrade-price"/>
+                                            <Label fx:id="attackPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="attackUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyAttackUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -99,7 +99,7 @@
                                         </HBox>
                                         <Label text="+3 Defense Rating" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="armorPrice" text="💰 175" styleClass="upgrade-price"/>
+                                            <Label fx:id="armorPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="armorUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyDefenseUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -126,7 +126,7 @@
                                         </HBox>
                                         <Label text="+2 Attack Range" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="eaglePrice" text="💰 180" styleClass="upgrade-price"/>
+                                            <Label fx:id="eaglePrice" styleClass="upgrade-price"/>
                                             <Button fx:id="eagleEyeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyRangeUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -139,7 +139,7 @@
                                         </HBox>
                                         <Label text="+1 Movement Speed" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="swiftPrice" text="💰 220" styleClass="upgrade-price"/>
+                                            <Label fx:id="swiftPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="swiftStepsBtn" text="Buy" styleClass="buy-button" onAction="#onBuySpeedUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -152,7 +152,7 @@
                                         </HBox>
                                         <Label text="+15% Critical Chance" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="precisionPrice" text="💰 300" styleClass="upgrade-price"/>
+                                            <Label fx:id="precisionPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="precisionShotBtn" text="Buy" styleClass="buy-button" onAction="#onBuyPrecisionUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -179,7 +179,7 @@
                                         </HBox>
                                         <Label text="+30 Max Mana" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="manaPrice" text="💰 160" styleClass="upgrade-price"/>
+                                            <Label fx:id="manaPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="manaUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyManaUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -192,7 +192,7 @@
                                         </HBox>
                                         <Label text="+8 Spell Damage" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="spellPowerPrice" text="💰 250" styleClass="upgrade-price"/>
+                                            <Label fx:id="spellPowerPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="spellPowerBtn" text="Buy" styleClass="buy-button" onAction="#onBuySpellPowerUpgrade"/>
                                         </HBox>
                                     </VBox>
@@ -205,7 +205,7 @@
                                         </HBox>
                                         <Label text="-1 Ability Cooldown" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
-                                            <Label fx:id="cooldownPrice" text="💰 350" styleClass="upgrade-price"/>
+                                            <Label fx:id="cooldownPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="cooldownUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyCooldownUpgrade"/>
                                         </HBox>
                                     </VBox>

@@ -1,9 +1,11 @@
 package com.amin.battlearena.uifx.handler;
 
+import com.amin.battlearena.economy.UpgradeCatalog;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
 
 // Handler for upgrade purchase operations with delegation pattern
+// NOW USES UpgradeCatalog as single source of truth for all pricing
 public class UpgradePurchaseHandler {
     
     public boolean purchaseUpgrade(PlayerData playerData, String upgradeName, String successMessage, 
@@ -18,6 +20,7 @@ public class UpgradePurchaseHandler {
             return false;
         }
         
+        // Use UpgradeCatalog for all price calculations
         int actualCost = calculateUpgradeCost(upgradeName, currentLevel);
         
         if (playerData.spendGold(actualCost)) {
@@ -35,33 +38,14 @@ public class UpgradePurchaseHandler {
         }
     }
     
+    // Delegate to UpgradeCatalog for cost calculation
     public int calculateUpgradeCost(String upgradeName, int currentLevel) {
-        int baseCost = getBaseUpgradeCost(upgradeName);
-        return (int) (baseCost * Math.pow(1.5, currentLevel));
+        return UpgradeCatalog.calculateUpgradeCost(upgradeName, currentLevel);
     }
     
-    private int getBaseUpgradeCost(String upgradeName) {
-        return switch (upgradeName) {
-            case "Health Boost" -> 150;
-            case "Attack Power" -> 200;
-            case "Armor Boost" -> 175;
-            case "Eagle Eye" -> 220;
-            case "Swift Steps" -> 250;
-            case "Precision Shot" -> 300;
-            case "Mana Pool" -> 180;
-            case "Spell Power" -> 280;
-            case "Quick Cast" -> 320;
-            default -> 100;
-        };
-    }
-    
+    // Delegate to UpgradeCatalog for max level
     public int getMaxUpgradeLevel(String upgradeName) {
-        return switch (upgradeName) {
-            case "Health Boost", "Attack Power", "Armor Boost" -> 10; // Core stats can go higher
-            case "Eagle Eye", "Swift Steps", "Precision Shot", 
-                 "Mana Pool", "Spell Power", "Quick Cast" -> 8; // Special abilities
-            default -> 5; // Default max level
-        };
+        return UpgradeCatalog.getMaxUpgradeLevel(upgradeName);
     }
     
     public boolean canPurchaseUpgrade(PlayerData playerData, String upgradeName) {
