@@ -71,7 +71,7 @@ public final class CharacterFactory {
     }
     
     public static String[] getRegisteredTypes() {
-        return REGISTRY.keySet().toArray(new String[0]);
+        return REGISTRY.keySet().toArray(String[]::new);
     }
     
     public static boolean unregisterType(String type) {

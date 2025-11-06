@@ -10,15 +10,15 @@ public final class ConsumableFactory {
     private static final Map<String, Function<Integer, Consumable>> REGISTRY = new HashMap<>();
     
     static {
-        registerType("health_potion", HealthPotion::new);
-        registerType("mana_potion", ManaPotion::new);
-        registerType("hp_potion", HealthPotion::new);
-        registerType("mp_potion", ManaPotion::new);
-        registerType("healing_potion", HealthPotion::new);
-        registerType("strength_elixir", amount -> new StrengthElixir());
-        registerType("shield_scroll", amount -> new ShieldScroll());
-        registerType("haste_potion", amount -> new HastePotion());
-        registerType("revival_token", amount -> new RevivalToken());
+        registerType("health_potion", amount -> new HealthPotion(amount));
+        registerType("mana_potion", amount -> new ManaPotion(amount));
+        registerType("hp_potion", amount -> new HealthPotion(amount));
+        registerType("mp_potion", amount -> new ManaPotion(amount));
+        registerType("healing_potion", amount -> new HealthPotion(amount));
+        registerType("strength_elixir", amount -> new StrengthElixir(amount, 3));
+        registerType("shield_scroll", amount -> new ShieldScroll(amount, 3));
+        registerType("haste_potion", amount -> new HastePotion(amount, 3));
+        registerType("revival_token", amount -> new RevivalToken(amount));
     }
     
     private ConsumableFactory() {}
