@@ -235,7 +235,7 @@
                                 <Label text="Health Potion" styleClass="item-name"/>
                                 <Label text="Restore 50 HP instantly" wrapText="true" styleClass="item-desc"/>
                                 <HBox alignment="CENTER" spacing="10">
-                                    <Label text="💰 25" styleClass="item-price"/>
+                                    <Label fx:id="healthPotionPrice" styleClass="item-price"/>
                                     <Button fx:id="healthBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyHealthPotion"/>
                                 </HBox>
                             </VBox>
@@ -248,7 +248,7 @@
                                 <Label text="Mana Potion" styleClass="item-name"/>
                                 <Label text="Restore 30 MP instantly" wrapText="true" styleClass="item-desc"/>
                                 <HBox alignment="CENTER" spacing="10">
-                                    <Label text="💰 20" styleClass="item-price"/>
+                                    <Label fx:id="manaPotionPrice" styleClass="item-price"/>
                                     <Button fx:id="manaBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyManaPotion"/>
                                 </HBox>
                             </VBox>
@@ -261,7 +261,7 @@
                                 <Label text="Strength Elixir" styleClass="item-name"/>
                                 <Label text="+10 Attack for 5 turns" wrapText="true" styleClass="item-desc"/>
                                 <HBox alignment="CENTER" spacing="10">
-                                    <Label text="💰 40" styleClass="item-price"/>
+                                    <Label fx:id="strengthElixirPrice" styleClass="item-price"/>
                                     <Button fx:id="strengthBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyStrengthElixir"/>
                                 </HBox>
                             </VBox>
@@ -274,7 +274,7 @@
                                 <Label text="Shield Scroll" styleClass="item-name"/>
                                 <Label text="+8 Defense for 5 turns" wrapText="true" styleClass="item-desc"/>
                                 <HBox alignment="CENTER" spacing="10">
-                                    <Label text="💰 35" styleClass="item-price"/>
+                                    <Label fx:id="shieldScrollPrice" styleClass="item-price"/>
                                     <Button fx:id="shieldBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyShieldScroll"/>
                                 </HBox>
                             </VBox>
@@ -287,7 +287,7 @@
                                 <Label text="Haste Potion" styleClass="item-name"/>
                                 <Label text="+2 Speed for 3 turns" wrapText="true" styleClass="item-desc"/>
                                 <HBox alignment="CENTER" spacing="10">
-                                    <Label text="💰 30" styleClass="item-price"/>
+                                    <Label fx:id="hastePotionPrice" styleClass="item-price"/>
                                     <Button fx:id="hasteBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyHastePotion"/>
                                 </HBox>
                             </VBox>
@@ -300,7 +300,7 @@
                                 <Label text="Revival Token" styleClass="item-name"/>
                                 <Label text="Revive with 25% HP" wrapText="true" styleClass="item-desc"/>
                                 <HBox alignment="CENTER" spacing="10">
-                                    <Label text="💰 100" styleClass="item-price premium"/>
+                                    <Label fx:id="revivalTokenPrice" styleClass="item-price premium"/>
                                     <Button fx:id="revivalBuyBtn" text="Buy" styleClass="buy-button-premium" onAction="#onBuyRevivalToken"/>
                                 </HBox>
                             </VBox>

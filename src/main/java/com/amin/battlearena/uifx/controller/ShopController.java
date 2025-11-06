@@ -1,5 +1,6 @@
 package com.amin.battlearena.uifx.controller;
 
+import com.amin.battlearena.economy.ShopConsumableRegistry;
 import com.amin.battlearena.economy.UpgradeCatalog;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
@@ -15,7 +16,7 @@ import javafx.scene.control.Label;
 import javafx.util.Duration;
 
 // Refactored Shop Controller using delegation patterns
-// NOW USES UpgradeCatalog as single source of truth for pricing
+// NOW USES UpgradeCatalog + ShopConsumableRegistry as single sources of truth for pricing
 public class ShopController {
     
     private MainApp app;
@@ -42,7 +43,7 @@ public class ShopController {
     @FXML private Button spellPowerBtn;
     @FXML private Button cooldownUpgradeBtn;
 
-    // Dynamic price labels
+    // Dynamic price labels for upgrades
     @FXML private Label healthPrice;
     @FXML private Label attackPrice;
     @FXML private Label armorPrice;
@@ -52,6 +53,14 @@ public class ShopController {
     @FXML private Label manaPrice;
     @FXML private Label spellPowerPrice;
     @FXML private Label cooldownPrice;
+
+    // Dynamic price labels for consumables
+    @FXML private Label healthPotionPrice;
+    @FXML private Label manaPotionPrice;
+    @FXML private Label strengthElixirPrice;
+    @FXML private Label shieldScrollPrice;
+    @FXML private Label hastePotionPrice;
+    @FXML private Label revivalTokenPrice;
     
     public void setApp(MainApp app) {
         this.app = app;
@@ -84,8 +93,9 @@ public class ShopController {
         loadPlayerData();
         updateGoldDisplay();
         
-        // Populate all prices from UpgradeCatalog (single source of truth)
+        // Populate all prices from registries (single sources of truth)
         populateUpgradePricesFromCatalog();
+        populateConsumablePricesFromRegistry();
         
         updateUpgradeButtons();
         updateConsumableButtons();
@@ -112,6 +122,32 @@ public class ShopController {
         updatePriceLabel("Mana Pool");
         updatePriceLabel("Spell Power");
         updatePriceLabel("Quick Cast");
+    }
+
+    /**
+     * Populates all consumable price labels from ShopConsumableRegistry.
+     * Single source of truth - eliminates FXML/Controller/Handler triple duplication.
+     */
+    private void populateConsumablePricesFromRegistry() {
+        updateConsumablePriceLabel("health_potion", healthPotionPrice);
+        updateConsumablePriceLabel("mana_potion", manaPotionPrice);
+        updateConsumablePriceLabel("strength_elixir", strengthElixirPrice);
+        updateConsumablePriceLabel("shield_scroll", shieldScrollPrice);
+        updateConsumablePriceLabel("haste_potion", hastePotionPrice);
+        updateConsumablePriceLabel("revival_token", revivalTokenPrice);
+    }
+
+    /**
+     * Updates a single consumable price label from ShopConsumableRegistry.
+     */
+    private void updateConsumablePriceLabel(String itemId, Label priceLabel) {
+        if (priceLabel == null) return;
+        int price = ShopConsumableRegistry.getPrice(itemId);
+        if (price >= 0) {
+            priceLabel.setText("💰 " + price);
+        } else {
+            priceLabel.setText("💰 N/A");
+        }
     }
     
     @FXML
@@ -173,36 +209,42 @@ public class ShopController {
         purchaseUpgrade("Quick Cast", "⏰ -1 Ability Cooldown purchased!");
     }
     
-    // Consumable Purchases
+    // Consumable Purchases - Delegate to ShopConsumableRegistry for pricing
     
     @FXML
     public void onBuyHealthPotion() {
-        purchaseConsumable("health_potion", 25, "❤️‍🩹 Health Potion added to inventory!");
+        int cost = ShopConsumableRegistry.getPrice("health_potion");
+        purchaseConsumable("health_potion", cost, "❤️‍🩹 Health Potion added to inventory!");
     }
     
     @FXML
     public void onBuyManaPotion() {
-        purchaseConsumable("mana_potion", 20, "🧪 Mana Potion added to inventory!");
+        int cost = ShopConsumableRegistry.getPrice("mana_potion");
+        purchaseConsumable("mana_potion", cost, "🧪 Mana Potion added to inventory!");
     }
     
     @FXML
     public void onBuyStrengthElixir() {
-        purchaseConsumable("strength_elixir", 40, "💪 Strength Elixir added to inventory!");
+        int cost = ShopConsumableRegistry.getPrice("strength_elixir");
+        purchaseConsumable("strength_elixir", cost, "💪 Strength Elixir added to inventory!");
     }
     
     @FXML
     public void onBuyShieldScroll() {
-        purchaseConsumable("shield_scroll", 35, "🛡️ Shield Scroll added to inventory!");
+        int cost = ShopConsumableRegistry.getPrice("shield_scroll");
+        purchaseConsumable("shield_scroll", cost, "🛡️ Shield Scroll added to inventory!");
     }
     
     @FXML
     public void onBuyHastePotion() {
-        purchaseConsumable("haste_potion", 30, "🏃‍♂️ Haste Potion added to inventory!");
+        int cost = ShopConsumableRegistry.getPrice("haste_potion");
+        purchaseConsumable("haste_potion", cost, "🏃‍♂️ Haste Potion added to inventory!");
     }
     
     @FXML
     public void onBuyRevivalToken() {
-        purchaseConsumable("revival_token", 100, "💫 Revival Token added to inventory!");
+        int cost = ShopConsumableRegistry.getPrice("revival_token");
+        purchaseConsumable("revival_token", cost, "💫 Revival Token added to inventory!");
     }
     
     private void purchaseUpgrade(String upgradeName, String successMessage) {

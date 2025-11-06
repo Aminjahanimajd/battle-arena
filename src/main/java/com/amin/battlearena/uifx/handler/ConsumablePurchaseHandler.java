@@ -1,5 +1,6 @@
 package com.amin.battlearena.uifx.handler;
 
+import com.amin.battlearena.economy.ShopConsumableRegistry;
 import com.amin.battlearena.persistence.PlayerData;
 import com.amin.battlearena.persistence.PlayerDataManager;
 
@@ -25,16 +26,13 @@ public class ConsumablePurchaseHandler {
         }
     }
     
+    /**
+     * Retrieves consumable cost from ShopConsumableRegistry (single source of truth).
+     * Delegates to registry instead of maintaining duplicate switch statement.
+     */
     public int getConsumableCost(String itemId) {
-        return switch (itemId) {
-            case "health_potion" -> 25;
-            case "mana_potion" -> 20;
-            case "strength_elixir" -> 40;
-            case "shield_scroll" -> 35;
-            case "haste_potion" -> 30;
-            case "revival_token" -> 100;
-            default -> 50;
-        };
+        int price = ShopConsumableRegistry.getPrice(itemId);
+        return price >= 0 ? price : 50; // Default fallback if not registered
     }
     
     public boolean canPurchaseConsumable(PlayerData playerData, String itemId) {
