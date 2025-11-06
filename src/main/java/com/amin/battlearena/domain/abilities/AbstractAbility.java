@@ -7,17 +7,17 @@ import com.amin.battlearena.infra.InvalidActionException;
 
 // Base class providing cooldown handling and mana management
 public abstract class AbstractAbility implements Ability {
-    protected final String name;
-    protected final String description;
-    protected final int cooldown;
-    protected final int manaCost;
-    protected final int range;
-    protected int remainingCooldown = 0;
+    private final String name ;
+    private final String description;
+    private final int cooldown;
+    private final int manaCost;
+    private final int range;
+    private int remainingCooldown = 0;
 
     protected AbstractAbility(String name, String description, int cooldown, int manaCost) {
         this(name, description, cooldown, manaCost, 2); // Default range of 2
     }
-    
+
     protected AbstractAbility(String name, String description, int cooldown, int manaCost, int range) {
         this.name = name;
         this.description = description;
@@ -31,12 +31,12 @@ public abstract class AbstractAbility implements Ability {
     @Override public int getCooldown() { return cooldown; }
     @Override public int getRemainingCooldown() { return remainingCooldown; }
     @Override public int getManaCost() { return manaCost; }
-    public int getRange() { return range; }
+    @Override public int getRange() { return range; }
     @Override public boolean isReady() { return remainingCooldown == 0; }
     @Override public boolean canUse(Character user) { 
         return isReady() && user.canSpendMana(manaCost); 
     }
-    
+
     protected boolean isInRange(Character user, Character target) {
         if (user == null || target == null) return false;
         return user.getPosition().distanceTo(target.getPosition()) <= range;

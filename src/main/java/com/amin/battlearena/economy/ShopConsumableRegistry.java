@@ -42,8 +42,10 @@ public final class ShopConsumableRegistry {
     static {
         registerShopItem("health_potion", 25, "Health Potion", "Restore 20 HP", 20);
         registerShopItem("mana_potion", 20, "Mana Potion", "Restore 10 Mana", 10);
-        registerShopItem("hp_potion", 50, "Greater Health Potion", "Restore 50 HP", 50);
-        registerShopItem("mp_potion", 40, "Greater Mana Potion", "Restore 30 Mana", 30);
+        registerShopItem("strength_elixir", 40, "Strength Elixir", "+5 Attack for 3 turns", 5);
+        registerShopItem("shield_scroll", 35, "Shield Scroll", "+5 Defense for 3 turns", 5);
+        registerShopItem("haste_potion", 30, "Haste Potion", "+2 Movement Range for 3 turns", 2);
+        registerShopItem("revival_token", 100, "Revival Token", "Revive a fallen ally with 50% HP", 50);
     }
     
     private ShopConsumableRegistry() {}

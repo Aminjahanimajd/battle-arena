@@ -12,6 +12,7 @@ public interface Ability {
     int getCooldown();
     int getRemainingCooldown();
     int getManaCost();
+    int getRange();
     boolean isReady();
     boolean canUse(Character user);
     void reduceCooldown();

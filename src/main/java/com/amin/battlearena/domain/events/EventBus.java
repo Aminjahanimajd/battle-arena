@@ -21,7 +21,8 @@ public final class EventBus {
             if (type.isInstance(evt)) {
                 @SuppressWarnings("unchecked")
                 E cast = (E) evt;
-                @SuppressWarnings("unchecked") Consumer<E> typedHandler = (Consumer<E>) handler;
+                @SuppressWarnings("unchecked")
+                Consumer<E> typedHandler = (Consumer<E>) handler;
                 typedHandler.accept(cast);
             }
         };

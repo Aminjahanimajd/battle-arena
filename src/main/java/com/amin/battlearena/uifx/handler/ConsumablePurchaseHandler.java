@@ -29,10 +29,10 @@ public class ConsumablePurchaseHandler {
         return switch (itemId) {
             case "health_potion" -> 25;
             case "mana_potion" -> 20;
-            case "strength_potion" -> 40;
-            case "shield_potion" -> 35;
+            case "strength_elixir" -> 40;
+            case "shield_scroll" -> 35;
             case "haste_potion" -> 30;
-            case "revival_scroll" -> 100;
+            case "revival_token" -> 100;
             default -> 50;
         };
     }

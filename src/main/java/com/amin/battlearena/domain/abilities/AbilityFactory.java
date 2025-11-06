@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 // Factory for creating abilities with runtime registration
 public final class AbilityFactory {
-    
+
     private static final Map<String, Supplier<Ability>> REGISTRY = new HashMap<>();
     
     static {
@@ -55,7 +55,7 @@ public final class AbilityFactory {
     }
     
     public static String[] getRegisteredAbilities() {
-        return REGISTRY.keySet().toArray(new String[0]);
+        return REGISTRY.keySet().toArray(String[]::new);
     }
     
     public static boolean unregisterAbility(String key) {

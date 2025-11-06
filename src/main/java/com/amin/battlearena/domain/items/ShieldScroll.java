@@ -3,27 +3,27 @@ package com.amin.battlearena.domain.items;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
 
-public final class StrengthElixir extends AbstractConsumable {
-    private final int attackBoost;
+public final class ShieldScroll extends AbstractConsumable {
+    private final int defenseBoost;
     private final int duration;
 
-    public StrengthElixir(int attackBoost, int duration) {
-        this.attackBoost = Math.max(1, attackBoost);
+    public ShieldScroll(int defenseBoost, int duration) {
+        this.defenseBoost = Math.max(1, defenseBoost);
         this.duration = Math.max(1, duration);
     }
 
-    public StrengthElixir() {
+    public ShieldScroll() {
         this(5, 3);
     }
 
     @Override
     public String key() {
-        return "STRENGTH_ELIXIR_" + attackBoost;
+        return "SHIELD_SCROLL_" + defenseBoost;
     }
 
     @Override
     public String displayName() {
-        return "Strength Elixir (+" + attackBoost + ")";
+        return "Shield Scroll (+" + defenseBoost + ")";
     }
 
     @Override
@@ -33,22 +33,22 @@ public final class StrengthElixir extends AbstractConsumable {
 
     @Override
     protected int getBaseValue() {
-        return attackBoost;
+        return defenseBoost;
     }
 
     @Override
     protected String getEffectDescription() {
-        return "+" + attackBoost + " Attack for " + duration + " turns";
+        return "+" + defenseBoost + " Defense for " + duration + " turns";
     }
 
     @Override
     protected void applyEffect(GameEngine engine, Character user, Character receiver) {
-        receiver.getStats().modifyAttack(attackBoost);
-        engine.log("  ➜ +" + attackBoost + " Attack for " + duration + " turns");
+        receiver.getStats().modifyDefense(defenseBoost);
+        engine.log("  ➜ +" + defenseBoost + " Defense for " + duration + " turns");
     }
 
     @Override
     protected int calculateCost() {
-        return attackBoost * 8;
+        return defenseBoost * 7;
     }
 }

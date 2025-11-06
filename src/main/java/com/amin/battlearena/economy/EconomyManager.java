@@ -68,7 +68,7 @@ public final class EconomyManager implements AutoCloseable {
     }
 
     private void onBattleEnded(BattleEnded evt) {
-        Player winner = evt.winner;
+        Player winner = evt.getWinner();
         Wallet w = walletOf(winner);
         w.add(goldForWin);
         LOG.log(java.util.logging.Level.INFO, "{0} +{1}g (victory)", new Object[]{winner.getName(), goldForWin});

@@ -15,6 +15,10 @@ public final class ConsumableFactory {
         registerType("hp_potion", HealthPotion::new);
         registerType("mp_potion", ManaPotion::new);
         registerType("healing_potion", HealthPotion::new);
+        registerType("strength_elixir", amount -> new StrengthElixir());
+        registerType("shield_scroll", amount -> new ShieldScroll());
+        registerType("haste_potion", amount -> new HastePotion());
+        registerType("revival_token", amount -> new RevivalToken());
     }
     
     private ConsumableFactory() {}
@@ -42,7 +46,7 @@ public final class ConsumableFactory {
                 "registerShopItem", String.class, int.class, String.class, String.class, int.class
             );
             registerMethod.invoke(null, type, shopPrice, shopDisplayName, shopDescription, defaultAmount);
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
             // Shop not available - consumable still registered with factory
         }
     }

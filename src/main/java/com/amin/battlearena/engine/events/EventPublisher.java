@@ -29,7 +29,7 @@ public final class EventPublisher {
         listeners.forEach(listener -> {
             try {
                 if (event instanceof com.amin.battlearena.domain.events.BattleEnded battleEnded) {
-                    listener.onBattleEnded(battleEnded.winner, battleEnded.loser);
+                    listener.onBattleEnded(battleEnded.getWinner(), battleEnded.getLoser());
                 } else if (event instanceof com.amin.battlearena.domain.events.CharacterKilled characterKilled) {
                     listener.onCharacterKilled(characterKilled.getVictim());
                 }
