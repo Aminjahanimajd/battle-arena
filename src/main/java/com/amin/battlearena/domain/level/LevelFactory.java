@@ -89,7 +89,6 @@ public final class LevelFactory {
         private final List<String> enemies = new ArrayList<>();
         private final List<List<Integer>> enemyPositions = new ArrayList<>();
         private String note = "";
-        private String winConditionType = "DEFEAT_ALL_ENEMIES";
         
         private LevelBuilder(String id) {
             if (id == null || id.trim().isEmpty()) {
@@ -140,11 +139,6 @@ public final class LevelFactory {
             return this;
         }
         
-        public LevelBuilder withWinCondition(String winConditionType) {
-            this.winConditionType = (winConditionType != null) ? winConditionType : "DEFEAT_ALL_ENEMIES";
-            return this;
-        }
-        
         public LevelSpec build() {
             // Validation
             if (name == null || name.trim().isEmpty()) {
@@ -170,8 +164,7 @@ public final class LevelFactory {
                 requiresPlayerLevel,
                 new ArrayList<>(enemies),
                 new ArrayList<>(enemyPositions),
-                note,
-                winConditionType
+                note
             );
         }
     }

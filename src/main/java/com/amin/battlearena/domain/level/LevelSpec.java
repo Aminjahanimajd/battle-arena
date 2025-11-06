@@ -11,6 +11,5 @@ public record LevelSpec(
         int requiresPlayerLevel,
         List<String> enemies,
         List<List<Integer>> enemyPositions,
-        String note,
-        String winConditionType
+        String note
 ) {}
