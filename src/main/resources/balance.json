@@ -98,6 +98,58 @@
     }
   },
   
+  "abilities": {
+    "PowerStrike": {
+      "name": "Power Strike",
+      "description": "A powerful melee attack that deals bonus damage",
+      "cooldown": 3,
+      "manaCost": 15,
+      "range": 2
+    },
+    "ArcaneBurst": {
+      "name": "Arcane Burst",
+      "description": "A powerful magical attack that ignores some defense",
+      "cooldown": 5,
+      "manaCost": 25,
+      "range": 3
+    },
+    "DoubleShot": {
+      "name": "Double Shot",
+      "description": "Fire two arrows in quick succession",
+      "cooldown": 4,
+      "manaCost": 18,
+      "range": 2
+    },
+    "Charge": {
+      "name": "Charge",
+      "description": "Charge towards an enemy and deal bonus damage",
+      "cooldown": 4,
+      "manaCost": 20,
+      "range": 2
+    },
+    "PiercingVolley": {
+      "name": "Piercing Volley",
+      "description": "Fire a volley of arrows that can hit multiple enemies",
+      "cooldown": 6,
+      "manaCost": 26,
+      "range": 2
+    },
+    "MasterStrike": {
+      "name": "Master Strike",
+      "description": "A devastating attack that deals massive damage",
+      "cooldown": 8,
+      "manaCost": 50,
+      "range": 2
+    },
+    "Evasion": {
+      "name": "Evasion",
+      "description": "Grants temporary evasion chance for this turn",
+      "cooldown": 5,
+      "manaCost": 20,
+      "range": 2
+    }
+  },
+  
   "_legacy_bonuses_deprecated": {
     "warrior.damageBonus": 2,
     "warrior.defenseBonus": 1,

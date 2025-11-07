@@ -2,14 +2,19 @@ package com.amin.battlearena.domain.abilities;
 
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
+import com.amin.battlearena.infra.CharacterBalanceConfig.AbilityConfig;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
 // Ranger ability: fires a volley of arrows that can hit multiple targets
+// Stats loaded from balance.json via CharacterBalanceConfig
 public final class PiercingVolley extends AbstractAbility {
 
+    private static final AbilityConfig CONFIG = CharacterBalanceConfig.getInstance().getAbilityConfig("PiercingVolley");
+
     public PiercingVolley() {
-        super("Piercing Volley", "Fire a volley of arrows that can hit multiple enemies", 6, 26);
+        super(CONFIG.getName(), CONFIG.getDescription(), CONFIG.getCooldown(), CONFIG.getManaCost(), CONFIG.getRange());
     }
 
     @Override

@@ -2,14 +2,19 @@ package com.amin.battlearena.domain.abilities;
 
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
+import com.amin.battlearena.infra.CharacterBalanceConfig.AbilityConfig;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
 // Mage ability: powerful magical burst attack that ignores some defense
+// Stats loaded from balance.json via CharacterBalanceConfig
 public final class ArcaneBurst extends AbstractAbility {
 
+    private static final AbilityConfig CONFIG = CharacterBalanceConfig.getInstance().getAbilityConfig("ArcaneBurst");
+
     public ArcaneBurst() {
-        super("Arcane Burst", "A powerful magical attack that ignores some defense", 5, 25, 3);
+        super(CONFIG.getName(), CONFIG.getDescription(), CONFIG.getCooldown(), CONFIG.getManaCost(), CONFIG.getRange());
     }
 
     @Override

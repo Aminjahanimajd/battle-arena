@@ -2,14 +2,19 @@ package com.amin.battlearena.domain.abilities;
 
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
+import com.amin.battlearena.infra.CharacterBalanceConfig.AbilityConfig;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
 // Master ability: grants temporary evasion chance
+// Stats loaded from balance.json via CharacterBalanceConfig
 public final class Evasion extends AbstractAbility {
 
+    private static final AbilityConfig CONFIG = CharacterBalanceConfig.getInstance().getAbilityConfig("Evasion");
+
     public Evasion() {
-        super("Evasion", "Grants temporary evasion chance for this turn", 5, 20);
+        super(CONFIG.getName(), CONFIG.getDescription(), CONFIG.getCooldown(), CONFIG.getManaCost(), CONFIG.getRange());
     }
 
     @Override

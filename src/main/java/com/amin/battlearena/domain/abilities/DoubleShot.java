@@ -2,14 +2,19 @@ package com.amin.battlearena.domain.abilities;
 
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.engine.core.GameEngine;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
+import com.amin.battlearena.infra.CharacterBalanceConfig.AbilityConfig;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
 
 // Archer ability: fires two arrows in quick succession
+// Stats loaded from balance.json via CharacterBalanceConfig
 public final class DoubleShot extends AbstractAbility {
 
+    private static final AbilityConfig CONFIG = CharacterBalanceConfig.getInstance().getAbilityConfig("DoubleShot");
+
     public DoubleShot() {
-        super("Double Shot", "Fire two arrows in quick succession", 4, 18);
+        super(CONFIG.getName(), CONFIG.getDescription(), CONFIG.getCooldown(), CONFIG.getManaCost(), CONFIG.getRange());
     }
 
     @Override

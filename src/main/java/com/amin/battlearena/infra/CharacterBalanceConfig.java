@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Configuration loader for character balance stats from balance.json.
  * Single source of truth for all character base stats, mana, movement, and abilities.
+ * Also loads ability configurations (cooldowns, mana costs, ranges).
  * 
  * Similar pattern to LevelRepository - load once, cache in memory, provide query API.
  */
@@ -19,6 +20,33 @@ public final class CharacterBalanceConfig {
     
     private static CharacterBalanceConfig instance;
     private final Map<String, CharacterConfig> characterConfigs = new HashMap<>();
+    private final Map<String, AbilityConfig> abilityConfigs = new HashMap<>();
+    
+    /**
+     * Immutable configuration for an ability.
+     * Contains all stats previously hardcoded in ability constructors.
+     */
+    public static class AbilityConfig {
+        private final String name;
+        private final String description;
+        private final int cooldown;
+        private final int manaCost;
+        private final int range;
+        
+        public AbilityConfig(String name, String description, int cooldown, int manaCost, int range) {
+            this.name = name;
+            this.description = description;
+            this.cooldown = cooldown;
+            this.manaCost = manaCost;
+            this.range = range;
+        }
+        
+        public String getName() { return name; }
+        public String getDescription() { return description; }
+        public int getCooldown() { return cooldown; }
+        public int getManaCost() { return manaCost; }
+        public int getRange() { return range; }
+    }
     
     /**
      * Immutable configuration for a character class.
@@ -83,7 +111,7 @@ public final class CharacterBalanceConfig {
     }
     
     /**
-     * Loads character configurations from balance.json in classpath.
+     * Loads character and ability configurations from balance.json in classpath.
      * Called once during initialization.
      */
     private void loadConfiguration() {
@@ -94,13 +122,13 @@ public final class CharacterBalanceConfig {
             
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(is);
-            JsonNode charactersNode = root.get("characters");
             
+            // Load character configurations
+            JsonNode charactersNode = root.get("characters");
             if (charactersNode == null || !charactersNode.isObject()) {
                 throw new IllegalStateException("balance.json missing 'characters' object");
             }
             
-            // Parse each character configuration
             charactersNode.fields().forEachRemaining(entry -> {
                 String className = entry.getKey();
                 JsonNode config = entry.getValue();
@@ -111,8 +139,42 @@ public final class CharacterBalanceConfig {
             
             System.out.println("✅ Loaded " + characterConfigs.size() + " character configurations from balance.json");
             
+            // Load ability configurations
+            JsonNode abilitiesNode = root.get("abilities");
+            if (abilitiesNode != null && abilitiesNode.isObject()) {
+                abilitiesNode.fields().forEachRemaining(entry -> {
+                    String abilityId = entry.getKey();
+                    JsonNode config = entry.getValue();
+                    
+                    AbilityConfig abilityConfig = parseAbilityConfig(abilityId, config);
+                    abilityConfigs.put(abilityId, abilityConfig);
+                });
+                
+                System.out.println("✅ Loaded " + abilityConfigs.size() + " ability configurations from balance.json");
+            }
+            
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load balance.json", e);
+        }
+    }
+    
+    /**
+     * Parses a single ability configuration from JSON node.
+     */
+    private AbilityConfig parseAbilityConfig(String abilityId, JsonNode config) {
+        try {
+            String name = config.get("name").asText();
+            String description = config.get("description").asText();
+            int cooldown = config.get("cooldown").asInt();
+            int manaCost = config.get("manaCost").asInt();
+            int range = config.get("range").asInt();
+            
+            return new AbilityConfig(name, description, cooldown, manaCost, range);
+            
+        } catch (Exception e) {
+            throw new IllegalStateException(
+                "Failed to parse configuration for ability '" + abilityId + "'", e
+            );
         }
     }
     
@@ -194,5 +256,42 @@ public final class CharacterBalanceConfig {
      */
     public java.util.Set<String> getAvailableCharacterClasses() {
         return java.util.Set.copyOf(characterConfigs.keySet());
+    }
+    
+    /**
+     * Retrieves configuration for an ability.
+     * 
+     * @param abilityId Ability ID (case-sensitive): "PowerStrike", "ArcaneBurst", etc.
+     * @return Ability configuration with cooldown, mana cost, range
+     * @throws IllegalArgumentException if ability not found in balance.json
+     */
+    public AbilityConfig getAbilityConfig(String abilityId) {
+        if (abilityId == null) {
+            throw new IllegalArgumentException("Ability ID cannot be null");
+        }
+        
+        AbilityConfig config = abilityConfigs.get(abilityId);
+        if (config == null) {
+            throw new IllegalArgumentException(
+                "Unknown ability: '" + abilityId + "'. " +
+                "Available abilities: " + abilityConfigs.keySet()
+            );
+        }
+        
+        return config;
+    }
+    
+    /**
+     * Checks if an ability is defined in balance.json.
+     */
+    public boolean hasAbilityConfig(String abilityId) {
+        return abilityId != null && abilityConfigs.containsKey(abilityId);
+    }
+    
+    /**
+     * Gets all available ability IDs.
+     */
+    public java.util.Set<String> getAvailableAbilities() {
+        return java.util.Set.copyOf(abilityConfigs.keySet());
     }
 }
