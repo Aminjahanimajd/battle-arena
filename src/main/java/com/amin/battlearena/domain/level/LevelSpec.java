@@ -16,18 +16,4 @@ public record LevelSpec(
         List<List<Integer>> enemyPositions,
         String note
 ) {
-    // Convenience method for enemy count display in UI
-    public String getEnemyCountLabel() {
-        int count = enemies != null ? enemies.size() : 0;
-        if (count == 0) return "None";
-        if (count == 1) {
-            String enemy = enemies.get(0).toLowerCase();
-            if (enemy.contains("dragon") || enemy.contains("boss") || 
-                enemy.contains("champion") || enemy.contains("master")) {
-                return "1 Boss";
-            }
-            return "1 Enemy";
-        }
-        return count + " Enemies";
-    }
 }

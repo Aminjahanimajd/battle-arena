@@ -126,7 +126,7 @@ public class CampaignController {
         if (selectedLevelName != null) selectedLevelName.setText(level.name());
         if (selectedLevelChapter != null) selectedLevelChapter.setText(level.chapter());
         if (selectedLevelDescription != null) selectedLevelDescription.setText(level.description());
-        if (enemyCount != null) enemyCount.setText(level.getEnemyCountLabel());
+        if (enemyCount != null) enemyCount.setText(getEnemyCountLabel(level));
         if (rewardAmount != null) rewardAmount.setText(String.valueOf(level.rewards().winGold()));
         
         // Update difficulty stars
@@ -219,6 +219,25 @@ public class CampaignController {
             if (playerLevel != null) playerLevel.setText("Level 1");
             if (victoriesCount != null) victoriesCount.setText("0 wins");
         }
+    }
+    
+    // UI helper method: formats enemy count for display
+    private String getEnemyCountLabel(LevelSpec level) {
+        List<String> enemies = level.enemies();
+        int count = enemies != null ? enemies.size() : 0;
+        
+        if (count == 0) return "None";
+        
+        if (count == 1 && enemies != null) {
+            String enemy = enemies.get(0).toLowerCase();
+            if (enemy.contains("dragon") || enemy.contains("boss") || 
+                enemy.contains("champion") || enemy.contains("master")) {
+                return "1 Boss";
+            }
+            return "1 Enemy";
+        }
+        
+        return count + " Enemies";
     }
     
     private void updateCampaignProgress() {
