@@ -1,6 +1,8 @@
 package com.amin.battlearena.uifx.handler;
 
 import com.amin.battlearena.domain.model.Character;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
+import com.amin.battlearena.infra.CharacterBalanceConfig.AbilityConfig;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -129,56 +131,63 @@ public class AbilityUIHandler {
         return "🎯"; // Default ability icon
     }
     
+    /**
+     * Gets damage type label from balance.json config (physical/magical/utility).
+     * REFACTORED: Removed hardcoded string-based heuristics (name.contains).
+     */
     private String estimateAbilityDamage(com.amin.battlearena.domain.abilities.Ability ability) {
-        String name = ability.getName().toLowerCase();
-        
-        // Estimate damage based on ability characteristics
-        if (name.contains("heal")) {
-            return "Healing";
-        } else if (name.contains("burst") || name.contains("arcane")) {
-            return "Magic Damage";
-        } else if (name.contains("strike") || name.contains("power")) {
-            return "Physical Damage";
-        } else if (name.contains("master")) {
-            return "Heavy Damage";
-        } else if (name.contains("charge")) {
-            return "Rush Damage";
-        } else if (name.contains("shot") || name.contains("arrow")) {
-            return "Ranged Damage";
+        try {
+            // Query balance.json for actual damage type
+            AbilityConfig config = getAbilityConfigSafe(ability.getName());
+            if (config != null) {
+                String damageType = config.getDamageType();
+                // Convert type to user-friendly label
+                return switch (damageType.toLowerCase()) {
+                    case "physical" -> "Physical Damage";
+                    case "magical" -> "Magic Damage";
+                    case "utility" -> "Utility";
+                    default -> "Damage";
+                };
+            }
+        } catch (Exception e) {
+            // Fallback to default if config not found
         }
         
-        // Default for unknown abilities
-        return "Damage";
+        return "Damage"; // Default fallback
     }
     
+    /**
+     * Gets damage formula from balance.json config.
+     * REFACTORED: Removed 7 hardcoded damage formulas (manaCost + 10, etc.).
+     */
     private String getEstimatedDamageValue(com.amin.battlearena.domain.abilities.Ability ability) {
-        String name = ability.getName().toLowerCase();
-        
-        // Estimate damage values based on ability characteristics and mana cost
-        int manaCost = ability.getManaCost();
-        
-        if (name.contains("heal")) {
-            // Healing abilities - estimate heal amount
-            return String.valueOf(manaCost * 2); // Rough estimate: 2 HP per mana
-        } else if (name.contains("burst") || name.contains("arcane")) {
-            // Magic damage abilities
-            return String.valueOf(manaCost + 10); // Magic abilities tend to be high damage
-        } else if (name.contains("strike") || name.contains("power")) {
-            // Physical damage abilities
-            return String.valueOf(manaCost + 5); // Physical abilities are reliable
-        } else if (name.contains("master")) {
-            // Master abilities - very high damage
-            return String.valueOf(manaCost + 20); // Master abilities are devastating
-        } else if (name.contains("charge")) {
-            // Charge abilities - moderate damage + movement
-            return String.valueOf(manaCost + 8); // Damage plus utility
-        } else if (name.contains("shot") || name.contains("arrow")) {
-            // Ranged abilities
-            return String.valueOf(manaCost + 6); // Ranged precision damage
+        try {
+            // Query balance.json for actual damage formula
+            AbilityConfig config = getAbilityConfigSafe(ability.getName());
+            if (config != null) {
+                return config.getDamageFormula();
+            }
+        } catch (Exception e) {
+            // Fallback to mana cost if config not found
         }
         
-        // Default estimate based on mana cost
-        return String.valueOf(manaCost + 3);
+        // Fallback: estimate based on mana cost
+        return "~" + (ability.getManaCost() + 3);
+    }
+    
+    /**
+     * Safely retrieves ability config from balance.json.
+     * Returns null if ability not found (instead of throwing exception).
+     */
+    private AbilityConfig getAbilityConfigSafe(String abilityName) {
+        try {
+            // Map ability names to config IDs (e.g., "Power Strike" → "PowerStrike")
+            String abilityId = abilityName.replace(" ", "");
+            return CharacterBalanceConfig.getInstance().getAbilityConfig(abilityId);
+        } catch (Exception e) {
+            // Config not found - return null for fallback
+            return null;
+        }
     }
     
     public void selectAbility(int index, String abilityName) {

@@ -32,13 +32,18 @@ public final class CharacterBalanceConfig {
         private final int cooldown;
         private final int manaCost;
         private final int range;
+        private final String damageFormula;  // NEW: For UI damage display
+        private final String damageType;      // NEW: physical/magical/utility
         
-        public AbilityConfig(String name, String description, int cooldown, int manaCost, int range) {
+        public AbilityConfig(String name, String description, int cooldown, int manaCost, int range,
+                            String damageFormula, String damageType) {
             this.name = name;
             this.description = description;
             this.cooldown = cooldown;
             this.manaCost = manaCost;
             this.range = range;
+            this.damageFormula = damageFormula != null ? damageFormula : "Unknown";
+            this.damageType = damageType != null ? damageType : "physical";
         }
         
         public String getName() { return name; }
@@ -46,6 +51,8 @@ public final class CharacterBalanceConfig {
         public int getCooldown() { return cooldown; }
         public int getManaCost() { return manaCost; }
         public int getRange() { return range; }
+        public String getDamageFormula() { return damageFormula; }
+        public String getDamageType() { return damageType; }
     }
     
     /**
@@ -169,7 +176,16 @@ public final class CharacterBalanceConfig {
             int manaCost = config.get("manaCost").asInt();
             int range = config.get("range").asInt();
             
-            return new AbilityConfig(name, description, cooldown, manaCost, range);
+            // NEW: Load damage formula and type (optional fields with defaults)
+            String damageFormula = config.has("damageFormula") 
+                ? config.get("damageFormula").asText() 
+                : "attack + baseDamage";
+            String damageType = config.has("damageType") 
+                ? config.get("damageType").asText() 
+                : "physical";
+            
+            return new AbilityConfig(name, description, cooldown, manaCost, range, 
+                                    damageFormula, damageType);
             
         } catch (Exception e) {
             throw new IllegalStateException(
