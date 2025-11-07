@@ -30,7 +30,7 @@ public class CharacterRenderer {
         healthBar.getStyleClass().add("health-bar");
         healthBar.setPrefWidth(40);
         healthBar.setPrefHeight(4);
-        healthBar.setProgress((double) character.getStats().getHp() / character.getStats().getMaxHp());
+        healthBar.setProgress(character.getStats().getHealthPercentage());
         
         ProgressBar manaBar = new ProgressBar();
         manaBar.getStyleClass().add("mana-bar");

@@ -80,6 +80,19 @@ public abstract class Character {
         if (amount <= 0) return;
         currentMana = Math.min(maxMana, currentMana + amount);
     }
+    
+    // Get ability range (typically base range + 1 for most abilities)
+    public int getAbilityRange() {
+        return stats.getRange() + 1;
+    }
+    
+    // Check if character health is low (below threshold from config)
+    public boolean isLowHealth() {
+        return stats.getHealthPercentage() <= 0.2; // TODO: Read from balance.json
+    }
+    
+    // Get movement range - each character type has different movement capability
+    public abstract int getMovementRange();
 
     public int getTemporaryDefense() { return temporaryDefense; }
     public void addTemporaryDefense(int amount) { this.temporaryDefense += Math.max(0, amount); }

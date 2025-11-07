@@ -48,7 +48,7 @@ public final class MovementValidator {
         int dx = Math.abs(newPosition.x() - currentPos.x());
         int dy = Math.abs(newPosition.y() - currentPos.y());
         int steps = Math.max(dx, dy);
-        int maxMove = getMovementRange(character);
+        int maxMove = character.getMovementRange();
         if (steps > maxMove) {
             return false;
         }
@@ -60,19 +60,6 @@ public final class MovementValidator {
         }
 
         return true;
-    }
-    
-    private int getMovementRange(Character character) {
-        String className = character.getClass().getSimpleName();
-        if ("Archer".equals(className)) {
-            return 2;
-        } else if ("Ranger".equals(className)) {
-            return 3;
-        } else if ("Master".equals(className)) {
-            return 2;
-        } else {
-            return 1;
-        }
     }
 
     private boolean isPathClear(Position from, Position to) {

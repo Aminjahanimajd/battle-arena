@@ -63,6 +63,11 @@ public final class ExtensionExample {
         public int baseDamage() {
             return (int) (getStats().getAttack() * 1.2);
         }
+        
+        @Override
+        public int getMovementRange() {
+            return 2; // Assassins are nimble, can move 2 spaces
+        }
     }
     
     // Custom ability: high damage with armor penetration

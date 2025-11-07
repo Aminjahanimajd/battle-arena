@@ -5,6 +5,7 @@ import java.util.Stack;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
 import com.amin.battlearena.engine.core.GameEngine;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
 
 // Manages undo/redo functionality using Memento pattern
 public final class GameCaretaker {
@@ -14,7 +15,7 @@ public final class GameCaretaker {
     private final int maxHistorySize;
     
     public GameCaretaker() {
-        this(10);
+        this(CharacterBalanceConfig.getInstance().getUndoHistorySize());
     }
     
     public GameCaretaker(int maxHistorySize) {

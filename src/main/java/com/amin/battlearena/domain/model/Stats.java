@@ -101,6 +101,11 @@ public final class Stats {
 
     // ---------- Queries ----------
     public boolean isDead() { return hp <= 0; }
+    
+    // Get health as percentage (0.0 to 1.0)
+    public double getHealthPercentage() {
+        return maxHp > 0 ? (double) hp / maxHp : 0.0;
+    }
 
     @Override
     public String toString() {

@@ -4,19 +4,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.amin.battlearena.infra.CharacterBalanceConfig;
 import com.amin.battlearena.players.Player;
 
 // Manages turn orchestration and player switching
 public final class TurnManager {
     
     private static final Logger LOG = Logger.getLogger(TurnManager.class.getName());
-    private static final int MAX_TURNS = 1000; // Safety limit
+    private final int maxTurns; // Safety limit from config
     
     private final List<Player> players;
     private int currentTurn = 0;
     
     public TurnManager(List<Player> players) {
         this.players = players;
+        this.maxTurns = CharacterBalanceConfig.getInstance().getMaxTurns();
     }
     
     public void runTurns(GameEngine engine) {
@@ -42,7 +44,7 @@ public final class TurnManager {
                 LOG.log(Level.WARNING, "Exception during player turn: " + currentPlayer.getName(), t);
                 // Don't increment turn on error - let the same player try again
                 // But add a safety check to prevent infinite loops
-                if (currentTurn > MAX_TURNS) {
+                if (currentTurn > maxTurns) {
                     LOG.severe("ERROR: Too many turns, ending battle due to infinite loop protection");
                     break;
                 }

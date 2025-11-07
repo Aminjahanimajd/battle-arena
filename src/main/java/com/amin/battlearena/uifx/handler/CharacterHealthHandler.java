@@ -19,7 +19,7 @@ public class CharacterHealthHandler {
                     .filter(child -> child instanceof ProgressBar)
                     .map(child -> (ProgressBar) child)
                     .forEach(healthBar -> {
-                        double healthPercent = (double) character.getStats().getHp() / character.getStats().getMaxHp();
+                        double healthPercent = character.getStats().getHealthPercentage();
                         healthBar.setProgress(healthPercent);
                         
                         // Change color based on health
@@ -35,7 +35,7 @@ public class CharacterHealthHandler {
             });
         
         // Visual feedback for low health
-        if (character.getStats().getHp() <= character.getStats().getMaxHp() * 0.2) {
+        if (character.isLowHealth()) {
             // Add wounded effect
             characterNode.getStyleClass().add("wounded");
         } else {

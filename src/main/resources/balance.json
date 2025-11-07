@@ -184,6 +184,15 @@
     "goldForWin": 50
   },
   
+  "ui": {
+    "lowHealthThreshold": 0.2
+  },
+  
+  "game": {
+    "maxTurns": 1000,
+    "undoHistorySize": 10
+  },
+  
   "consumables": {
     "health_potion": {
       "price": 25,

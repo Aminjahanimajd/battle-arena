@@ -187,7 +187,7 @@ public class CombatActionHandler {
             }
             
             // Enforce ability range
-            int abilityRange = selected.getStats().getRange() + 1;
+            int abilityRange = selected.getAbilityRange();
             if (target == null || target.getPosition() == null || selected.getPosition() == null) {
                 appendLog.accept("Invalid target or position data for range calculation\n");
                 return;

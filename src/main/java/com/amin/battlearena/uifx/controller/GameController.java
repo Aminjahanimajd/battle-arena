@@ -998,13 +998,11 @@ public class GameController implements Initializable {
     }
     private void updateTeamCounters() {
         if (playerUnitsAlive != null && human != null) {
-            long alive = human.getTeam().stream().mapToLong(c -> c.isAlive() ? 1 : 0).sum();
-            playerUnitsAlive.setText(alive + "/" + human.getTeam().size());
+            playerUnitsAlive.setText(human.aliveTeam().size() + "/" + human.getTeam().size());
         }
         
         if (cpuUnitsAlive != null && cpu != null) {
-            long alive = cpu.getTeam().stream().mapToLong(c -> c.isAlive() ? 1 : 0).sum();
-            cpuUnitsAlive.setText(alive + "/" + cpu.getTeam().size());
+            cpuUnitsAlive.setText(cpu.aliveTeam().size() + "/" + cpu.getTeam().size());
         }
     }
 
@@ -1052,7 +1050,7 @@ public class GameController implements Initializable {
         // For now, use same range as attack but this can be customized per ability
         int sx = selected.getPosition().x();
         int sy = selected.getPosition().y();
-        int abilityRange = selected.getStats().getRange() + 1; // Abilities have slightly longer range
+        int abilityRange = selected.getAbilityRange();
         int minX = Math.max(0, sx - abilityRange);
         int maxX = Math.min(board.getWidth() - 1, sx + abilityRange);
         int minY = Math.max(0, sy - abilityRange);
@@ -1271,7 +1269,7 @@ public class GameController implements Initializable {
                 
                 // Check if target is in range before using ability
                 if (target != null && target != u) {
-                    int abilityRange = u.getStats().getRange() + 1; // Abilities have +1 range
+                    int abilityRange = u.getAbilityRange();
                     int dx = Math.abs(target.getPosition().x() - u.getPosition().x());
                     int dy = Math.abs(target.getPosition().y() - u.getPosition().y());
                     int distance = Math.max(dx, dy);

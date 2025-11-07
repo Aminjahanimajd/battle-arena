@@ -172,6 +172,18 @@ public final class CharacterBalanceConfig {
                 System.out.println("✅ Loaded economy config: goldPerKill=" + economyGoldPerKill + ", goldForWin=" + economyGoldForWin);
             }
             
+            // Load game configuration
+            JsonNode gameNode = root.get("game");
+            if (gameNode != null && gameNode.isObject()) {
+                if (gameNode.has("maxTurns")) {
+                    gameMaxTurns = gameNode.get("maxTurns").asInt();
+                }
+                if (gameNode.has("undoHistorySize")) {
+                    gameUndoHistorySize = gameNode.get("undoHistorySize").asInt();
+                }
+                System.out.println("✅ Loaded game config: maxTurns=" + gameMaxTurns + ", undoHistorySize=" + gameUndoHistorySize);
+            }
+            
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load balance.json", e);
         }
@@ -341,6 +353,26 @@ public final class CharacterBalanceConfig {
         return economyGoldForWin;
     }
     
+    // ========== GAME CONFIG ==========
+    
+    /**
+     * Gets maximum turns limit from balance.json game section.
+     * Returns 1000 if not configured.
+     */
+    public int getMaxTurns() {
+        return gameMaxTurns;
+    }
+    
+    /**
+     * Gets undo history size from balance.json game section.
+     * Returns 10 if not configured.
+     */
+    public int getUndoHistorySize() {
+        return gameUndoHistorySize;
+    }
+    
     private int economyGoldPerKill = 10;  // default fallback
     private int economyGoldForWin = 50;   // default fallback
+    private int gameMaxTurns = 1000;      // default fallback
+    private int gameUndoHistorySize = 10; // default fallback
 }

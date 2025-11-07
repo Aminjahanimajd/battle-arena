@@ -5,11 +5,11 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 import com.amin.battlearena.domain.events.BattleEnded;
+import com.amin.battlearena.domain.events.CharacterKilled;
+import com.amin.battlearena.domain.events.EventBus;
 import com.amin.battlearena.domain.model.Board;
 import com.amin.battlearena.domain.model.Character;
 import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.engine.events.EventPublisher;
-import com.amin.battlearena.engine.events.GameEventListener;
 import com.amin.battlearena.engine.memento.GameCaretaker;
 import com.amin.battlearena.engine.random.DefaultRandomProvider;
 import com.amin.battlearena.engine.random.RandomProvider;
@@ -28,7 +28,7 @@ public final class GameEngine {
     private final Board board;
     private final TurnManager turnManager;
     private MovementValidator movementValidator;
-    private final EventPublisher eventPublisher;
+    private final EventBus eventBus;
     private final GameState gameState;
     private final RandomProvider randomProvider;
 
@@ -48,7 +48,7 @@ public final class GameEngine {
         // Initialize specialized components
         this.gameState = new GameState();
         this.movementValidator = new MovementValidator(board, gameState.getAllCharacters());
-        this.eventPublisher = new EventPublisher();
+        this.eventBus = new EventBus();
         this.turnManager = new TurnManager(List.of(human, ai));
         
         // Setup game state
@@ -129,7 +129,7 @@ public final class GameEngine {
 
             if (!target.isAlive()) {
                 log(target.getName() + " has been slain!");
-                eventPublisher.notifyCharacterKilled(target);
+                eventBus.post(new CharacterKilled(target, null)); // TODO: Pass killer player
                 gameState.removeCharacter(target);
             }
             // Save state after successful damage application
@@ -140,7 +140,7 @@ public final class GameEngine {
             }
         } catch (DeadCharacterException e) {
             log(target.getName() + " was killed by the damage!");
-            eventPublisher.notifyCharacterKilled(target);
+            eventBus.post(new CharacterKilled(target, null)); // TODO: Pass killer player
             gameState.removeCharacter(target);
             try {
                 getCaretaker().saveState(this);
@@ -163,19 +163,15 @@ public final class GameEngine {
     }
 
     public void notifyBattleEnded(Player winner, Player loser) {
-        eventPublisher.notifyBattleEnded(winner, loser);
         try {
-            eventPublisher.publish(new BattleEnded(winner, loser));
+            eventBus.post(new BattleEnded(winner, loser));
         } catch (Exception e) {
             LOG.warning(String.format("Error publishing battle ended event: %s", e.getMessage()));
         }
     }
-
-    public void addEventListener(GameEventListener listener) {
-        eventPublisher.addEventListener(listener);
-    }
-
-    public void removeEventListener(GameEventListener listener) {
-        eventPublisher.removeEventListener(listener);
+    
+    // Access to EventBus for external subscriptions
+    public EventBus getEventBus() {
+        return eventBus;
     }
 }

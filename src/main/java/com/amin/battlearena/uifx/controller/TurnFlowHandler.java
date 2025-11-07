@@ -291,8 +291,7 @@ public class TurnFlowHandler {
         // Bonus for keeping team alive
         int aliveBonus = 0;
         if (human != null) {
-            long aliveCount = human.getTeam().stream().mapToLong(c -> c.isAlive() ? 1 : 0).sum();
-            aliveBonus = (int) (aliveCount * 10);
+            aliveBonus = human.aliveTeam().size() * 10;
         }
         
         return baseReward + aliveBonus;

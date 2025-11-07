@@ -88,9 +88,9 @@ public final class SimpleAIStrategy implements AIStrategy {
         if (attacker instanceof Archer archer) {
             return archer.inRangeOf(target);
         }
-        // Melee characters need to be adjacent
+        // Use character's attack range from stats
         return attacker.getPosition() != null && target.getPosition() != null && 
-               attacker.getPosition().distanceTo(target.getPosition()) <= 1;
+               attacker.getPosition().distanceTo(target.getPosition()) <= attacker.getStats().getRange();
     }
     
     private boolean isInAbilityRange(Character user, Character target, Ability ability) {
@@ -101,12 +101,7 @@ public final class SimpleAIStrategy implements AIStrategy {
             return distance <= abstractAbility.getRange();
         }
         
-        // Fallback: Most abilities have similar range to basic attacks
-        if (user instanceof Archer) {
-            return distance <= user.getStats().getRange();
-        }
-        
-        // Melee abilities typically have range 1-2
-        return distance <= 2;
+        // Fallback: Use character's ability range
+        return distance <= user.getAbilityRange();
     }
 }

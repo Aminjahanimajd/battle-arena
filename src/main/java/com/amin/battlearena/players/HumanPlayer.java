@@ -6,11 +6,8 @@ import java.util.Scanner;
 import com.amin.battlearena.domain.abilities.Ability;
 import com.amin.battlearena.domain.actions.AttackAction;
 import com.amin.battlearena.domain.actions.DefendAction;
-import com.amin.battlearena.domain.model.Archer;
 import com.amin.battlearena.domain.model.Character;
-import com.amin.battlearena.domain.model.Master;
 import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.domain.model.Ranger;
 import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.infra.DeadCharacterException;
 import com.amin.battlearena.infra.InvalidActionException;
@@ -104,7 +101,7 @@ public final class HumanPlayer extends Player {
                     new DefendAction().execute(engine, actor, null);
                 } else if (actionChoice == 3) {
                     // Movement with validation
-                    int maxMove = getMovementRange(actor);
+                    int maxMove = actor.getMovementRange();
                     System.out.println(actor.getName() + " can move up to " + maxMove + " spaces");
                     System.out.print("Enter new X: "); 
                     if (!scanner.hasNextInt()) {
@@ -221,14 +218,6 @@ public final class HumanPlayer extends Player {
             // Clear scanner buffer on error
             scanner.nextLine();
         }
-    }
-
-    private int getMovementRange(Character character) {
-        if (character instanceof Archer) return 2;
-        if (character instanceof Ranger) return 3;
-        if (character instanceof Master) return 2;
-        // Warrior, Knight, Mage all move 1 space
-        return 1;
     }
 
     public void cleanup() {

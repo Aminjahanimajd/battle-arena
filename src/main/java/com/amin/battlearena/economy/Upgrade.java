@@ -1,6 +1,7 @@
 package com.amin.battlearena.economy;
 
 import java.util.Objects;
+
 import com.amin.battlearena.domain.model.Character;
 
 // Represents an upgrade that can be purchased to improve character stats or abilities

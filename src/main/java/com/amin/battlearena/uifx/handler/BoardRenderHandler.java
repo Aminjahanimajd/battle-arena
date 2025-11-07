@@ -122,7 +122,7 @@ public class BoardRenderHandler {
         // Health indicator (circle background) - keep existing visual
         StackPane characterIcon = new StackPane();
         Circle healthCircle = new Circle(15);
-        double healthRatio = (double) character.getStats().getHp() / character.getStats().getMaxHp();
+        double healthRatio = character.getStats().getHealthPercentage();
         healthCircle.setFill(getHealthColor(healthRatio));
         
         // Character symbol
