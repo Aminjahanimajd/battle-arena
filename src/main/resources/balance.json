@@ -177,6 +177,376 @@
     "ranger.defenseBonus": 0,
     "master.damageBonus": 4,
     "master.defenseBonus": 1
+  },
+  
+  "economy": {
+    "goldPerKill": 10,
+    "goldForWin": 50
+  },
+  
+  "consumables": {
+    "health_potion": {
+      "price": 25,
+      "displayName": "Health Potion",
+      "description": "Restore 20 HP",
+      "amount": 20
+    },
+    "mana_potion": {
+      "price": 20,
+      "displayName": "Mana Potion",
+      "description": "Restore 10 Mana",
+      "amount": 10
+    },
+    "strength_elixir": {
+      "price": 40,
+      "displayName": "Strength Elixir",
+      "description": "+5 Attack for 3 turns",
+      "amount": 5
+    },
+    "shield_scroll": {
+      "price": 35,
+      "displayName": "Shield Scroll",
+      "description": "+5 Defense for 3 turns",
+      "amount": 5
+    },
+    "haste_potion": {
+      "price": 30,
+      "displayName": "Haste Potion",
+      "description": "+2 Movement Range for 3 turns",
+      "amount": 2
+    },
+    "revival_token": {
+      "price": 100,
+      "displayName": "Revival Token",
+      "description": "Revive a fallen ally with 50% HP",
+      "amount": 50
+    }
+  },
+  
+  "upgrades": {
+    "warrior": [
+      {
+        "id": "warrior_hp",
+        "name": "Warrior Vitality",
+        "description": "Increase Warrior's max HP",
+        "type": "STAT_HP",
+        "maxStages": 3,
+        "baseValue": 100,
+        "valuePerStage": 25,
+        "baseCost": 150,
+        "costMultiplier": 1.5
+      },
+      {
+        "id": "warrior_attack",
+        "name": "Warrior Strength",
+        "description": "Increase Warrior's attack power",
+        "type": "STAT_ATTACK",
+        "maxStages": 3,
+        "baseValue": 12,
+        "valuePerStage": 3,
+        "baseCost": 200,
+        "costMultiplier": 1.8
+      },
+      {
+        "id": "warrior_defense",
+        "name": "Warrior Armor",
+        "description": "Increase Warrior's defense",
+        "type": "STAT_DEFENSE",
+        "maxStages": 3,
+        "baseValue": 8,
+        "valuePerStage": 2,
+        "baseCost": 180,
+        "costMultiplier": 1.6
+      },
+      {
+        "id": "warrior_mana",
+        "name": "Warrior Spirit",
+        "description": "Increase Warrior's mana pool",
+        "type": "STAT_MANA",
+        "maxStages": 3,
+        "baseValue": 30,
+        "valuePerStage": 10,
+        "baseCost": 120,
+        "costMultiplier": 1.4
+      }
+    ],
+    "archer": [
+      {
+        "id": "archer_hp",
+        "name": "Archer Endurance",
+        "description": "Increase Archer's max HP",
+        "type": "STAT_HP",
+        "maxStages": 3,
+        "baseValue": 90,
+        "valuePerStage": 20,
+        "baseCost": 140,
+        "costMultiplier": 1.5
+      },
+      {
+        "id": "archer_attack",
+        "name": "Archer Precision",
+        "description": "Increase Archer's attack power",
+        "type": "STAT_ATTACK",
+        "maxStages": 3,
+        "baseValue": 14,
+        "valuePerStage": 2,
+        "baseCost": 180,
+        "costMultiplier": 1.7
+      },
+      {
+        "id": "archer_defense",
+        "name": "Archer Evasion",
+        "description": "Increase Archer's defense",
+        "type": "STAT_DEFENSE",
+        "maxStages": 3,
+        "baseValue": 6,
+        "valuePerStage": 2,
+        "baseCost": 170,
+        "costMultiplier": 1.6
+      },
+      {
+        "id": "archer_mana",
+        "name": "Archer Focus",
+        "description": "Increase Archer's mana pool",
+        "type": "STAT_MANA",
+        "maxStages": 3,
+        "baseValue": 45,
+        "valuePerStage": 8,
+        "baseCost": 150,
+        "costMultiplier": 1.5
+      }
+    ],
+    "mage": [
+      {
+        "id": "mage_hp",
+        "name": "Mage Constitution",
+        "description": "Increase Mage's max HP",
+        "type": "STAT_HP",
+        "maxStages": 3,
+        "baseValue": 80,
+        "valuePerStage": 15,
+        "baseCost": 120,
+        "costMultiplier": 1.4
+      },
+      {
+        "id": "mage_attack",
+        "name": "Mage Power",
+        "description": "Increase Mage's attack power",
+        "type": "STAT_ATTACK",
+        "maxStages": 3,
+        "baseValue": 15,
+        "valuePerStage": 3,
+        "baseCost": 220,
+        "costMultiplier": 1.9
+      },
+      {
+        "id": "mage_mana",
+        "name": "Mage Wisdom",
+        "description": "Increase Mage's mana pool",
+        "type": "STAT_MANA",
+        "maxStages": 3,
+        "baseValue": 60,
+        "valuePerStage": 15,
+        "baseCost": 200,
+        "costMultiplier": 1.6
+      },
+      {
+        "id": "mage_mana_regen",
+        "name": "Mage Meditation",
+        "description": "Increase Mage's mana regeneration",
+        "type": "STAT_MANA_REGEN",
+        "maxStages": 3,
+        "baseValue": 8,
+        "valuePerStage": 2,
+        "baseCost": 300,
+        "costMultiplier": 2.0
+      }
+    ],
+    "knight": [
+      {
+        "id": "knight_hp",
+        "name": "Knight Fortitude",
+        "description": "Increase Knight's max HP",
+        "type": "STAT_HP",
+        "maxStages": 3,
+        "baseValue": 150,
+        "valuePerStage": 35,
+        "baseCost": 200,
+        "costMultiplier": 1.7
+      },
+      {
+        "id": "knight_defense",
+        "name": "Knight Protection",
+        "description": "Increase Knight's defense",
+        "type": "STAT_DEFENSE",
+        "maxStages": 3,
+        "baseValue": 15,
+        "valuePerStage": 3,
+        "baseCost": 250,
+        "costMultiplier": 1.8
+      },
+      {
+        "id": "knight_mana",
+        "name": "Knight Honor",
+        "description": "Increase Knight's mana pool",
+        "type": "STAT_MANA",
+        "maxStages": 3,
+        "baseValue": 40,
+        "valuePerStage": 10,
+        "baseCost": 160,
+        "costMultiplier": 1.5
+      },
+      {
+        "id": "knight_mana_regen",
+        "name": "Knight Discipline",
+        "description": "Increase Knight's mana regeneration",
+        "type": "STAT_MANA_REGEN",
+        "maxStages": 3,
+        "baseValue": 4,
+        "valuePerStage": 1,
+        "baseCost": 180,
+        "costMultiplier": 1.6
+      }
+    ],
+    "ranger": [
+      {
+        "id": "ranger_hp",
+        "name": "Ranger Stamina",
+        "description": "Increase Ranger's max HP",
+        "type": "STAT_HP",
+        "maxStages": 3,
+        "baseValue": 110,
+        "valuePerStage": 25,
+        "baseCost": 180,
+        "costMultiplier": 1.6
+      },
+      {
+        "id": "ranger_attack",
+        "name": "Ranger Mastery",
+        "description": "Increase Ranger's attack power",
+        "type": "STAT_ATTACK",
+        "maxStages": 3,
+        "baseValue": 16,
+        "valuePerStage": 3,
+        "baseCost": 240,
+        "costMultiplier": 1.8
+      },
+      {
+        "id": "ranger_defense",
+        "name": "Ranger Agility",
+        "description": "Increase Ranger's defense through agility",
+        "type": "STAT_DEFENSE",
+        "maxStages": 3,
+        "baseValue": 8,
+        "valuePerStage": 2,
+        "baseCost": 200,
+        "costMultiplier": 1.7
+      },
+      {
+        "id": "ranger_mana",
+        "name": "Ranger Focus",
+        "description": "Increase Ranger's mana pool",
+        "type": "STAT_MANA",
+        "maxStages": 3,
+        "baseValue": 55,
+        "valuePerStage": 10,
+        "baseCost": 200,
+        "costMultiplier": 1.6
+      }
+    ],
+    "master": [
+      {
+        "id": "master_hp",
+        "name": "Master Vitality",
+        "description": "Increase Master's max HP",
+        "type": "STAT_HP",
+        "maxStages": 3,
+        "baseValue": 200,
+        "valuePerStage": 40,
+        "baseCost": 400,
+        "costMultiplier": 2.0
+      },
+      {
+        "id": "master_attack",
+        "name": "Master Power",
+        "description": "Increase Master's attack power",
+        "type": "STAT_ATTACK",
+        "maxStages": 3,
+        "baseValue": 20,
+        "valuePerStage": 4,
+        "baseCost": 500,
+        "costMultiplier": 2.2
+      },
+      {
+        "id": "master_defense",
+        "name": "Master Defense",
+        "description": "Increase Master's defense",
+        "type": "STAT_DEFENSE",
+        "maxStages": 3,
+        "baseValue": 12,
+        "valuePerStage": 2,
+        "baseCost": 350,
+        "costMultiplier": 1.9
+      },
+      {
+        "id": "master_mana",
+        "name": "Master Spirit",
+        "description": "Increase Master's mana pool",
+        "type": "STAT_MANA",
+        "maxStages": 3,
+        "baseValue": 80,
+        "valuePerStage": 20,
+        "baseCost": 300,
+        "costMultiplier": 1.8
+      }
+    ],
+    "global": [
+      {
+        "id": "ability_cooldown",
+        "name": "Quick Casting",
+        "description": "Reduce ability cooldowns",
+        "type": "ABILITY_COOLDOWN",
+        "maxStages": 3,
+        "baseValue": 0,
+        "valuePerStage": -1,
+        "baseCost": 400,
+        "costMultiplier": 2.5
+      },
+      {
+        "id": "ability_mana_cost",
+        "name": "Efficient Casting",
+        "description": "Reduce ability mana costs",
+        "type": "ABILITY_MANA_COST",
+        "maxStages": 3,
+        "baseValue": 0,
+        "valuePerStage": -2,
+        "baseCost": 350,
+        "costMultiplier": 2.0
+      },
+      {
+        "id": "ability_damage",
+        "name": "Enhanced Abilities",
+        "description": "Increase ability damage",
+        "type": "ABILITY_DAMAGE",
+        "maxStages": 3,
+        "baseValue": 0,
+        "valuePerStage": 3,
+        "baseCost": 450,
+        "costMultiplier": 2.2
+      }
+    ]
+  },
+  
+  "uiMapping": {
+    "Health Boost": "warrior_hp",
+    "Attack Power": "warrior_attack",
+    "Armor Boost": "warrior_defense",
+    "Eagle Eye": "archer_attack",
+    "Swift Steps": "archer_hp",
+    "Precision Shot": "archer_mana",
+    "Mana Pool": "mage_mana",
+    "Spell Power": "mage_attack",
+    "Quick Cast": "mage_mana_regen"
   }
 }
 

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 // Catalog of all available upgrades in the game
+// DATA NOW DOCUMENTED IN balance.json upgrades section (single source of truth)
+// This class provides runtime access - future enhancement: load dynamically from balance.json
 public final class UpgradeCatalog {
     
     private static final Map<String, List<Upgrade>> upgradesByCharacter = new HashMap<>();

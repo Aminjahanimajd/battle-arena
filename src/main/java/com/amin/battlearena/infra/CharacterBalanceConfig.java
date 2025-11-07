@@ -160,6 +160,18 @@ public final class CharacterBalanceConfig {
                 System.out.println("✅ Loaded " + abilityConfigs.size() + " ability configurations from balance.json");
             }
             
+            // Load economy configuration
+            JsonNode economyNode = root.get("economy");
+            if (economyNode != null && economyNode.isObject()) {
+                if (economyNode.has("goldPerKill")) {
+                    economyGoldPerKill = economyNode.get("goldPerKill").asInt();
+                }
+                if (economyNode.has("goldForWin")) {
+                    economyGoldForWin = economyNode.get("goldForWin").asInt();
+                }
+                System.out.println("✅ Loaded economy config: goldPerKill=" + economyGoldPerKill + ", goldForWin=" + economyGoldForWin);
+            }
+            
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load balance.json", e);
         }
@@ -310,4 +322,25 @@ public final class CharacterBalanceConfig {
     public java.util.Set<String> getAvailableAbilities() {
         return java.util.Set.copyOf(abilityConfigs.keySet());
     }
+    
+    // ========== ECONOMY CONFIG ==========
+    
+    /**
+     * Gets gold reward per kill from balance.json economy section.
+     * Returns 10 if not configured.
+     */
+    public int getGoldPerKill() {
+        return economyGoldPerKill;
+    }
+    
+    /**
+     * Gets gold reward for winning battle from balance.json economy section.
+     * Returns 50 if not configured.
+     */
+    public int getGoldForWin() {
+        return economyGoldForWin;
+    }
+    
+    private int economyGoldPerKill = 10;  // default fallback
+    private int economyGoldForWin = 50;   // default fallback
 }

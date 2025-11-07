@@ -8,11 +8,13 @@ import java.util.logging.Logger;
 import com.amin.battlearena.domain.events.BattleEnded;
 import com.amin.battlearena.domain.events.CharacterKilled;
 import com.amin.battlearena.domain.events.EventBus;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
 import com.amin.battlearena.persistence.PlayerProgressUtil;
 import com.amin.battlearena.persistence.ProgressService;
 import com.amin.battlearena.players.Player;
 
 // EconomyManager: awards gold on kills and victory, persists wallet state via ProgressService
+// NOW USES CharacterBalanceConfig.economy section for gold values (single source of truth)
 public final class EconomyManager implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(EconomyManager.class.getName());
@@ -25,9 +27,11 @@ public final class EconomyManager implements AutoCloseable {
     private final Runnable killUnsub;
     private final Runnable endUnsub;
 
-    // Backwards-compatible ctor that creates a ProgressService internally
+    // Backwards-compatible ctor that reads gold values from balance.json
     public EconomyManager(EventBus bus, Player p1, Player p2) {
-        this(bus, p1, p2, new ProgressService(), 10, 50);
+        this(bus, p1, p2, new ProgressService(), 
+             CharacterBalanceConfig.getInstance().getGoldPerKill(),
+             CharacterBalanceConfig.getInstance().getGoldForWin());
     }
 
     // Preferred constructor: inject ProgressService and tune gold values
