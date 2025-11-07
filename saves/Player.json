@@ -12,17 +12,6 @@
     "Health Boost": 0,
     "Attack Power": 0
   },
-  "upgradeCosts": {
-    "Spell Power": 250,
-    "Armor Boost": 175,
-    "Swift Steps": 220,
-    "Quick Cast": 350,
-    "Eagle Eye": 180,
-    "Precision Shot": 300,
-    "Mana Pool": 160,
-    "Health Boost": 150,
-    "Attack Power": 200
-  },
   "settings": {
     "gameHintsEnabled": true,
     "masterVolume": 70.0,

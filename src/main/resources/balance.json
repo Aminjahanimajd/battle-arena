@@ -1,15 +1,116 @@
 {
-  "warrior.damageBonus": 2,
-  "warrior.defenseBonus": 1,
-  "archer.damageBonus": 1,
-  "archer.defenseBonus": 0,
-  "mage.damageBonus": 3,
-  "mage.defenseBonus": -1,
-  "knight.damageBonus": 1,
-  "knight.defenseBonus": 2,
-  "ranger.damageBonus": 2,
-  "ranger.defenseBonus": 0,
-  "master.damageBonus": 4,
-  "master.defenseBonus": 1
+  "characters": {
+    "warrior": {
+      "baseStats": {
+        "health": 100,
+        "attack": 12,
+        "defense": 8,
+        "range": 1
+      },
+      "manaStats": {
+        "maxMana": 30,
+        "manaRegen": 3,
+        "startingMana": 10
+      },
+      "movementRange": 1,
+      "baseDamage": 5,
+      "abilities": ["PowerStrike"]
+    },
+    "mage": {
+      "baseStats": {
+        "health": 80,
+        "attack": 15,
+        "defense": 5,
+        "range": 3
+      },
+      "manaStats": {
+        "maxMana": 60,
+        "manaRegen": 8,
+        "startingMana": 25
+      },
+      "movementRange": 1,
+      "baseDamage": 6,
+      "abilities": ["ArcaneBurst"]
+    },
+    "archer": {
+      "baseStats": {
+        "health": 90,
+        "attack": 14,
+        "defense": 6,
+        "range": 3
+      },
+      "manaStats": {
+        "maxMana": 45,
+        "manaRegen": 5,
+        "startingMana": 20
+      },
+      "movementRange": 2,
+      "baseDamage": 4,
+      "abilities": ["DoubleShot"]
+    },
+    "knight": {
+      "baseStats": {
+        "health": 150,
+        "attack": 12,
+        "defense": 10,
+        "range": 1
+      },
+      "manaStats": {
+        "maxMana": 40,
+        "manaRegen": 4,
+        "startingMana": 15
+      },
+      "movementRange": 1,
+      "baseDamage": 4,
+      "abilities": ["Charge"]
+    },
+    "ranger": {
+      "baseStats": {
+        "health": 110,
+        "attack": 16,
+        "defense": 8,
+        "range": 4
+      },
+      "manaStats": {
+        "maxMana": 55,
+        "manaRegen": 6,
+        "startingMana": 30
+      },
+      "movementRange": 3,
+      "baseDamage": 5,
+      "abilities": ["PiercingVolley"]
+    },
+    "master": {
+      "baseStats": {
+        "health": 200,
+        "attack": 20,
+        "defense": 12,
+        "range": 4
+      },
+      "manaStats": {
+        "maxMana": 80,
+        "manaRegen": 10,
+        "startingMana": 40
+      },
+      "movementRange": 2,
+      "baseDamage": 8,
+      "abilities": ["MasterStrike", "Evasion"]
+    }
+  },
+  
+  "_legacy_bonuses_deprecated": {
+    "warrior.damageBonus": 2,
+    "warrior.defenseBonus": 1,
+    "archer.damageBonus": 1,
+    "archer.defenseBonus": 0,
+    "mage.damageBonus": 3,
+    "mage.defenseBonus": -1,
+    "knight.damageBonus": 1,
+    "knight.defenseBonus": 2,
+    "ranger.damageBonus": 2,
+    "ranger.defenseBonus": 0,
+    "master.damageBonus": 4,
+    "master.defenseBonus": 1
+  }
 }
 

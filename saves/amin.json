@@ -1,6 +1,6 @@
 {
   "playerName": "amin",
-  "gold": 615,
+  "gold": 705,
   "upgrades": {
     "Spell Power": 0,
     "Armor Boost": 0,
@@ -11,17 +11,6 @@
     "Mana Pool": 0,
     "Health Boost": 0,
     "Attack Power": 0
-  },
-  "upgradeCosts": {
-    "Spell Power": 250,
-    "Armor Boost": 262,
-    "Swift Steps": 220,
-    "Quick Cast": 350,
-    "Eagle Eye": 270,
-    "Precision Shot": 450,
-    "Mana Pool": 240,
-    "Health Boost": 337,
-    "Attack Power": 300
   },
   "settings": {
     "gameHintsEnabled": false,
@@ -42,7 +31,7 @@
     "autoSave": "Every 3 Turns"
   },
   "currentLevel": 4,
-  "victories": 13,
+  "victories": 14,
   "levelCompleted": {
     "1": true,
     "2": true,
@@ -50,16 +39,16 @@
   },
   "accountId": "amin_1756985177340",
   "createdAt": 1756985177342,
-  "lastLoginAt": 1762450142159,
+  "lastLoginAt": 1762519245589,
   "totalPlayTime": 0,
   "statistics": {
     "battlesLost": 0,
     "totalDamageDealt": 0,
-    "goldEarned": 1425,
+    "goldEarned": 1515,
     "totalDamageTaken": 0,
     "upgradesPurchased": 0,
     "abilitiesUsed": 0,
-    "battlesWon": 13
+    "battlesWon": 14
   },
   "purchasedUpgrades": {},
   "upgradeTimestamps": {},

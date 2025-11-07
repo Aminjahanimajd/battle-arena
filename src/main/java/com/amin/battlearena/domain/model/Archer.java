@@ -1,22 +1,32 @@
 package com.amin.battlearena.domain.model;
 
 import com.amin.battlearena.domain.abilities.DoubleShot;
+import com.amin.battlearena.infra.CharacterBalanceConfig;
+import com.amin.battlearena.infra.CharacterBalanceConfig.CharacterConfig;
 
 // Ranged attacker with good mobility
+// Stats loaded from balance.json via CharacterBalanceConfig
 public final class Archer extends Character {
 
+    private static final CharacterConfig CONFIG = CharacterBalanceConfig.getInstance().getCharacterConfig("archer");
+
     public Archer(String name, Position position) {
-        super(name, new Stats(90, 14, 6, 3), position, 45, 5, 20);
+        super(name, 
+              new Stats(CONFIG.getHealth(), CONFIG.getAttack(), CONFIG.getDefense(), CONFIG.getRange()), 
+              position, 
+              CONFIG.getMaxMana(), 
+              CONFIG.getManaRegen(), 
+              CONFIG.getStartingMana());
         addAbility(new DoubleShot());
     }
 
     @Override
     protected int calculateBaseDamage() {
-        return 4; // Increased from 2 for better combat balance
+        return CONFIG.getBaseDamage();
     }
 
     public int getMovementRange() {
-        return 2;
+        return CONFIG.getMovementRange();
     }
 
     public boolean inRangeOf(Character target) {
