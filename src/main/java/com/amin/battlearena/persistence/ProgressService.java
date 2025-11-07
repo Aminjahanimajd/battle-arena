@@ -65,7 +65,7 @@ public final class ProgressService {
         }
 
         // sync to DB: gold and numeric unlocked_level (max numeric)
-        int gold = progress.wallet().gold();
+        int gold = progress.wallet().getGold();
         int numeric = progress.unlockedLevels().stream()
                 .map(s -> {
                     try {

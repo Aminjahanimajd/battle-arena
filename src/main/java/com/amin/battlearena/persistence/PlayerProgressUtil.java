@@ -10,13 +10,13 @@ public final class PlayerProgressUtil {
     public static void loadIntoWallet(ProgressService svc, Player player, Wallet wallet) {
         if (svc == null || player == null || wallet == null) return;
         PlayerProgress p = svc.load(player.getName());
-        wallet.set(p.wallet().gold());
+        wallet.set(p.wallet().getGold());
     }
 
     public static void saveFromWallet(ProgressService svc, Player player, Wallet wallet) {
         if (svc == null || player == null || wallet == null) return;
         PlayerProgress p = svc.load(player.getName()); // keep unlocked levels existing
-        p.wallet().set(wallet.gold());
+        p.wallet().set(wallet.getGold());
         svc.save(player.getName(), p);
     }
 }

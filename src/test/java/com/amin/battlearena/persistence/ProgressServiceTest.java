@@ -25,7 +25,7 @@ public class ProgressServiceTest {
             svc.save("Bob", p);
 
             PlayerProgress re = svc.load("Bob");
-            assertEquals(50, re.wallet().gold());
+            assertEquals(50, re.wallet().getGold());
             assertTrue(re.unlockedLevels().contains("L02"));
         } finally {
             if (oldUrl == null) System.clearProperty("battlearena.jdbcUrl");

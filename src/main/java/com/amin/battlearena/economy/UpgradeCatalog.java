@@ -162,8 +162,8 @@ public final class UpgradeCatalog {
         Upgrade upgrade = findUpgradeByUIName(uiDisplayName);
         if (upgrade == null) return 100;
         
-        // Use the upgrade's cost calculation formula
-        return (int) (upgrade.getBaseCost() * Math.pow(upgrade.getCostMultiplier(), currentLevel));
+        // Delegate to Upgrade's cost calculation formula
+        return upgrade.calculateCostForLevel(currentLevel);
     }
     
     // Get maximum upgrade level for UI display name

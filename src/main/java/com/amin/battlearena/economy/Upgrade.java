@@ -1,29 +1,77 @@
 package com.amin.battlearena.economy;
 
 import java.util.Objects;
+import com.amin.battlearena.domain.model.Character;
 
 // Represents an upgrade that can be purchased to improve character stats or abilities
 public final class Upgrade {
     
+    @FunctionalInterface
+    public interface UpgradeApplier {
+        void apply(Character character, int valuePerStage);
+    }
+    
     public enum Type {
-        STAT_HP("Max HP"),
-        STAT_ATTACK("Attack"),
-        STAT_DEFENSE("Defense"),
-        STAT_SPEED("Speed"),
-        STAT_MANA("Max Mana"),
-        STAT_MANA_REGEN("Mana Regeneration"),
-        ABILITY_COOLDOWN("Ability Cooldown"),
-        ABILITY_MANA_COST("Ability Mana Cost"),
-        ABILITY_DAMAGE("Ability Damage");
+        STAT_HP("Max HP", (character, value) -> {
+            // Increase max HP and restore current HP proportionally
+            int currentHp = character.getStats().getHp();
+            int maxHp = character.getStats().getMaxHp();
+            int newMaxHp = maxHp + value;
+            character.getStats().setMaxHp(newMaxHp);
+            // Restore HP proportionally
+            if (maxHp > 0) {
+                int newHp = (int) ((double) currentHp / maxHp * newMaxHp);
+                character.getStats().setHp(newHp);
+            }
+        }),
+        STAT_ATTACK("Attack", (character, value) -> {
+            int currentAttack = character.getStats().getAttack();
+            character.getStats().setAttack(currentAttack + value);
+        }),
+        STAT_DEFENSE("Defense", (character, value) -> {
+            int currentDefense = character.getStats().getDefense();
+            character.getStats().setDefense(currentDefense + value);
+        }),
+        STAT_SPEED("Speed", (character, value) -> {
+            // Speed concept removed - convert to range upgrade instead
+            int currentRange = character.getStats().getRange();
+            character.getStats().setRange(currentRange + value);
+        }),
+        STAT_MANA("Max Mana", (character, value) -> {
+            // Increase max mana by restoring additional mana
+            character.restoreMana(value);
+        }),
+        STAT_MANA_REGEN("Mana Regeneration", (character, value) -> {
+            // Note: We can't directly modify mana regen in the current system
+            // This would require adding a method to Character class
+        }),
+        ABILITY_COOLDOWN("Ability Cooldown", (character, value) -> {
+            // Note: We can't directly modify ability cooldowns in the current system
+            // This would require adding methods to Ability classes
+        }),
+        ABILITY_MANA_COST("Ability Mana Cost", (character, value) -> {
+            // Note: We can't directly modify ability mana costs in the current system
+            // This would require adding methods to Ability classes
+        }),
+        ABILITY_DAMAGE("Ability Damage", (character, value) -> {
+            // Note: We can't directly modify ability damage in the current system
+            // This would require adding methods to Ability classes
+        });
         
         private final String displayName;
+        private final UpgradeApplier applier;
         
-        Type(String displayName) {
+        Type(String displayName, UpgradeApplier applier) {
             this.displayName = displayName;
+            this.applier = applier;
         }
         
         public String getDisplayName() {
             return displayName;
+        }
+        
+        public void applyTo(Character character, int valuePerStage) {
+            applier.apply(character, valuePerStage);
         }
     }
     
@@ -80,7 +128,17 @@ public final class Upgrade {
     
     public int getUpgradeCost() {
         if (!canUpgrade()) return Integer.MAX_VALUE;
-        return (int) (baseCost * Math.pow(costMultiplier, currentStage));
+        return calculateCostForLevel(currentStage);
+    }
+    
+    // Calculate cost for purchasing upgrade at a specific level
+    public int calculateCostForLevel(int level) {
+        return (int) (baseCost * Math.pow(costMultiplier, level));
+    }
+    
+    // Apply this upgrade's effect to a character (Strategy Pattern)
+    public void applyTo(Character character) {
+        type.applyTo(character, valuePerStage);
     }
     
     public Upgrade upgrade() {
