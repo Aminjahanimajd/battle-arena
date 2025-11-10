@@ -104,7 +104,7 @@ public class GameController implements Initializable {
     private HumanPlayer human;
     private AIPlayer cpu;
     private GameEngine engine;
-    private final GameCaretaker caretaker = new GameCaretaker(20);
+    private final GameCaretaker caretaker = new GameCaretaker();
 
     private com.amin.battlearena.domain.model.Character selected;
     private int currentTurn = 1;
@@ -371,7 +371,7 @@ public class GameController implements Initializable {
     private void regenerateManaForAllCharacters() {
         // Regenerate mana for player team
         for (com.amin.battlearena.domain.model.Character character : human.getTeam()) {
-            if (character.getStats().getHp() > 0) { // Only alive characters
+            if (character.isAlive()) {
                 int regenAmount = character.getManaRegenPerTurn();
                 if (regenAmount > 0) {
                     int oldMana = character.getCurrentMana();
@@ -386,7 +386,7 @@ public class GameController implements Initializable {
         
         // Regenerate mana for CPU team
         for (com.amin.battlearena.domain.model.Character character : cpu.getTeam()) {
-            if (character.getStats().getHp() > 0) { // Only alive characters
+            if (character.isAlive()) {
                 int regenAmount = character.getManaRegenPerTurn();
                 if (regenAmount > 0) {
                     character.restoreMana(regenAmount);
