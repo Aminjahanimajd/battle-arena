@@ -7,7 +7,6 @@ import com.amin.battlearena.domain.level.LevelRepository;
 import com.amin.battlearena.domain.level.LevelSpec;
 import com.amin.battlearena.domain.model.Board;
 import com.amin.battlearena.domain.model.Position;
-import com.amin.battlearena.engine.ai.SimpleAIStrategy;
 import com.amin.battlearena.engine.core.GameEngine;
 import com.amin.battlearena.engine.memento.GameCaretaker;
 import com.amin.battlearena.infra.DeadCharacterException;
@@ -166,7 +165,7 @@ public class GameController implements Initializable {
     private void setupLevelBasedBattle() {
         this.board = new Board(12, 8);
         this.human = new HumanPlayer(currentPlayerName);
-        this.cpu = new AIPlayer("CPU", new SimpleAIStrategy());
+        this.cpu = new AIPlayer("CPU");
 
         // Load player data and apply upgrades
         com.amin.battlearena.persistence.PlayerData playerData = 

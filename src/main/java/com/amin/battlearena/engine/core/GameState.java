@@ -41,14 +41,6 @@ public class GameState {
         }
     }
     
-    public boolean isPositionOccupied(Position position) {
-        return characterAtPosition.containsKey(position);
-    }
-    
-    public Character getCharacterAt(Position position) {
-        return characterAtPosition.get(position);
-    }
-    
     public Set<Character> getAllCharacters() {
         return Set.copyOf(allCharacters);
     }
@@ -61,18 +53,6 @@ public class GameState {
     
     public List<Player> getPlayers() {
         return List.copyOf(players);
-    }
-    
-    public Set<Character> getAliveCharacters() {
-        return allCharacters.stream()
-                .filter(Character::isAlive)
-                .collect(java.util.stream.Collectors.toUnmodifiableSet());
-    }
-    
-    public Set<Character> getDeadCharacters() {
-        return allCharacters.stream()
-                .filter(c -> !c.isAlive())
-                .collect(java.util.stream.Collectors.toUnmodifiableSet());
     }
 
     public void clear() {
