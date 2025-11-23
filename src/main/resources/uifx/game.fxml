@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="com.amin.battlearena.uifx.controller.GameController" styleClass="game-root" stylesheets="@styles.css">
+    
+    <!-- Top Status Bar -->
+    <top>
+        <VBox styleClass="status-bar">
+            <!-- Game Status -->
+            <HBox styleClass="game-status" alignment="CENTER_LEFT" spacing="20">
+                <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Turn:" styleClass="status-label"/>
+                    <Label fx:id="turnLabel" text="1" styleClass="status-value"/>
+                </HBox>
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Player:" styleClass="status-label"/>
+                    <Label fx:id="currentPlayerLabel" text="-" styleClass="status-value"/>
+                </HBox>
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Time:" styleClass="status-label"/>
+                    <ProgressBar fx:id="timerProgress" progress="1.0" minWidth="100" styleClass="timer-bar"/>
+                    <Label fx:id="timerLabel" text="60" styleClass="timer-label"/>
+                </HBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="pauseBtn" text="⏸" onAction="#onPause" styleClass="icon-button">
+                    <tooltip><Tooltip text="Pause Game (ESC)"/></tooltip>
+                </Button>
+            </HBox>
+            
+            <!-- Action Controls -->
+            <HBox styleClass="action-controls" alignment="CENTER_LEFT" spacing="15">
+                <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                <Button fx:id="setupBtn" text="⚔ Start Battle" onAction="#onStartBattle" styleClass="primary-button"/>
+                <Separator orientation="VERTICAL"/>
+                <ToggleButton fx:id="moveBtn" text="🏃" onAction="#onModeMove" styleClass="game-action-button move-button">
+                    <tooltip><Tooltip text="Movement Mode (M) - Move your characters"/></tooltip>
+                </ToggleButton>
+                <ToggleButton fx:id="attackBtn" text="⚔" onAction="#onModeAttack" styleClass="game-action-button attack-button">
+                    <tooltip><Tooltip text="Attack Mode (A) - Attack enemies"/></tooltip>
+                </ToggleButton>
+                <!-- Ability button removed from top bar; activation via 'Use Selected Ability' in HUD -->
+                <!-- Consumable button removed; consumables are managed via HUD list -->
+                <Separator orientation="VERTICAL"/>
+                <Button fx:id="endTurnBtn" text="⏭" onAction="#onEndTurn" styleClass="game-action-button end-turn-button">
+                    <tooltip><Tooltip text="End Turn (SPACE) - Finish your turn"/></tooltip>
+                </Button>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="backBtn" text="← Back" onAction="#onBack" styleClass="secondary-button">
+                    <tooltip><Tooltip text="Return to Main Menu"/></tooltip>
+                </Button>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Main Game Area - Huge Board in Center -->
+    <center>
+        <VBox styleClass="main-arena" spacing="5">
+            <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+            
+            <!-- Board Title Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="board-title-bar">
+                <padding><Insets top="5" right="10" bottom="5" left="10"/></padding>
+                <Label text="⚔ BATTLE ARENA" styleClass="arena-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+            
+            <!-- Huge Battle Board -->
+            <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="main-board-scroll" VBox.vgrow="ALWAYS">
+                <GridPane fx:id="boardGrid" hgap="3" vgap="3" styleClass="main-battle-grid" alignment="CENTER"/>
+            </ScrollPane>
+        </VBox>
+    </center>
+    
+    <!-- Left Toolbar - Character Info -->
+    <left>
+        <VBox spacing="8" styleClass="left-toolbar" minWidth="250" maxWidth="280">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            
+            <!-- Character Info Panel -->
+            <!-- Selected Character -->
+            <VBox spacing="8" styleClass="character-info">
+                <Label text="👤 CHARACTER INFO" styleClass="section-title"/>
+                <VBox spacing="4">
+                    <Label fx:id="selName" text="No Selection" styleClass="character-name"/>
+                    <Label fx:id="selClass" text="-" styleClass="character-class"/>
+                </VBox>
+                
+                <!-- Health Bar -->
+                <VBox spacing="2">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="❤" styleClass="stat-icon health"/>
+                        <Label text="Health:" styleClass="stat-label"/>
+                        <Label fx:id="selHp" text="-/-" styleClass="stat-value"/>
+                    </HBox>
+                    <ProgressBar fx:id="healthBar" progress="0" minWidth="180" styleClass="health-bar" visible="false"/>
+                </VBox>
+                
+                <!-- Mana Bar -->
+                <VBox spacing="2">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="✨" styleClass="stat-icon mana"/>
+                        <Label text="Mana:" styleClass="stat-label"/>
+                        <Label fx:id="selMana" text="-/-" styleClass="stat-value"/>
+                    </HBox>
+                    <ProgressBar fx:id="manaBar" progress="0" minWidth="180" styleClass="mana-bar" visible="false"/>
+                </VBox>
+                
+                <!-- Combat Stats -->
+                <VBox spacing="4" styleClass="combat-stats">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="⚔" styleClass="stat-icon attack"/>
+                        <Label text="Attack:" styleClass="stat-label"/>
+                        <Label fx:id="selAttack" text="-" styleClass="stat-value"/>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="🛡" styleClass="stat-icon defense"/>
+                        <Label text="Defense:" styleClass="stat-label"/>
+                        <Label fx:id="selDefense" text="-" styleClass="stat-value"/>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="🎯" styleClass="stat-icon range"/>
+                        <Label text="Range:" styleClass="stat-label"/>
+                        <Label fx:id="selRange" text="-" styleClass="stat-value"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Action Economy -->
+                <VBox spacing="4" styleClass="action-economy">
+                    <Label text="📊 ACTIONS" styleClass="subsection-title"/>
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="Moves:" styleClass="action-label"/>
+                        <Label fx:id="selMovesLeft" text="-" styleClass="action-value"/>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="Attacks:" styleClass="action-label"/>
+                        <Label fx:id="selAttacksLeft" text="-" styleClass="action-value"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+            
+            <!-- Abilities Panel with Enhanced Display -->
+            <VBox spacing="8" styleClass="abilities-panel">
+                <Label text="✨ ABILITIES" styleClass="section-title"/>
+                <!-- Enhanced abilities display with icons, cooldowns, and mana -->
+                <VBox fx:id="abilitiesContainer" spacing="4" styleClass="abilities-container">
+                    <!-- Abilities will be dynamically added here -->
+                </VBox>
+                <Button fx:id="useAbilityBtn" text="Use Selected Ability" onAction="#onUseSelectedAbility" 
+                       styleClass="ability-button" disable="true"/>
+            </VBox>
+            
+            <!-- Team Overview -->
+            <VBox spacing="8" styleClass="team-panel">
+                <Label text="👥 TEAMS" styleClass="section-title"/>
+                <VBox spacing="4">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Circle radius="6" styleClass="team-indicator player"/>
+                        <Label text="Player" styleClass="team-label"/>
+                        <Label fx:id="playerUnitsAlive" text="0/0" styleClass="team-count"/>
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Circle radius="6" styleClass="team-indicator cpu"/>
+                        <Label text="CPU" styleClass="team-label"/>
+                        <Label fx:id="cpuUnitsAlive" text="0/0" styleClass="team-count"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+    </left>
+    
+    <!-- Right Toolbar - Consumables Only -->
+    <right>
+        <VBox spacing="8" styleClass="right-toolbar" minWidth="200" maxWidth="250">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            
+            <!-- Expanded Consumables Panel -->
+            <VBox spacing="8" styleClass="consumables-panel" VBox.vgrow="ALWAYS">
+                <Label text="🎒 CONSUMABLES" styleClass="section-title"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="consumables-scroll">
+                    <VBox fx:id="consumablesContainer" spacing="8" styleClass="consumables-container"/>
+                </ScrollPane>
+                <Button fx:id="useConsumableBtn" text="Use Selected Consumable" onAction="#onUseConsumable" disable="true" styleClass="consumable-button"/>
+            </VBox>
+
+        </VBox>
+    </right>
+    
+    <!-- Bottom Log Panel -->
+    <bottom>
+        <VBox styleClass="log-panel">
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="log-header">
+                <padding><Insets top="8" right="12" bottom="4" left="12"/></padding>
+                <Label text="📜 BATTLE LOG" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="clearLogBtn" text="Clear" onAction="#onClearLog" styleClass="log-button"/>
+                <Button fx:id="exportLogBtn" text="Export" onAction="#onExportLog" styleClass="log-button"/>
+            </HBox>
+            <TextArea fx:id="logArea" prefRowCount="8" maxHeight="200" wrapText="true" 
+                     editable="false" styleClass="battle-log" VBox.vgrow="NEVER"/>
+        </VBox>
+    </bottom>
+</BorderPane>

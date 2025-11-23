@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" 
+     alignment="CENTER" spacing="25" styleClass="signin-container"
+     stylesheets="@styles.css"
+     fx:controller="com.amin.battlearena.uifx.controller.SignInController">
+    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+    
+    <!-- Title -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="⚔ BATTLE ARENA ⚔" styleClass="signin-title">
+            <font><Font name="System Bold" size="32"/></font>
+        </Label>
+        <Label text="Enter the battlefield" styleClass="signin-subtitle">
+            <font><Font size="14"/></font>
+        </Label>
+    </VBox>
+    
+    <!-- Sign In Form -->
+    <VBox alignment="CENTER" spacing="15" maxWidth="300">
+        <Label text="👤 Player Login" styleClass="form-label">
+            <font><Font name="System Bold" size="16"/></font>
+        </Label>
+        
+        <TextField fx:id="nicknameField" promptText="Enter your nickname" 
+                  styleClass="signin-textfield" minWidth="250">
+            <font><Font size="14"/></font>
+        </TextField>
+        
+        <VBox spacing="8" alignment="CENTER">
+            <Label text="Choose your destiny..." styleClass="hint-label">
+                <font><Font size="12"/></font>
+            </Label>
+        </VBox>
+    </VBox>
+    
+    <!-- Action Buttons -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="⚔ ENTER BATTLE" onAction="#onLogin" styleClass="signin-button primary" minWidth="150">
+            <font><Font name="System Bold" size="14"/></font>
+        </Button>
+        <Button text="❌ EXIT" onAction="#onExit" styleClass="signin-button secondary" minWidth="100">
+            <font><Font size="12"/></font>
+        </Button>
+    </HBox>
+    
+    <!-- Footer -->
+    <Label text="Ready your weapons, warrior!" styleClass="footer-text">
+        <font><Font size="11"/></font>
+    </Label>
+</VBox>

@@ -1,0 +1,1097 @@
+/* Battle Arena - Modern Game UI Stylesheet */
+
+/* Root styling */
+.game-root {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+/* Status Bar */
+.status-bar {
+    -fx-background-color: linear-gradient(to bottom, #2d3748, #1a202c);
+    -fx-border-color: #4a5568;
+    -fx-border-width: 0 0 2px 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 4, 0, 0, 2);
+}
+
+.game-status {
+    -fx-background-color: rgba(45, 55, 72, 0.8);
+}
+
+.status-label {
+    -fx-text-fill: #a0aec0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.status-value {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.timer-bar {
+    -fx-accent: #48bb78;
+    -fx-control-inner-background: #2d3748;
+}
+
+.timer-bar-warning {
+    -fx-accent: #ed8936;
+    -fx-control-inner-background: #2d3748;
+}
+
+.timer-bar-critical {
+    -fx-accent: #e53e3e;
+    -fx-control-inner-background: #2d3748;
+}
+
+.timer-label {
+    -fx-text-fill: #f7fafc;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Action Controls */
+.action-controls {
+    -fx-background-color: rgba(26, 32, 44, 0.9);
+}
+
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.3), 4, 0, 0, 2);
+}
+
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #3182ce, #2b77cb);
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.5), 6, 0, 0, 3);
+}
+
+.secondary-button {
+    -fx-background-color: linear-gradient(to bottom, #718096, #4a5568);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #4a5568, #2d3748);
+}
+
+.mode-button {
+    -fx-background-color: linear-gradient(to bottom, #38a169, #2f855a);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.mode-button:selected {
+    -fx-background-color: linear-gradient(to bottom, #2f855a, #276749);
+    -fx-effect: dropshadow(three-pass-box, rgba(56, 161, 105, 0.5), 4, 0, 0, 2);
+}
+
+.mode-button.attack {
+    -fx-background-color: linear-gradient(to bottom, #e53e3e, #c53030);
+}
+
+.mode-button.attack:selected {
+    -fx-background-color: linear-gradient(to bottom, #c53030, #9c2323);
+}
+
+.mode-button.ability {
+    -fx-background-color: linear-gradient(to bottom, #805ad5, #6b46c1);
+}
+
+.mode-button.ability:selected {
+    -fx-background-color: linear-gradient(to bottom, #6b46c1, #553c9a);
+}
+
+.end-turn-button {
+    -fx-background-color: linear-gradient(to bottom, #ed8936, #dd6b20);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20 8 20;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(237, 137, 54, 0.3), 4, 0, 0, 2);
+}
+
+.end-turn-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #dd6b20, #c05621);
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 16px;
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.icon-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Game Content */
+.game-content {
+    -fx-background-color: transparent;
+}
+
+.arena-section {
+    -fx-background-color: rgba(26, 32, 44, 0.8);
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);
+}
+
+.board-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-viewport-background: transparent;
+}
+
+   .battle-grid {
+       -fx-background-color: #2d3748;
+       -fx-background-radius: 4;
+       -fx-padding: 8;
+       /* inset-dropshadow is not supported on JavaFX 17 parser; use regular dropshadow */
+       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 4, 0, 0, 0);
+   }
+
+   /* Theme root classes */
+   .theme-dark {
+       -fx-base: #1a202c;
+       -fx-background: #1a202c;
+   }
+   .theme-light {
+       -fx-base: #f7fafc;
+       -fx-background: #ffffff;
+   }
+
+   /* Settings screen styling */
+   .settings-container {
+       -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
+       -fx-text-fill: #f2f6ff;
+   }
+   .theme-light .settings-container {
+       -fx-background-color: linear-gradient(to bottom, #edf2f7, #e2e8f0);
+       -fx-text-fill: #1a202c;
+   }
+   .settings-section {
+       -fx-background-color: rgba(45,55,72,0.6);
+       -fx-background-radius: 8;
+       -fx-padding: 10;
+   }
+   .theme-light .settings-section {
+       -fx-background-color: rgba(255,255,255,0.9);
+   }
+   .section-header {
+       -fx-text-fill: #f2f6ff;
+       -fx-font-size: 14px;
+       -fx-font-weight: bold;
+   }
+   .theme-light .section-header { -fx-text-fill: #1a202c; }
+   .info-box {
+       -fx-background-color: rgba(26,32,44,0.8);
+       -fx-background-radius: 6;
+       -fx-padding: 8;
+   }
+   .info-box .label {
+       -fx-text-fill: #e2e8f0; /* dark default */
+   }
+   .theme-light .info-box {
+       -fx-background-color: rgba(226,232,240,0.9);
+   }
+   .theme-light .info-box .label {
+       -fx-text-fill: #1a202c; /* readable on light background */
+   }
+   /* TabPane styling for readability */
+   .tab-pane .tab-header-area {
+       -fx-background-color: rgba(255,255,255,0.15);
+       -fx-background-insets: 0, 1;
+   }
+   .theme-light .tab-pane .tab-header-area {
+       -fx-background-color: rgba(0,0,0,0.06);
+   }
+   .tab-pane:top *.tab-header-area *.tab {
+       -fx-background-insets: 0;
+       -fx-background-radius: 4 4 0 0;
+       -fx-padding: 4 8 4 8;
+   }
+   .tab-pane:top *.tab-header-area *.tab:selected {
+       -fx-background-color: rgba(255,255,255,0.25);
+   }
+   .theme-light .tab-pane:top *.tab-header-area *.tab:selected {
+       -fx-background-color: rgba(0,0,0,0.06);
+   }
+   .settings-tab .tab-label {
+       -fx-text-fill: #e2e8f0; /* dark */
+       -fx-font-weight: bold;
+   }
+   .theme-light .settings-tab .tab-label {
+       -fx-text-fill: #1a202c;
+   }
+   .danger-section .label {
+       -fx-text-fill: #e2e8f0;
+   }
+   .theme-light .danger-section .label {
+       -fx-text-fill: #1a202c;
+   }
+
+   /* Inputs contrast on dark */
+   .settings-section .combo-box, .settings-section .check-box, .settings-section .label, .settings-section .slider {
+       -fx-text-fill: #e2e8f0;
+   }
+   .theme-light .settings-section .combo-box, .theme-light .settings-section .check-box, .theme-light .settings-section .label, .theme-light .settings-section .slider {
+       -fx-text-fill: #1a202c;
+   }
+
+/* Info Panel */
+.info-panel {
+    -fx-background-color: rgba(26, 32, 44, 0.9);
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);
+}
+
+.character-info {
+    -fx-background-color: rgba(45, 55, 72, 0.6);
+    -fx-background-radius: 6;
+    -fx-padding: 12;
+}
+
+.character-name {
+    -fx-text-fill: #f7fafc;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.character-class {
+    -fx-text-fill: #cbd5e0;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+/* Health and Mana Bars */
+.health-bar {
+    -fx-accent: #48bb78;
+    -fx-control-inner-background: #2d3748;
+    -fx-background-radius: 4;
+}
+
+.health-bar .bar {
+    -fx-background-color: #48bb78;
+    -fx-background-radius: 4;
+}
+
+.mana-bar {
+    -fx-accent: #4299e1;
+    -fx-control-inner-background: #2d3748;
+    -fx-background-radius: 4;
+    -fx-border-color: #1a202c;
+    -fx-border-width: 1px;
+}
+
+.mana-bar .bar {
+    -fx-background-color: #4299e1;
+    -fx-background-radius: 4;
+}
+
+.mana-bar .track {
+    -fx-background-color: #2d3748;
+    -fx-background-radius: 4;
+}
+
+/* Stat Icons and Labels */
+.stat-icon {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.stat-icon.health { -fx-text-fill: #48bb78; }
+.stat-icon.mana { -fx-text-fill: #4299e1; }
+.stat-icon.attack { -fx-text-fill: #e53e3e; }
+.stat-icon.defense { -fx-text-fill: #805ad5; }
+/* speed icon removed — concept replaced by per-turn movements */
+.stat-icon.range { -fx-text-fill: #ed8936; }
+
+.stat-label {
+    -fx-text-fill: #a0aec0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.stat-value {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Combat Stats */
+.combat-stats {
+    -fx-background-color: rgba(45, 55, 72, 0.4);
+    -fx-background-radius: 4;
+    -fx-padding: 8;
+}
+
+/* Action Economy */
+.action-economy {
+    -fx-background-color: rgba(56, 178, 172, 0.1);
+    -fx-background-radius: 4;
+    -fx-padding: 8;
+}
+
+.action-label {
+    -fx-text-fill: #4fd1c7;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.action-value {
+    -fx-text-fill: #e6fffa;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Abilities Panel */
+.abilities-panel {
+    -fx-background-color: rgba(128, 90, 213, 0.1);
+    -fx-background-radius: 6;
+    -fx-padding: 10;
+}
+
+.abilities-list {
+    -fx-background-color: #2d3748;
+    -fx-control-inner-background: #1a202c;
+    -fx-text-fill: #e2e8f0;
+    -fx-background-radius: 4;
+}
+
+.abilities-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e2e8f0;
+    -fx-padding: 4 8 4 8;
+}
+
+.abilities-list .list-cell:selected {
+    -fx-background-color: rgba(128, 90, 213, 0.3);
+    -fx-text-fill: #f7fafc;
+}
+
+.ability-button {
+    -fx-background-color: linear-gradient(to bottom, #805ad5, #6b46c1);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 12 8 12;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.ability-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #6b46c1, #553c9a);
+}
+
+/* Hints Panel */
+.hints-panel {
+    -fx-background-color: rgba(237, 137, 54, 0.1);
+    -fx-background-radius: 6;
+    -fx-padding: 10;
+}
+
+.hint-text {
+    -fx-text-fill: #fbd38d;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+    -fx-line-spacing: 2px;
+}
+
+/* Consumables Panel */
+.consumables-panel {
+    -fx-background-color: rgba(246, 224, 94, 0.15); /* soft yellow */
+    -fx-background-radius: 6;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 2);
+}
+
+.consumables-container {
+    -fx-spacing: 8;
+    -fx-background-color: transparent; /* Make container transparent */
+}
+
+/* ScrollPane inside consumables panel */
+.consumables-scroll {
+    -fx-background: transparent; /* Make scroll pane background transparent */
+    -fx-background-color: transparent;
+}
+
+.consumables-scroll .viewport {
+    -fx-background-color: transparent; /* Make viewport transparent */
+}
+
+.consumables-scroll .scroll-pane {
+    -fx-background-color: transparent; /* Ensure scroll pane itself is transparent */
+}
+
+/* Enhanced Consumable Display Styles - Matching Abilities but Yellow Theme */
+.consumable-item, .consumable-display {
+    -fx-background-color: rgba(255,215,0,0.05); /* Gold background */
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(255,215,0,0.2); /* Gold border */
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+
+.consumable-item:hover, .consumable-display:hover {
+    -fx-background-color: rgba(255,215,0,0.15); /* Brighter gold on hover */
+    -fx-border-color: rgba(255,215,0,0.4);
+}
+
+.consumable-selected {
+    -fx-background-color: rgba(255,215,0,0.25); /* Selected yellow background */
+    -fx-border-color: #FFD700; /* Bright gold border */
+    -fx-border-width: 2;
+}
+
+.consumable-enabled {
+    -fx-opacity: 1.0;
+}
+
+.consumable-disabled {
+    -fx-opacity: 0.6;
+}
+
+/* Consumable Header Styles */
+.consumable-header {
+    -fx-alignment: center-left;
+}
+
+.consumable-icon {
+    -fx-font-size: 14px;
+    -fx-text-fill: #FFD700; /* Gold icons */
+}
+
+.consumable-name {
+    -fx-text-fill: #FFA500; /* Orange text for names */
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Consumable Status Row Styles */
+.consumable-status {
+    -fx-alignment: center-left;
+}
+
+/* Stat Icons and Values - Yellow Theme */
+.stat-icon {
+    -fx-font-size: 10px;
+}
+
+.stat-value {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff; /* White text for readability against dark backgrounds */
+}
+
+/* Quantity Styles */
+.quantity-icon { 
+    -fx-text-fill: #FFD700; /* Gold for quantity icon */
+}
+
+.quantity-value { 
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.quantity-available { 
+    -fx-text-fill: #32CD32; /* Green for available */
+}
+
+.quantity-unavailable { 
+    -fx-text-fill: #FF6B6B; /* Red for unavailable */
+}
+
+/* Availability Status */
+.consumable-available { 
+    -fx-text-fill: #32CD32; /* Green for available */
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.consumable-unavailable { 
+    -fx-text-fill: #FF6B6B; /* Red for unavailable */
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+/* Description Styles */
+.consumable-description {
+    -fx-text-fill: #000000; /* Dark text for readability on light backgrounds */
+    -fx-font-size: 10px;
+    -fx-wrap-text: true;
+}
+
+/* Tab description and item description should also be dark on light backgrounds */
+.tab-description {
+    -fx-text-fill: #000000; /* Dark note text */
+    -fx-font-size: 14px;
+}
+
+.item-desc {
+    -fx-text-fill: #000000; /* Dark item descriptions */
+}
+
+/* Item icon and name styles for consumable cards */
+.item-icon-large {
+    -fx-font-size: 24px; /* match FXML font size */
+    -fx-text-fill: #000000; /* Dark icon color for visibility */
+}
+
+.item-name {
+    -fx-text-fill: #000000; /* Dark item name */
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.item-price {
+    -fx-text-fill: #1a202c; /* Dark price text for contrast */
+}
+
+/* Use Consumable Button */
+.consumable-button {
+    -fx-background-color: linear-gradient(to bottom, #ecc94b, #d69e2e);
+    -fx-text-fill: #1a202c;
+    -fx-font-weight: bold;
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 6;
+}
+
+/* No Selection Label */
+.no-selection-label {
+    -fx-text-fill: #a0aec0;
+    -fx-font-style: italic;
+    -fx-font-size: 11px;
+    -fx-alignment: center;
+}
+
+/* Team Panel */
+.team-panel {
+    -fx-background-color: rgba(45, 55, 72, 0.4);
+    -fx-background-radius: 6;
+    -fx-padding: 10;
+}
+
+.team-indicator.player {
+    -fx-fill: #4299e1;
+    -fx-stroke: #2b77cb;
+    -fx-stroke-width: 1;
+}
+
+.team-indicator.cpu {
+    -fx-fill: #e53e3e;
+    -fx-stroke: #c53030;
+    -fx-stroke-width: 1;
+}
+
+.team-label {
+    -fx-text-fill: #cbd5e0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.team-count {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Section Titles */
+.section-title {
+    -fx-text-fill: #f7fafc;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-underline: true;
+}
+
+.subsection-title {
+    -fx-text-fill: #cbd5e0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Quick Actions */
+.quick-action {
+    -fx-background-color: rgba(74, 85, 104, 0.8);
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 11px;
+    -fx-padding: 4 8 4 8;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.quick-action:hover {
+    -fx-background-color: rgba(74, 85, 104, 1.0);
+}
+
+.quick-action:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+/* Log Panel */
+.log-panel {
+    -fx-background-color: rgba(26, 32, 44, 0.9);
+    -fx-border-color: #4a5568;
+    -fx-border-width: 2px 0 0 0;
+}
+
+.log-header {
+    -fx-background-color: rgba(45, 55, 72, 0.8);
+}
+
+.battle-log {
+    -fx-control-inner-background: #1a202c;
+    -fx-text-fill: #e2e8f0;
+    -fx-font-family: "Consolas", "Monaco", monospace;
+    -fx-font-size: 11px;
+    -fx-highlight-fill: rgba(66, 153, 225, 0.3);
+    -fx-highlight-text-fill: #f7fafc;
+}
+
+.log-button {
+    -fx-background-color: rgba(74, 85, 104, 0.6);
+    -fx-text-fill: #cbd5e0;
+    -fx-font-size: 10px;
+    -fx-padding: 4 8 4 8;
+    -fx-background-radius: 3;
+    -fx-cursor: hand;
+}
+
+.log-button:hover {
+    -fx-background-color: rgba(74, 85, 104, 0.8);
+}
+
+/* Cell Styles for Battle Grid */
+.battle-cell {
+    -fx-background-color: #4a5568;
+    -fx-background-radius: 2;
+    -fx-border-color: #2d3748;
+    -fx-border-radius: 2;
+    -fx-cursor: hand;
+}
+
+.battle-cell:hover {
+    -fx-background-color: #718096;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.2), 2, 0, 0, 0);
+}
+
+.battle-cell.occupied-player {
+    -fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce);
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.4), 3, 0, 0, 1);
+}
+
+.battle-cell.occupied-cpu {
+    -fx-background-color: linear-gradient(to bottom, #e53e3e, #c53030);
+    -fx-effect: dropshadow(three-pass-box, rgba(229, 62, 62, 0.4), 3, 0, 0, 1);
+}
+
+.battle-cell.selected {
+    -fx-border-color: #fbd38d;
+    -fx-border-width: 3;
+    -fx-effect: dropshadow(three-pass-box, rgba(251, 211, 141, 0.6), 4, 0, 0, 0);
+}
+
+.battle-cell.move-target {
+    -fx-border-color: #48bb78;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(72, 187, 120, 0.4), 3, 0, 0, 0);
+}
+
+.battle-cell.attack-target {
+    -fx-border-color: #fc8181;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(252, 129, 129, 0.4), 3, 0, 0, 0);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+}
+
+.pulse-animation {
+    -fx-animation: pulse 1s infinite;
+}
+
+/* Menu Styles */
+.main-menu {
+    -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2, #f093fb);
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-padding: 40;
+}
+
+.menu-title {
+    -fx-text-fill: white;
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 6, 0, 0, 3);
+    -fx-text-alignment: center;
+}
+
+.welcome-text {
+    -fx-text-fill: rgba(255,255,255,0.9);
+    -fx-font-size: 18px;
+    -fx-font-weight: normal;
+    -fx-text-alignment: center;
+}
+
+.version-text {
+    -fx-text-fill: rgba(255,255,255,0.7);
+    -fx-font-size: 12px;
+}
+
+.subtitle-text {
+    -fx-text-fill: rgba(255,255,255,0.5);
+    -fx-font-size: 10px;
+    -fx-font-style: italic;
+}
+
+.menu-separator {
+    -fx-background-color: rgba(255,255,255,0.3);
+    -fx-pref-height: 2;
+}
+
+.menu-separator-small {
+    -fx-background-color: rgba(255,255,255,0.2);
+    -fx-pref-height: 1;
+}
+
+.menu-button {
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.25), rgba(255,255,255,0.15));
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 15 25 15 25;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255,255,255,0.4);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 4, 0, 0, 2);
+    -fx-alignment: center;
+}
+
+.menu-button:hover {
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0.25));
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.menu-button.primary {
+    -fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce);
+    -fx-border-color: #2c5aa0;
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.4), 6, 0, 0, 2);
+}
+
+.menu-button.primary:hover {
+    -fx-background-color: linear-gradient(to bottom, #3182ce, #2c5aa0);
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.6), 8, 0, 0, 4);
+}
+
+.menu-button.secondary {
+    -fx-background-color: linear-gradient(to bottom, #718096, #4a5568);
+    -fx-border-color: #2d3748;
+}
+
+.menu-button.secondary:hover {
+    -fx-background-color: linear-gradient(to bottom, #4a5568, #2d3748);
+}
+
+.menu-button.danger {
+    -fx-background-color: linear-gradient(to bottom, #e53e3e, #c53030);
+    -fx-border-color: #9c2323;
+}
+
+.menu-button.danger:hover {
+    -fx-background-color: linear-gradient(to bottom, #c53030, #9c2323);
+}
+
+.menu-button:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+/* Dialog Styles */
+.dialog-pane {
+    -fx-background-color: linear-gradient(to bottom, #2d3748, #1a202c);
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: rgba(66, 153, 225, 0.1);
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-weight: bold;
+}
+
+.dialog-pane .content {
+    -fx-text-fill: #cbd5e0;
+}
+
+.dialog-pane .button-bar .button {
+    -fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+/* Scrollbars */
+.scroll-bar {
+    -fx-background-color: #2d3748;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #4a5568;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #718096;
+}
+
+/* Tooltips */
+.tooltip {
+    -fx-background-color: rgba(26, 32, 44, 0.95);
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 11px;
+    -fx-background-radius: 4;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 0, 2);
+}
+
+/* Progress Indicators */
+.progress-bar {
+    -fx-background-radius: 4;
+    -fx-background-color: #2d3748;
+}
+
+.progress-bar .bar {
+    -fx-background-radius: 4;
+    -fx-padding: 2;
+}
+
+.progress-indicator {
+    -fx-progress-color: #4299e1;
+}
+
+/* Sign In Styles */
+.signin-container {
+    -fx-background-color: linear-gradient(to bottom right, #2d3748, #1a202c, #4a5568);
+}
+
+.signin-title {
+    -fx-text-fill: white;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 4, 0, 0, 2);
+}
+
+.signin-subtitle {
+    -fx-text-fill: rgba(255,255,255,0.8);
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+.form-label {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.hint-label {
+    -fx-text-fill: rgba(255,255,255,0.6);
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+.footer-text {
+    -fx-text-fill: rgba(255,255,255,0.5);
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+}
+
+.signin-textfield {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255,255,255,0.5);
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(255,255,255,0.3);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 12 15 12 15;
+    -fx-font-size: 14px;
+}
+
+.signin-textfield:focused {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-border-color: #4299e1;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.3), 4, 0, 0, 0);
+}
+
+.signin-button {
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 20 12 20;
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(255,255,255,0.3);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 3, 0, 0, 2);
+}
+
+.signin-button:hover {
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.3), rgba(255,255,255,0.2));
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 4, 0, 0, 3);
+}
+
+.signin-button.primary {
+    -fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce);
+    -fx-border-color: #2c5aa0;
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.4), 4, 0, 0, 2);
+}
+
+.signin-button.primary:hover {
+    -fx-background-color: linear-gradient(to bottom, #3182ce, #2c5aa0);
+    -fx-effect: dropshadow(three-pass-box, rgba(66, 153, 225, 0.6), 6, 0, 0, 3);
+}
+
+.signin-button.secondary {
+    -fx-background-color: linear-gradient(to bottom, #718096, #4a5568);
+    -fx-border-color: #2d3748;
+}
+
+.signin-button.secondary:hover {
+    -fx-background-color: linear-gradient(to bottom, #4a5568, #2d3748);
+}
+
+/* Settings Styles */
+.settings-container {
+    -fx-background-color: linear-gradient(to bottom, #2d3748, #1a202c);
+    -fx-padding: 30;
+}
+
+/* Help Styles */
+.help-container {
+    -fx-background-color: linear-gradient(to bottom, #2d3748, #1a202c);
+    -fx-padding: 25;
+}
+
+/* Enhanced Ability Display Styles */
+.ability-display {
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 6;
+    -fx-border-color: rgba(255,255,255,0.2);
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+
+.ability-display:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-border-color: rgba(255,255,255,0.3);
+}
+
+.ability-display.ability-selected {
+    -fx-background-color: rgba(66, 153, 225, 0.2);
+    -fx-border-color: #4299e1;
+    -fx-border-width: 2;
+}
+
+.ability-display.ability-enabled {
+    -fx-opacity: 1.0;
+}
+
+.ability-display.ability-disabled {
+    -fx-opacity: 0.6;
+}
+
+.ability-header {
+    -fx-alignment: center-left;
+}
+
+.ability-icon {
+    -fx-font-size: 14px;
+    -fx-text-fill: #a0aec0;
+}
+
+.ability-name {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.ability-status {
+    -fx-alignment: center-left;
+}
+
+.mana-cost-value {
+    -fx-text-fill: #90cdf4;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.cooldown-icon {
+    -fx-text-fill: #f687b3;
+    -fx-font-size: 10px;
+}
+
+.cooldown-value {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.cooldown-active {
+    -fx-text-fill: #f56565;
+}
+
+.cooldown-ready {
+    -fx-text-fill: #68d391;
+}
+
+.ability-unavailable {
+    -fx-text-fill: #f56565;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.ability-ready {
+    -fx-text-fill: #68d391;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+}
+
+.no-abilities-label {
+    -fx-text-fill: #a0aec0;
+    -fx-font-style: italic;
+    -fx-font-size: 11px;
+    -fx-alignment: center;
+}

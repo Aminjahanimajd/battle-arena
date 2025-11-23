@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="com.amin.battlearena.uifx.controller.ShopController" styleClass="shop-root" stylesheets="@styles.css">
+
+    <!-- Top Bar -->
+    <top>
+        <HBox styleClass="shop-header" alignment="CENTER" spacing="20">
+            <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+            <Label text="🛍 BATTLE SHOP" styleClass="shop-title">
+                <font><Font name="System Bold" size="28"/></font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Player Gold Display -->
+            <HBox alignment="CENTER" spacing="10" styleClass="player-gold">
+                <Label text="💰" styleClass="gold-icon-large">
+                    <font><Font size="20"/></font>
+                </Label>
+                <Label text="Your Gold:" styleClass="gold-label">
+                    <font><Font size="16"/></font>
+                </Label>
+                <Label fx:id="playerGold" text="1000" styleClass="gold-amount">
+                    <font><Font name="System Bold" size="18"/></font>
+                </Label>
+            </HBox>
+            
+            <Button fx:id="backBtn" text="← Back to Menu" onAction="#onBack" styleClass="back-button">
+                <font><Font size="14"/></font>
+            </Button>
+        </HBox>
+    </top>
+
+    <!-- Main Shop Content -->
+    <center>
+        <TabPane styleClass="shop-tabs" tabClosingPolicy="UNAVAILABLE">
+            
+            <!-- Character Upgrades Tab -->
+            <Tab text="⚔ Character Upgrades" styleClass="shop-tab">
+                <ScrollPane fitToWidth="true" styleClass="upgrades-scroll">
+                    <VBox spacing="10" styleClass="upgrades-container">
+                        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+                        
+                        <Label text="Enhance your characters' abilities!" styleClass="tab-description">
+                            <font><Font size="14"/></font>
+                        </Label>
+                        
+                        <!-- Character Upgrade Categories -->
+                        <VBox spacing="15" styleClass="upgrade-categories">
+                            
+                            <!-- Warrior Upgrades -->
+                            <VBox spacing="8" styleClass="character-category">
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="🛡" styleClass="character-icon">
+                                        <font><Font size="18"/></font>
+                                    </Label>
+                                    <Label text="WARRIOR UPGRADES" styleClass="category-title">
+                                        <font><Font name="System Bold" size="16"/></font>
+                                    </Label>
+                                </HBox>
+                                
+                                <GridPane hgap="15" vgap="10" styleClass="upgrades-grid">
+                                    <!-- Health Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="❤" styleClass="upgrade-icon"/>
+                                            <Label text="Health Boost" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+20 Max Health" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="healthPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="healthUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyHealthUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                    
+                                    <!-- Attack Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="⚔" styleClass="upgrade-icon"/>
+                                            <Label text="Attack Power" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+5 Attack Damage" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="attackPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="attackUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyAttackUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                    
+                                    <!-- Defense Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="🛡" styleClass="upgrade-icon"/>
+                                            <Label text="Armor Boost" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+3 Defense Rating" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="armorPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="armorUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyDefenseUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                </GridPane>
+                            </VBox>
+                            
+                            <!-- Archer Upgrades -->
+                            <VBox spacing="8" styleClass="character-category">
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="🏹" styleClass="character-icon">
+                                        <font><Font size="18"/></font>
+                                    </Label>
+                                    <Label text="ARCHER UPGRADES" styleClass="category-title">
+                                        <font><Font name="System Bold" size="16"/></font>
+                                    </Label>
+                                </HBox>
+                                
+                                <GridPane hgap="15" vgap="10" styleClass="upgrades-grid">
+                                    <!-- Range Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="🎯" styleClass="upgrade-icon"/>
+                                            <Label text="Eagle Eye" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+2 Attack Range" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="eaglePrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="eagleEyeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyRangeUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                    
+                                    <!-- Speed Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="🏃" styleClass="upgrade-icon"/>
+                                            <Label text="Swift Steps" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+1 Movement Speed" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="swiftPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="swiftStepsBtn" text="Buy" styleClass="buy-button" onAction="#onBuySpeedUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                    
+                                    <!-- Precision Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="💥" styleClass="upgrade-icon"/>
+                                            <Label text="Precision Shot" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+15% Critical Chance" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="precisionPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="precisionShotBtn" text="Buy" styleClass="buy-button" onAction="#onBuyPrecisionUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                </GridPane>
+                            </VBox>
+                            
+                            <!-- Mage Upgrades -->
+                            <VBox spacing="8" styleClass="character-category">
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <Label text="🔮" styleClass="character-icon">
+                                        <font><Font size="18"/></font>
+                                    </Label>
+                                    <Label text="MAGE UPGRADES" styleClass="category-title">
+                                        <font><Font name="System Bold" size="16"/></font>
+                                    </Label>
+                                </HBox>
+                                
+                                <GridPane hgap="15" vgap="10" styleClass="upgrades-grid">
+                                    <!-- Mana Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="✨" styleClass="upgrade-icon"/>
+                                            <Label text="Mana Pool" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+30 Max Mana" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="manaPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="manaUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyManaUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                    
+                                    <!-- Spell Power Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="🌟" styleClass="upgrade-icon"/>
+                                            <Label text="Spell Power" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="+8 Spell Damage" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="spellPowerPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="spellPowerBtn" text="Buy" styleClass="buy-button" onAction="#onBuySpellPowerUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                    
+                                    <!-- Cooldown Upgrade -->
+                                    <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                        <HBox alignment="CENTER_LEFT" spacing="5">
+                                            <Label text="⏰" styleClass="upgrade-icon"/>
+                                            <Label text="Quick Cast" styleClass="upgrade-name"/>
+                                        </HBox>
+                                        <Label text="-1 Ability Cooldown" styleClass="upgrade-desc"/>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label fx:id="cooldownPrice" styleClass="upgrade-price"/>
+                                            <Button fx:id="cooldownUpgradeBtn" text="Buy" styleClass="buy-button" onAction="#onBuyCooldownUpgrade"/>
+                                        </HBox>
+                                    </VBox>
+                                </GridPane>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+            <!-- Consumables Tab -->
+            <Tab text="⚗ Consumables" styleClass="shop-tab">
+                <ScrollPane fitToWidth="true" styleClass="consumables-scroll">
+                    <VBox spacing="15" styleClass="consumables-container">
+                        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+                        
+                        <Label text="Battle items and consumables for tactical advantage!" styleClass="tab-description">
+                            <font><Font size="14"/></font>
+                        </Label>
+                        
+                        <GridPane hgap="20" vgap="15" styleClass="items-grid">
+                            <!-- Health Potion -->
+                            <VBox spacing="8" styleClass="item-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <Label text="❤️‍🩹" styleClass="item-icon-large">
+                                    <font><Font size="24"/></font>
+                                </Label>
+                                <Label text="Health Potion" styleClass="item-name"/>
+                                <Label text="Restore 50 HP instantly" wrapText="true" styleClass="item-desc"/>
+                                <HBox alignment="CENTER" spacing="10">
+                                    <Label fx:id="healthPotionPrice" styleClass="item-price"/>
+                                    <Button fx:id="healthBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyHealthPotion"/>
+                                </HBox>
+                            </VBox>
+                            
+                            <!-- Mana Potion -->
+                            <VBox spacing="8" styleClass="item-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <Label text="🧪" styleClass="item-icon-large">
+                                    <font><Font size="24"/></font>
+                                </Label>
+                                <Label text="Mana Potion" styleClass="item-name"/>
+                                <Label text="Restore 30 MP instantly" wrapText="true" styleClass="item-desc"/>
+                                <HBox alignment="CENTER" spacing="10">
+                                    <Label fx:id="manaPotionPrice" styleClass="item-price"/>
+                                    <Button fx:id="manaBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyManaPotion"/>
+                                </HBox>
+                            </VBox>
+                            
+                            <!-- Speed Boost -->
+                            <VBox spacing="8" styleClass="item-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                <Label text="🏃‍♂️" styleClass="item-icon-large">
+                                    <font><Font size="24"/></font>
+                                </Label>
+                                <Label text="Haste Potion" styleClass="item-name"/>
+                                <Label text="+2 Speed for 3 turns" wrapText="true" styleClass="item-desc"/>
+                                <HBox alignment="CENTER" spacing="10">
+                                    <Label fx:id="hastePotionPrice" styleClass="item-price"/>
+                                    <Button fx:id="hasteBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyHastePotion"/>
+                                </HBox>
+                            </VBox>
+                            
+                            <!-- Revival Token -->
+                            <VBox spacing="8" styleClass="item-card premium" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <Label text="💫" styleClass="item-icon-large">
+                                    <font><Font size="24"/></font>
+                                </Label>
+                                <Label text="Revival Token" styleClass="item-name"/>
+                                <Label text="Revive with 25% HP" wrapText="true" styleClass="item-desc"/>
+                                <HBox alignment="CENTER" spacing="10">
+                                    <Label fx:id="revivalTokenPrice" styleClass="item-price premium"/>
+                                    <Button fx:id="revivalBuyBtn" text="Buy" styleClass="buy-button-premium" onAction="#onBuyRevivalToken"/>
+                                </HBox>
+                            </VBox>
+                        </GridPane>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+        </TabPane>
+    </center>
+    
+    <!-- Bottom Status -->
+    <bottom>
+        <HBox styleClass="shop-status" alignment="CENTER" spacing="15">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            <Label fx:id="statusMessage" text="Welcome to the Battle Shop!" styleClass="status-message">
+                <font><Font size="12"/></font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="💡 Tip: Upgrades are permanent!" styleClass="shop-tip">
+                <font><Font size="11"/></font>
+            </Label>
+        </HBox>
+    </bottom>
+    
+</BorderPane>

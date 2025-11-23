@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="com.amin.battlearena.uifx.controller.CampaignController" styleClass="campaign-root" stylesheets="@styles.css">
+
+    <!-- Top Header -->
+    <top>
+        <VBox styleClass="campaign-header">
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+                <Label text="🗺 CAMPAIGN MAP" styleClass="campaign-title">
+                    <font><Font name="System Bold" size="28"/></font>
+                </Label>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <!-- Player Progress -->
+                <VBox alignment="CENTER_RIGHT" spacing="5">
+                    <HBox spacing="15" alignment="CENTER_RIGHT">
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="💰" styleClass="stat-icon"/>
+                            <Label fx:id="playerGold" text="1000" styleClass="gold-value"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="⭐" styleClass="stat-icon"/>
+                            <Label fx:id="playerLevel" text="Level 1" styleClass="level-value"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER">
+                            <Label text="🏆" styleClass="stat-icon"/>
+                            <Label fx:id="victoriesCount" text="0 Wins" styleClass="victory-value"/>
+                        </HBox>
+                    </HBox>
+                </VBox>
+                
+                <Button fx:id="backBtn" text="← Back" onAction="#onBack" styleClass="back-button">
+                    <font><Font size="14"/></font>
+                </Button>
+            </HBox>
+            
+            <!-- Progress Bar -->
+            <HBox alignment="CENTER" spacing="10" styleClass="progress-section">
+                <padding><Insets top="10" right="20" bottom="15" left="20"/></padding>
+                <Label text="Campaign Progress:" styleClass="progress-label"/>
+                <ProgressBar fx:id="campaignProgress" progress="0.0" minWidth="300" styleClass="campaign-progress"/>
+                <Label fx:id="progressText" text="0/12 Complete" styleClass="progress-text"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Main Campaign Map -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="campaign-scroll">
+            <VBox spacing="20" styleClass="campaign-map">
+                <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+                
+                <!-- Campaign Title -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="⚔ THE BATTLE ARENA CAMPAIGN" styleClass="map-title">
+                        <font><Font name="System Bold" size="24"/></font>
+                    </Label>
+                    <Label text="Conquer the realm and become the ultimate champion!" styleClass="map-subtitle">
+                        <font><Font size="14"/></font>
+                    </Label>
+                </VBox>
+                
+                <!-- Level Grid -->
+                <GridPane hgap="25" vgap="25" alignment="CENTER" styleClass="levels-grid">
+                    
+                    <!-- Chapter 1: Training Grounds -->
+                    <VBox spacing="15" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="📚 CHAPTER 1: TRAINING GROUNDS" styleClass="chapter-title">
+                            <font><Font name="System Bold" size="16"/></font>
+                        </Label>
+                        
+                        <!-- Level 1 -->
+                        <VBox spacing="8" styleClass="level-card available" onMouseClicked="#onLevelSelected" userData="1">
+                            <Circle radius="30" styleClass="level-icon available"/>
+                            <Label text="1" styleClass="level-number">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="First Steps" styleClass="level-name"/>
+                            <Label text="Learn the basics" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="50 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 2 -->
+                        <VBox spacing="8" styleClass="level-card available" onMouseClicked="#onLevelSelected" userData="2">
+                            <Circle radius="30" styleClass="level-icon available"/>
+                            <Label text="2" styleClass="level-number">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Warrior's Trial" styleClass="level-name"/>
+                            <Label text="Face basic enemies" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="75 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 3 -->
+                        <VBox spacing="8" styleClass="level-card available" onMouseClicked="#onLevelSelected" userData="3">
+                            <Circle radius="30" styleClass="level-icon available"/>
+                            <Label text="3" styleClass="level-number">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Archer's Test" styleClass="level-name"/>
+                            <Label text="Master ranged combat" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="100 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Chapter 2: Dark Forest -->
+                    <VBox spacing="15" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="🌲 CHAPTER 2: DARK FOREST" styleClass="chapter-title">
+                            <font><Font name="System Bold" size="16"/></font>
+                        </Label>
+                        
+                        <!-- Level 4 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="4">
+                            <Circle radius="30" styleClass="level-icon locked"/>
+                            <Label text="4" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Forest Ambush" styleClass="level-name"/>
+                            <Label text="Survive the darkness" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="125 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 5 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="5">
+                            <Circle radius="30" styleClass="level-icon locked"/>
+                            <Label text="5" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Ancient Guardian" styleClass="level-name"/>
+                            <Label text="Face the forest lord" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="150 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 6 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="6">
+                            <Circle radius="30" styleClass="level-icon locked"/>
+                            <Label text="6" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Mystic Clearing" styleClass="level-name"/>
+                            <Label text="Magic awakens" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="200 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Chapter 3: Mountain Peak -->
+                    <VBox spacing="15" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label text="⛰ CHAPTER 3: MOUNTAIN PEAK" styleClass="chapter-title">
+                            <font><Font name="System Bold" size="16"/></font>
+                        </Label>
+                        
+                        <!-- Level 7 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="7">
+                            <Circle radius="30" styleClass="level-icon locked"/>
+                            <Label text="7" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Rocky Ascent" styleClass="level-name"/>
+                            <Label text="Climb to victory" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="250 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 8 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="8">
+                            <Circle radius="30" styleClass="level-icon locked"/>
+                            <Label text="8" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Dragon's Lair" styleClass="level-name"/>
+                            <Label text="Face the ancient beast" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="300 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 9 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="9">
+                            <Circle radius="30" styleClass="level-icon locked"/>
+                            <Label text="9" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Summit Battle" styleClass="level-name"/>
+                            <Label text="Reach the peak" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="400 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                    
+                    <!-- Chapter 4: Final Arena -->
+                    <VBox spacing="15" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="🏛 FINAL CHAPTER: THE GRAND ARENA" styleClass="chapter-title">
+                            <font><Font name="System Bold" size="16"/></font>
+                        </Label>
+                        
+                        <!-- Level 10 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="10">
+                            <Circle radius="35" styleClass="level-icon locked boss"/>
+                            <Label text="10" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Arena Champion" styleClass="level-name boss"/>
+                            <Label text="Face the reigning champion" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="500 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 11 -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="11">
+                            <Circle radius="35" styleClass="level-icon locked boss"/>
+                            <Label text="11" styleClass="level-number locked">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label text="Master's Trial" styleClass="level-name boss"/>
+                            <Label text="Ultimate test of skill" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="750 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- Level 12 - Final Boss -->
+                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="12">
+                            <Circle radius="40" styleClass="level-icon locked final-boss"/>
+                            <Label text="👑" styleClass="level-number locked final-boss">
+                                <font><Font name="System Bold" size="20"/></font>
+                            </Label>
+                            <Label text="ARENA MASTER" styleClass="level-name final-boss"/>
+                            <Label text="Become the ultimate champion!" styleClass="level-desc" wrapText="true"/>
+                            <HBox alignment="CENTER" spacing="5">
+                                <Label text="🏆" styleClass="reward-icon"/>
+                                <Label text="1000 Gold" styleClass="reward-text"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                </GridPane>
+            </VBox>
+        </ScrollPane>
+    </center>
+    
+    <!-- Bottom Panel - Selected Level Info -->
+    <bottom>
+        <VBox fx:id="levelInfoPanel" styleClass="level-info-panel" visible="true">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox spacing="8" styleClass="selected-level-info">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Circle fx:id="selectedLevelIcon" radius="25" styleClass="level-icon"/>
+                        <VBox spacing="2">
+                            <Label fx:id="selectedLevelName" text="Level Name" styleClass="selected-level-name">
+                                <font><Font name="System Bold" size="18"/></font>
+                            </Label>
+                            <Label fx:id="selectedLevelChapter" text="Chapter Name" styleClass="selected-level-chapter"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <Label fx:id="selectedLevelDescription" text="Level description goes here..." 
+                           wrapText="true" styleClass="selected-level-desc" maxWidth="400"/>
+                    
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <VBox spacing="2" alignment="CENTER">
+                            <Label text="Difficulty" styleClass="info-label"/>
+                            <HBox fx:id="difficultyStars" spacing="2"/>
+                        </VBox>
+                        <VBox spacing="2" alignment="CENTER">
+                            <Label text="Enemies" styleClass="info-label"/>
+                            <Label fx:id="enemyCount" text="3-5" styleClass="info-value"/>
+                        </VBox>
+                        <VBox spacing="2" alignment="CENTER">
+                            <Label text="Reward" styleClass="info-label"/>
+                            <HBox spacing="5" alignment="CENTER">
+                                <Label text="💰" styleClass="reward-icon"/>
+                                <Label fx:id="rewardAmount" text="50" styleClass="reward-value"/>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </VBox>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <VBox alignment="CENTER_RIGHT" spacing="10">
+                    <Button fx:id="startLevelBtn" text="⚔ START BATTLE" onAction="#onStartSelectedLevel" 
+                           styleClass="start-level-button" disable="true">
+                        <font><Font name="System Bold" size="16"/></font>
+                    </Button>
+                </VBox>
+            </HBox>
+        </VBox>
+    </bottom>
+    
+</BorderPane>

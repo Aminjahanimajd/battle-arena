@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" spacing="15"
+      styleClass="help-container" alignment="TOP_CENTER"
+      fx:controller="com.amin.battlearena.uifx.controller.HelpController" stylesheets="@styles.css">
+    <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+    <children>
+        <Label text="Help &amp; Controls" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+        <Separator />
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+            <VBox spacing="8">
+                <children>
+                    <Label text="Game Controls:" style="-fx-font-weight: bold;" />
+                    <Label text="• Click 'Setup Board' to start a new battle" />
+                    <Label text="• Click a friendly unit to select it" />
+                    <Label text="• Click 'Move' then click a green tile to move" />
+                    <Label text="• Click 'Attack' then click a red tile to attack" />
+                    <Label text="• Click 'End Turn' to finish your turn" />
+
+                    <Label text="• Abilities consume mana and your attack/ability budget for the turn" />
+                    <Label text="• Movement per turn replaces 'speed' — plan positions carefully" />
+                    <Separator />
+                    <Label text="Character Types:" style="-fx-font-weight: bold;" />
+                    <Label text="• Warrior: Balanced fighter, moves 1, range 1" />
+                    <Label text="• Archer: Ranged attacker, moves 2, range 3" />
+                    <Label text="• Mage: Magic damage, moves 1, range 1" />
+                    <Label text="• Knight: Tank, moves 1, range 1" />
+                    <Label text="• Ranger: Elite archer, moves 3, range 4" />
+                    <Label text="• Master: Boss unit, moves 2, range 1" />
+                    <Separator />
+                    <Label text="Tips:" style="-fx-font-weight: bold;" />
+                    <Label text="• Green outlines show valid move tiles" />
+                    <Label text="• Red outlines show valid attack targets" />
+                    <Label text="• Yellow outline shows selected unit" />
+                    <Label text="• HP bars show unit health" />
+                </children>
+            </VBox>
+        </ScrollPane>
+        <Button text="Back" onAction="#onBack" />
+    </children>
+</VBox>

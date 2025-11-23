@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<VBox xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" 
+     alignment="CENTER" spacing="25" styleClass="main-menu"
+     fx:controller="com.amin.battlearena.uifx.controller.MainMenuController" stylesheets="@styles.css">
+    <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+    
+    <!-- Game Title -->
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="⚔ BATTLE ARENA ⚔" styleClass="menu-title">
+            <font><Font name="System Bold" size="42"/></font>
+        </Label>
+        <Label fx:id="welcomeLabel" text="Welcome, Player!" styleClass="welcome-text">
+            <font><Font size="18"/></font>
+        </Label>
+        
+        <!-- Gold Display -->
+        <HBox alignment="CENTER" spacing="8" styleClass="gold-display">
+            <Label text="💰" styleClass="gold-icon">
+                <font><Font size="16"/></font>
+            </Label>
+            <Label text="Gold:" styleClass="gold-label">
+                <font><Font size="14"/></font>
+            </Label>
+            <Label fx:id="goldAmount" text="1000" styleClass="gold-value">
+                <font><Font name="System Bold" size="14"/></font>
+            </Label>
+        </HBox>
+    </VBox>
+    
+    <!-- Decorative Separator -->
+    <Separator maxWidth="300" styleClass="menu-separator"/>
+    
+    <!-- Main Menu Buttons -->
+    <VBox alignment="CENTER" spacing="15" maxWidth="250">
+        <Button text="🎯 START CAMPAIGN" onAction="#onCampaign" styleClass="menu-button primary" minWidth="250">
+            <font><Font name="System Bold" size="16"/></font>
+        </Button>
+        
+        <Button text="🛍 SHOP" onAction="#onShop" styleClass="menu-button" minWidth="250">
+            <font><Font size="14"/></font>
+            <tooltip><Tooltip text="Buy upgrades and enhance your characters!"/></tooltip>
+        </Button>
+        
+        <Separator maxWidth="200" styleClass="menu-separator-small"/>
+        
+        <Button text="❓ HELP" onAction="#onHelp" styleClass="menu-button" minWidth="250">
+            <font><Font size="14"/></font>
+        </Button>
+        
+        <Separator maxWidth="200" styleClass="menu-separator-small"/>
+        
+        <Button text="🔄 CHANGE ACCOUNT" onAction="#onChangeAccount" styleClass="menu-button secondary" minWidth="250">
+            <font><Font size="14"/></font>
+        </Button>
+        
+        <Button text="❌ EXIT" onAction="#onExit" styleClass="menu-button danger" minWidth="250">
+            <font><Font size="14"/></font>
+        </Button>
+    </VBox>
+    
+    <!-- Footer Info -->
+    <VBox alignment="CENTER" spacing="5">
+        <Label text="Version 1.0 | Enhanced GUI" styleClass="version-text">
+            <font><Font size="12"/></font>
+        </Label>
+        <Label text="Built with JavaFX &amp; Modern Design" styleClass="subtitle-text">
+            <font><Font size="10"/></font>
+        </Label>
+    </VBox>
+</VBox>
