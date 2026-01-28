@@ -4,7 +4,7 @@ import com.amin.battlearena.domain.Player;
 import com.amin.battlearena.domain.ability.Slash;
 import com.amin.battlearena.persistence.AccountRepository;
 
-public class Warrior extends GameCharacter {
+public class Warrior extends Character {
     public Warrior(boolean isPlayer) {
         super("Warrior", "Warrior", 
               100 + getUpgrade(0),

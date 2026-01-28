@@ -2,9 +2,9 @@ package com.amin.battlearena.domain.character;
 
 import com.amin.battlearena.domain.ability.Slash;
 
-public class Enemy extends GameCharacter {
+public class Enemy extends Character {
     public Enemy(String name, int level) {
-        super(name, "Enemy", 
+        super(name, "Enemy",
               50 + (level * 10), // HP
               20 + (level * 5),  // Mana
               10 + (level * 2),  // Attack

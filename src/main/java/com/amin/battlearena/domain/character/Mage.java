@@ -4,7 +4,7 @@ import com.amin.battlearena.domain.Player;
 import com.amin.battlearena.domain.ability.Fireball;
 import com.amin.battlearena.persistence.AccountRepository;
 
-public class Mage extends GameCharacter {
+public class Mage extends Character {
     public Mage(boolean isPlayer) {
         super("Mage", "Mage", 
               60 + getUpgrade(0),

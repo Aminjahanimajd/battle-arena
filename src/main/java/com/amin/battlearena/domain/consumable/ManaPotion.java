@@ -1,6 +1,6 @@
 package com.amin.battlearena.domain.consumable;
 
-import com.amin.battlearena.domain.character.GameCharacter;
+import com.amin.battlearena.domain.character.Character;
 
 public class ManaPotion extends Consumable {
     private int manaAmount;
@@ -11,7 +11,7 @@ public class ManaPotion extends Consumable {
     }
 
     @Override
-    public void use(GameCharacter target) {
+    public void use(Character target) {
         if (target != null) {
             target.restoreMana(manaAmount);
         }

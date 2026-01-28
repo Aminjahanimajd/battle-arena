@@ -3,18 +3,19 @@ package com.amin.battlearena.engine;
 import com.amin.battlearena.domain.ability.Ability;
 import com.amin.battlearena.domain.character.Archer;
 import com.amin.battlearena.domain.Board;
-import com.amin.battlearena.domain.character.GameCharacter;
+import com.amin.battlearena.domain.character.Character;
 import com.amin.battlearena.domain.character.Enemy;
 import com.amin.battlearena.domain.character.Mage;
 import com.amin.battlearena.domain.Tile;
 import com.amin.battlearena.domain.character.Warrior;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class GameEngine {
     private Board board;
-    private List<GameCharacter> allCharacters;
+    private List<Character> allCharacters;
     private int turnCount;
     private boolean isPlayerTurn;
     private boolean isGameOver;
@@ -54,7 +55,7 @@ public class GameEngine {
         }
     }
 
-    private void spawnCharacter(GameCharacter c, int x, int y) {
+    private void spawnCharacter(Character c, int x, int y) {
         Tile t = board.getTile(x, y);
         if (t != null && !t.isOccupied()) {
             t.setOccupant(c);
@@ -64,13 +65,13 @@ public class GameEngine {
     }
 
     public Board getBoard() { return board; }
-    public List<GameCharacter> getAllCharacters() { return allCharacters; }
+    public List<Character> getAllCharacters() { return allCharacters; }
     public int getTurnCount() { return turnCount; }
     public boolean isPlayerTurn() { return isPlayerTurn; }
     public boolean isGameOver() { return isGameOver; }
     public boolean didPlayerWin() { return playerWon; }
 
-    public boolean moveCharacter(GameCharacter c, Tile target) {
+    public boolean moveCharacter(Character c, Tile target) {
         if (c.getMovesLeft() <= 0) return false;
         if (target.isOccupied()) return false;
         
@@ -87,7 +88,7 @@ public class GameEngine {
         return true;
     }
 
-    public boolean attackCharacter(GameCharacter attacker, GameCharacter target, Ability ability) {
+    public boolean attackCharacter(Character attacker, Character target, Ability ability) {
         if (attacker.getAttacksLeft() <= 0) return false;
         if (ability != null && !ability.isReady()) return false;
         if (ability != null && attacker.getCurrentMana() < ability.getManaCost()) return false;
@@ -107,7 +108,7 @@ public class GameEngine {
         return true;
     }
 
-    private void performAttack(GameCharacter attacker, GameCharacter target, Ability ability) {
+    private void performAttack(Character attacker, Character target, Ability ability) {
         if (ability != null) {
             attacker.spendMana(ability.getManaCost());
             ability.execute(attacker, target);
@@ -123,7 +124,7 @@ public class GameEngine {
         if (isPlayerTurn) {
             turnCount++;
             // Reset turn for all characters
-            for (GameCharacter c : allCharacters) {
+            for (Character c : allCharacters) {
                 c.resetTurn();
                 c.restoreMana(5); // Simple mana regen
             }
@@ -139,7 +140,7 @@ public class GameEngine {
         boolean playerAlive = false;
         boolean enemyAlive = false;
         
-        for (GameCharacter c : allCharacters) {
+        for (Character c : allCharacters) {
             if (c.isPlayerTeam()) playerAlive = true;
             else enemyAlive = true;
         }

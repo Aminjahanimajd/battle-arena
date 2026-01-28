@@ -1,11 +1,11 @@
 package com.amin.battlearena.domain;
 
-import com.amin.battlearena.domain.character.GameCharacter;
+import com.amin.battlearena.domain.character.Character;
 
 public class Tile {
     private final int x;
     private final int y;
-    private GameCharacter occupant;
+    private Character occupant;
 
     public Tile(int x, int y) {
         this.x = x;
@@ -20,11 +20,11 @@ public class Tile {
         return y;
     }
 
-    public GameCharacter getOccupant() {
+    public Character getOccupant() {
         return occupant;
     }
 
-    public void setOccupant(GameCharacter occupant) {
+    public void setOccupant(Character occupant) {
         this.occupant = occupant;
     }
 

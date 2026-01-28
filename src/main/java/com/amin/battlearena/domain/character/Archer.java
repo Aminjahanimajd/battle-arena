@@ -4,7 +4,7 @@ import com.amin.battlearena.domain.Player;
 import com.amin.battlearena.domain.ability.Shot;
 import com.amin.battlearena.persistence.AccountRepository;
 
-public class Archer extends GameCharacter {
+public class Archer extends Character {
     public Archer(boolean isPlayer) {
         super("Archer", "Archer", 
               80 + getUpgrade(0),

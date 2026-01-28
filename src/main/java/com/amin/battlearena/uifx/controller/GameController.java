@@ -1,7 +1,7 @@
 package com.amin.battlearena.uifx.controller;
 
 import com.amin.battlearena.domain.*;
-import com.amin.battlearena.domain.character.GameCharacter;
+import com.amin.battlearena.domain.character.Character;
 import com.amin.battlearena.domain.character.Warrior;
 import com.amin.battlearena.domain.character.Archer;
 import com.amin.battlearena.domain.character.Mage;
@@ -14,6 +14,7 @@ import com.amin.battlearena.engine.AiEngine;
 import com.amin.battlearena.engine.GameEngine;
 import com.amin.battlearena.infra.SceneManager;
 import com.amin.battlearena.persistence.AccountRepository;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -72,7 +73,7 @@ public class GameController {
 
     private GameEngine engine;
     private AiEngine aiEngine;
-    private GameCharacter selectedCharacter;
+    private Character selectedCharacter;
     private Ability selectedAbility;
     private String selectedItem;
     
@@ -141,7 +142,7 @@ public class GameController {
         
         Tile tile = engine.getBoard().getTile(x, y);
         if (tile.isOccupied()) {
-            GameCharacter c = tile.getOccupant();
+            Character c = tile.getOccupant();
             Label charIcon = new Label(c.getIcon());
             charIcon.setFont(new Font(24));
             if (c.isPlayerTeam()) {

@@ -5,7 +5,7 @@ import com.amin.battlearena.domain.ability.Ability;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GameCharacter {
+public abstract class Character {
     private String name;
     private String type; // Warrior, Archer, etc.
     private int maxHp;

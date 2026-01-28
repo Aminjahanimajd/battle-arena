@@ -1,6 +1,6 @@
 package com.amin.battlearena.domain.ability;
 
-import com.amin.battlearena.domain.character.GameCharacter;
+import com.amin.battlearena.domain.character.Character;
 
 public abstract class Ability {
     private final String name;
@@ -33,5 +33,5 @@ public abstract class Ability {
         currentCooldown = cooldown;
     }
 
-    public abstract void execute(GameCharacter source, GameCharacter target);
+    public abstract void execute(Character source, Character target);
 }

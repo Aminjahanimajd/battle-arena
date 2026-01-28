@@ -1,22 +1,23 @@
 package com.amin.battlearena.engine;
 
-import com.amin.battlearena.domain.character.GameCharacter;
+import com.amin.battlearena.domain.character.Character;
 import com.amin.battlearena.domain.Tile;
+
 import java.util.List;
 
 public class AiEngine {
     
     public void performTurn(GameEngine engine) {
-        List<GameCharacter> chars = engine.getAllCharacters();
-        for (GameCharacter c : chars) {
+        List<Character> chars = engine.getAllCharacters();
+        for (Character c : chars) {
             if (!c.isPlayerTeam() && c.isAlive()) {
                 performAction(engine, c);
             }
         }
     }
 
-    private void performAction(GameEngine engine, GameCharacter ai) {
-        GameCharacter target = findNearestTarget(engine, ai);
+    private void performAction(GameEngine engine, Character ai) {
+        Character target = findNearestTarget(engine, ai);
         if (target == null) return;
 
         // Try to attack first
@@ -37,11 +38,11 @@ public class AiEngine {
         }
     }
 
-    private GameCharacter findNearestTarget(GameEngine engine, GameCharacter ai) {
-        GameCharacter nearest = null;
+    private Character findNearestTarget(GameEngine engine, Character ai) {
+        Character nearest = null;
         int minDist = Integer.MAX_VALUE;
         
-        for (GameCharacter c : engine.getAllCharacters()) {
+        for (Character c : engine.getAllCharacters()) {
             if (c.isPlayerTeam() && c.isAlive()) {
                 int dist = getDistance(ai.getPosition(), c.getPosition());
                 if (dist < minDist) {
@@ -53,7 +54,7 @@ public class AiEngine {
         return nearest;
     }
 
-    private Tile findMoveTarget(GameEngine engine, GameCharacter ai, GameCharacter target) {
+    private Tile findMoveTarget(GameEngine engine, Character ai, Character target) {
         // Simple logic: move to a tile that minimizes distance to target
         // but is within movement range and not occupied
         Tile bestTile = null;
@@ -83,7 +84,7 @@ public class AiEngine {
         return bestTile;
     }
 
-    private boolean isInRange(GameCharacter attacker, GameCharacter target) {
+    private boolean isInRange(Character attacker, Character target) {
         return getDistance(attacker.getPosition(), target.getPosition()) <= attacker.getRange();
     }
 
