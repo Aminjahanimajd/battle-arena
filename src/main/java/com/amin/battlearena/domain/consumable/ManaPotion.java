@@ -2,8 +2,8 @@ package com.amin.battlearena.domain.consumable;
 
 import com.amin.battlearena.domain.character.Character;
 
-public class ManaPotion extends Consumable {
-    private int manaAmount;
+public final class ManaPotion extends Consumable {
+    private final int manaAmount;
 
     public ManaPotion(int manaAmount) {
         super("Mana Potion", "Restores " + manaAmount + " MP");

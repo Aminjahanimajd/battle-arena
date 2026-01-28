@@ -3,7 +3,7 @@ package com.amin.battlearena.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public final class Board {
     private final int width;
     private final int height;
     private final Tile[][] tiles;

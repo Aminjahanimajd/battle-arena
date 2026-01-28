@@ -2,8 +2,8 @@ package com.amin.battlearena.domain.consumable;
 
 import com.amin.battlearena.domain.character.Character;
 
-public class HastePotion extends Consumable {
-    private int speedAmount;
+public final class HastePotion extends Consumable {
+    private final int speedAmount;
 
     public HastePotion(int speedAmount) {
         super("Haste Potion", "Increases moves by " + speedAmount);

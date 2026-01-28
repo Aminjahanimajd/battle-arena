@@ -2,7 +2,7 @@ package com.amin.battlearena.domain.ability;
 
 import com.amin.battlearena.domain.character.Character;
 
-public abstract class Ability {
+public abstract class Ability implements AbilityInterface {
     private final String name;
     private final int manaCost;
     private final int cooldown;

@@ -46,7 +46,7 @@
                 <padding><Insets top="10" right="20" bottom="15" left="20"/></padding>
                 <Label text="Campaign Progress:" styleClass="progress-label"/>
                 <ProgressBar fx:id="campaignProgress" progress="0.0" minWidth="300" styleClass="campaign-progress"/>
-                <Label fx:id="progressText" text="0/12 Complete" styleClass="progress-text"/>
+                <Label fx:id="progressText" text="0/10 Complete" styleClass="progress-text"/>
             </HBox>
         </VBox>
     </top>
@@ -223,36 +223,8 @@
                             <font><Font name="System Bold" size="16"/></font>
                         </Label>
                         
-                        <!-- Level 10 -->
+                        <!-- Level 10 - Final Boss -->
                         <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="10">
-                            <Circle radius="35" styleClass="level-icon locked boss"/>
-                            <Label text="10" styleClass="level-number locked">
-                                <font><Font name="System Bold" size="18"/></font>
-                            </Label>
-                            <Label text="Arena Champion" styleClass="level-name boss"/>
-                            <Label text="Face the reigning champion" styleClass="level-desc" wrapText="true"/>
-                            <HBox alignment="CENTER" spacing="5">
-                                <Label text="🏆" styleClass="reward-icon"/>
-                                <Label text="500 Gold" styleClass="reward-text"/>
-                            </HBox>
-                        </VBox>
-                        
-                        <!-- Level 11 -->
-                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="11">
-                            <Circle radius="35" styleClass="level-icon locked boss"/>
-                            <Label text="11" styleClass="level-number locked">
-                                <font><Font name="System Bold" size="18"/></font>
-                            </Label>
-                            <Label text="Master's Trial" styleClass="level-name boss"/>
-                            <Label text="Ultimate test of skill" styleClass="level-desc" wrapText="true"/>
-                            <HBox alignment="CENTER" spacing="5">
-                                <Label text="🏆" styleClass="reward-icon"/>
-                                <Label text="750 Gold" styleClass="reward-text"/>
-                            </HBox>
-                        </VBox>
-                        
-                        <!-- Level 12 - Final Boss -->
-                        <VBox spacing="8" styleClass="level-card locked" onMouseClicked="#onLevelSelected" userData="12">
                             <Circle radius="40" styleClass="level-icon locked final-boss"/>
                             <Label text="👑" styleClass="level-number locked final-boss">
                                 <font><Font name="System Bold" size="20"/></font>
@@ -261,7 +233,7 @@
                             <Label text="Become the ultimate champion!" styleClass="level-desc" wrapText="true"/>
                             <HBox alignment="CENTER" spacing="5">
                                 <Label text="🏆" styleClass="reward-icon"/>
-                                <Label text="1000 Gold" styleClass="reward-text"/>
+                                <Label text="500 Gold" styleClass="reward-text"/>
                             </HBox>
                         </VBox>
                     </VBox>

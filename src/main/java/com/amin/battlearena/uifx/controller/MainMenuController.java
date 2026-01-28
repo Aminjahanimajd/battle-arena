@@ -1,8 +1,9 @@
 package com.amin.battlearena.uifx.controller;
 
-import com.amin.battlearena.domain.Player;
+import com.amin.battlearena.domain.account.AccountRepository;
+import com.amin.battlearena.domain.account.Player;
 import com.amin.battlearena.infra.SceneManager;
-import com.amin.battlearena.persistence.AccountRepository;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

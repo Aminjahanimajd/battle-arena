@@ -1,6 +1,6 @@
 package com.amin.battlearena.persistence;
 
-import com.amin.battlearena.domain.Player;
+import com.amin.battlearena.domain.account.Player;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;

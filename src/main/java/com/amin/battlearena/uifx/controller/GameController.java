@@ -1,26 +1,32 @@
 package com.amin.battlearena.uifx.controller;
 
-import com.amin.battlearena.domain.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.amin.battlearena.domain.Board;
+import com.amin.battlearena.domain.Tile;
+import com.amin.battlearena.domain.ability.AbilityInterface;
+import com.amin.battlearena.domain.account.AccountRepository;
+import com.amin.battlearena.domain.account.Player;
+import com.amin.battlearena.domain.campaign.RewardService;
 import com.amin.battlearena.domain.character.Character;
-import com.amin.battlearena.domain.character.Warrior;
-import com.amin.battlearena.domain.character.Archer;
-import com.amin.battlearena.domain.character.Mage;
-import com.amin.battlearena.domain.character.Enemy;
-import com.amin.battlearena.domain.ability.Ability;
 import com.amin.battlearena.domain.consumable.Consumable;
-import com.amin.battlearena.domain.consumable.HealthPotion;
-import com.amin.battlearena.domain.consumable.ItemFactory;
+import com.amin.battlearena.domain.consumable.ConsumableFactory;
 import com.amin.battlearena.engine.AiEngine;
 import com.amin.battlearena.engine.GameEngine;
 import com.amin.battlearena.infra.SceneManager;
-import com.amin.battlearena.persistence.AccountRepository;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -28,9 +34,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-
-import java.util.List;
-import java.util.Map;
 
 public class GameController {
 
@@ -74,13 +77,17 @@ public class GameController {
     private GameEngine engine;
     private AiEngine aiEngine;
     private Character selectedCharacter;
-    private Ability selectedAbility;
+    private AbilityInterface selectedAbility;
     private String selectedItem;
     
     private final int TILE_SIZE = 50;
     
     private Timeline gameTimer;
     private int timeLeft = 60;
+    
+    // Highlight system
+    private StackPane selectedTileView;
+    private List<StackPane> highlightedTiles = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -140,6 +147,14 @@ public class GameController {
         bg.setStroke(Color.BLACK);
         stack.getChildren().add(bg);
         
+        // Add highlight rectangle (initially transparent)
+        Rectangle highlight = new Rectangle(TILE_SIZE, TILE_SIZE);
+        highlight.setFill(Color.TRANSPARENT);
+        highlight.setStroke(Color.TRANSPARENT);
+        highlight.setStrokeWidth(4);
+        highlight.setMouseTransparent(true);
+        stack.getChildren().add(highlight);
+        
         Tile tile = engine.getBoard().getTile(x, y);
         if (tile.isOccupied()) {
             Character c = tile.getOccupant();
@@ -184,6 +199,7 @@ public class GameController {
             moveBtn.setSelected(false);
             renderBoard();
             updateUI();
+            updateHighlights();
         } else {
             log("Invalid move!");
         }
@@ -200,6 +216,7 @@ public class GameController {
             useAbilityBtn.setDisable(true);
             renderBoard();
             updateUI();
+            updateHighlights();
         } else {
             log("Attack failed (Out of range or no actions left)!");
         }
@@ -212,6 +229,154 @@ public class GameController {
             selectedCharacter = null;
         }
         updateSelectionUI();
+        updateHighlights();
+    }
+    
+    private void updateHighlights() {
+        clearHighlights();
+        
+        if (selectedCharacter == null || !selectedCharacter.isPlayerTeam()) {
+            return;
+        }
+        
+        // Highlight selected character's tile in BLUE
+        highlightSelectedCharacter();
+        
+        // Highlight available actions based on mode
+        if (moveBtn.isSelected()) {
+            highlightMoveTiles();
+        } else if (attackBtn.isSelected()) {
+            if (selectedAbility != null) {
+                highlightAbilityTargets();
+            } else {
+                highlightAttackTargets();
+            }
+        }
+    }
+    
+    private void clearHighlights() {
+        // Clear all existing highlights
+        for (StackPane tile : highlightedTiles) {
+            Rectangle highlight = (Rectangle) tile.getChildren().get(1);
+            highlight.setStroke(Color.TRANSPARENT);
+        }
+        highlightedTiles.clear();
+        selectedTileView = null;
+    }
+    
+    private void highlightSelectedCharacter() {
+        if (selectedCharacter == null || selectedCharacter.getPosition() == null) return;
+        
+        int x = selectedCharacter.getPosition().getX();
+        int y = selectedCharacter.getPosition().getY();
+        StackPane tileView = getTileView(x, y);
+        
+        if (tileView != null) {
+            Rectangle highlight = (Rectangle) tileView.getChildren().get(1);
+            highlight.setStroke(Color.BLUE);
+            selectedTileView = tileView;
+            highlightedTiles.add(tileView);
+        }
+    }
+    
+    private void highlightMoveTiles() {
+        if (selectedCharacter == null || selectedCharacter.getMovesLeft() <= 0) return;
+        
+        Board board = engine.getBoard();
+        int charX = selectedCharacter.getPosition().getX();
+        int charY = selectedCharacter.getPosition().getY();
+        int speed = selectedCharacter.getSpeed();
+        
+        // Highlight all tiles within movement range (Manhattan distance)
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
+                Tile tile = board.getTile(x, y);
+                if (tile.isOccupied()) continue;
+                
+                int dist = Math.abs(charX - x) + Math.abs(charY - y);
+                if (dist > 0 && dist <= speed) {
+                    StackPane tileView = getTileView(x, y);
+                    if (tileView != null) {
+                        Rectangle highlight = (Rectangle) tileView.getChildren().get(1);
+                        highlight.setStroke(Color.GREEN);
+                        highlightedTiles.add(tileView);
+                    }
+                }
+            }
+        }
+    }
+    
+    private void highlightAttackTargets() {
+        if (selectedCharacter == null || selectedCharacter.getAttacksLeft() <= 0) return;
+        
+        Board board = engine.getBoard();
+        int charX = selectedCharacter.getPosition().getX();
+        int charY = selectedCharacter.getPosition().getY();
+        int range = selectedCharacter.getRange();
+        
+        // Highlight all enemy characters within attack range
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
+                Tile tile = board.getTile(x, y);
+                if (!tile.isOccupied()) continue;
+                if (tile.getOccupant().isPlayerTeam()) continue;
+                
+                int dist = Math.abs(charX - x) + Math.abs(charY - y);
+                if (dist > 0 && dist <= range) {
+                    StackPane tileView = getTileView(x, y);
+                    if (tileView != null) {
+                        Rectangle highlight = (Rectangle) tileView.getChildren().get(1);
+                        highlight.setStroke(Color.RED);
+                        highlightedTiles.add(tileView);
+                    }
+                }
+            }
+        }
+    }
+    
+    private void highlightAbilityTargets() {
+        if (selectedCharacter == null || selectedAbility == null) return;
+        if (!selectedAbility.isReady() || selectedCharacter.getCurrentMana() < selectedAbility.getManaCost()) return;
+        
+        Board board = engine.getBoard();
+        int charX = selectedCharacter.getPosition().getX();
+        int charY = selectedCharacter.getPosition().getY();
+        int range = selectedAbility.getRange();
+        
+        // Highlight all enemy characters within ability range
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
+                Tile tile = board.getTile(x, y);
+                if (!tile.isOccupied()) continue;
+                if (tile.getOccupant().isPlayerTeam()) continue;
+                
+                int dist = Math.abs(charX - x) + Math.abs(charY - y);
+                if (dist > 0 && dist <= range) {
+                    StackPane tileView = getTileView(x, y);
+                    if (tileView != null) {
+                        Rectangle highlight = (Rectangle) tileView.getChildren().get(1);
+                        highlight.setStroke(Color.PURPLE);
+                        highlightedTiles.add(tileView);
+                    }
+                }
+            }
+        }
+    }
+    
+    private StackPane getTileView(int x, int y) {
+        for (javafx.scene.Node node : boardGrid.getChildren()) {
+            Integer colIndex = GridPane.getColumnIndex(node);
+            Integer rowIndex = GridPane.getRowIndex(node);
+            
+            // Handle null indices (defaults to 0)
+            int col = (colIndex != null) ? colIndex : 0;
+            int row = (rowIndex != null) ? rowIndex : 0;
+            
+            if (col == x && row == y) {
+                return (StackPane) node;
+            }
+        }
+        return null;
     }
 
     private void updateSelectionUI() {
@@ -256,7 +421,7 @@ public class GameController {
         abilitiesContainer.getChildren().clear();
         if (selectedCharacter == null) return;
         
-        for (Ability a : selectedCharacter.getAbilities()) {
+        for (AbilityInterface a : selectedCharacter.getAbilities()) {
             Button btn = new Button(a.getName() + " (" + a.getManaCost() + " MP)");
             btn.setMaxWidth(Double.MAX_VALUE);
             btn.setOnAction(e -> {
@@ -278,6 +443,7 @@ public class GameController {
             attackBtn.setSelected(true);
             moveBtn.setSelected(false);
             log("Select a target for " + selectedAbility.getName());
+            updateHighlights();
         }
     }
 
@@ -286,6 +452,12 @@ public class GameController {
         if (moveBtn.isSelected()) {
             attackBtn.setSelected(false);
             log("Move Mode: Select a tile to move to.");
+            updateHighlights();
+        } else {
+            clearHighlights();
+            if (selectedCharacter != null && selectedCharacter.isPlayerTeam()) {
+                highlightSelectedCharacter();
+            }
         }
     }
 
@@ -297,6 +469,12 @@ public class GameController {
             useAbilityBtn.setDisable(true);
             useAbilityBtn.setText("Use Selected Ability");
             log("Attack Mode: Select an enemy to attack.");
+            updateHighlights();
+        } else {
+            clearHighlights();
+            if (selectedCharacter != null && selectedCharacter.isPlayerTeam()) {
+                highlightSelectedCharacter();
+            }
         }
     }
 
@@ -345,14 +523,15 @@ public class GameController {
                 log("VICTORY! You won the battle!");
                 Player p = AccountRepository.getInstance().getCurrentUser();
                 if (p != null) {
-                    p.addGold(50 + (targetLevel * 25));
+                    RewardService rewardService = new RewardService();
+                    rewardService.grantLevelReward(p, targetLevel);
                     p.addVictory();
                     if (targetLevel == p.getCampaignProgress()) {
                         p.unlockNextLevel();
                     }
                     AccountRepository.getInstance().savePlayer(p);
                 }
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Victory! You earned gold.");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Victory! You earned gold and rewards.");
                 alert.showAndWait();
                 onBack();
             } else {
@@ -421,7 +600,7 @@ public class GameController {
         if (selectedCharacter != null && selectedCharacter.isPlayerTeam() && engine.isPlayerTurn()) {
              Player p = AccountRepository.getInstance().getCurrentUser();
              if (p != null && p.hasItem(selectedItem)) {
-                 Consumable item = ItemFactory.createItem(selectedItem);
+                 Consumable item = ConsumableFactory.createItem(selectedItem);
                  if (item != null) {
                      item.use(selectedCharacter);
                      p.useItem(selectedItem);

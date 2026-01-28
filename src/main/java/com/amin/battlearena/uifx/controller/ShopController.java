@@ -1,8 +1,10 @@
 package com.amin.battlearena.uifx.controller;
 
-import com.amin.battlearena.domain.Player;
+import com.amin.battlearena.domain.account.AccountRepository;
+import com.amin.battlearena.domain.account.Player;
+import com.amin.battlearena.domain.shop.Shop;
 import com.amin.battlearena.infra.SceneManager;
-import com.amin.battlearena.persistence.AccountRepository;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -24,22 +26,24 @@ public class ShopController {
     @FXML private Label healthPotionPrice;
     @FXML private Label manaPotionPrice;
     @FXML private Label hastePotionPrice;
-    @FXML private Label revivalTokenPrice;
 
-    private final int COST_HEALTH = 100;
-    private final int COST_ATTACK = 150;
-    private final int COST_DEFENSE = 120;
-    private final int COST_RANGE = 200;
-    private final int COST_SPEED = 180;
-    private final int COST_PRECISION = 150;
-    private final int COST_MANA = 100;
-    private final int COST_SPELL = 150;
-    private final int COST_COOLDOWN = 250;
+    private final Shop shop = new Shop();
     
-    private final int COST_POTION_HP = 50;
-    private final int COST_POTION_MP = 30;
-    private final int COST_POTION_HASTE = 75;
-    private final int COST_TOKEN_REVIVE = 500;
+    // Upgrade type indices
+    private static final int WARRIOR_HEALTH = 0;
+    private static final int WARRIOR_ATTACK = 1;
+    private static final int WARRIOR_DEFENSE = 2;
+    private static final int ARCHER_RANGE = 3;
+    private static final int ARCHER_SPEED = 4;
+    private static final int ARCHER_ATTACKS = 5;
+    private static final int MAGE_MANA = 6;
+    private static final int MAGE_SPELL_POWER = 7;
+    private static final int MAGE_COOLDOWN = 8;
+    
+    // Consumable names
+    private static final String HEALTH_POTION = "HealthPotion";
+    private static final String MANA_POTION = "ManaPotion";
+    private static final String HASTE_POTION = "HastePotion";
 
     @FXML
     public void initialize() {
@@ -48,20 +52,19 @@ public class ShopController {
     }
 
     private void setPrices() {
-        healthPrice.setText(COST_HEALTH + " G");
-        attackPrice.setText(COST_ATTACK + " G");
-        armorPrice.setText(COST_DEFENSE + " G");
-        eaglePrice.setText(COST_RANGE + " G");
-        swiftPrice.setText(COST_SPEED + " G");
-        precisionPrice.setText(COST_PRECISION + " G");
-        manaPrice.setText(COST_MANA + " G");
-        spellPowerPrice.setText(COST_SPELL + " G");
-        cooldownPrice.setText(COST_COOLDOWN + " G");
+        healthPrice.setText(shop.getUpgradeCost(WARRIOR_HEALTH) + " G");
+        attackPrice.setText(shop.getUpgradeCost(WARRIOR_ATTACK) + " G");
+        armorPrice.setText(shop.getUpgradeCost(WARRIOR_DEFENSE) + " G");
+        eaglePrice.setText(shop.getUpgradeCost(ARCHER_RANGE) + " G");
+        swiftPrice.setText(shop.getUpgradeCost(ARCHER_SPEED) + " G");
+        precisionPrice.setText(shop.getUpgradeCost(ARCHER_ATTACKS) + " G");
+        manaPrice.setText(shop.getUpgradeCost(MAGE_MANA) + " G");
+        spellPowerPrice.setText(shop.getUpgradeCost(MAGE_SPELL_POWER) + " G");
+        cooldownPrice.setText(shop.getUpgradeCost(MAGE_COOLDOWN) + " G");
         
-        healthPotionPrice.setText(COST_POTION_HP + " G");
-        manaPotionPrice.setText(COST_POTION_MP + " G");
-        hastePotionPrice.setText(COST_POTION_HASTE + " G");
-        revivalTokenPrice.setText(COST_TOKEN_REVIVE + " G");
+        healthPotionPrice.setText(shop.getConsumablePrice(HEALTH_POTION) + " G");
+        manaPotionPrice.setText(shop.getConsumablePrice(MANA_POTION) + " G");
+        hastePotionPrice.setText(shop.getConsumablePrice(HASTE_POTION) + " G");
     }
 
     private void updateUI() {
@@ -71,27 +74,23 @@ public class ShopController {
         }
     }
 
-    private void buyUpgrade(int type, int cost, String name) {
+    private void buyUpgrade(int upgradeType) {
         Player p = AccountRepository.getInstance().getCurrentUser();
         if (p != null) {
-            if (p.getGold() >= cost) {
-                p.spendGold(cost);
-                p.upgrade(type);
+            if (shop.purchaseUpgrade(p, upgradeType)) {
                 AccountRepository.getInstance().savePlayer(p);
                 updateUI();
-                statusMessage.setText("Purchased " + name + " Upgrade!");
+                statusMessage.setText("Purchased " + shop.getUpgradeName(upgradeType) + " Upgrade!");
             } else {
-                statusMessage.setText("Not enough gold for " + name + "!");
+                statusMessage.setText("Not enough gold for " + shop.getUpgradeName(upgradeType) + "!");
             }
         }
     }
 
-    private void buyItem(String item, int cost, String name) {
+    private void buyItem(String item, String name) {
         Player p = AccountRepository.getInstance().getCurrentUser();
         if (p != null) {
-            if (p.getGold() >= cost) {
-                p.spendGold(cost);
-                p.addItem(item);
+            if (shop.purchaseConsumable(p, item)) {
                 AccountRepository.getInstance().savePlayer(p);
                 updateUI();
                 statusMessage.setText("Purchased " + name + "!");
@@ -101,20 +100,19 @@ public class ShopController {
         }
     }
 
-    @FXML public void onBuyHealthUpgrade() { buyUpgrade(0, COST_HEALTH, "Health"); }
-    @FXML public void onBuyAttackUpgrade() { buyUpgrade(1, COST_ATTACK, "Attack"); }
-    @FXML public void onBuyDefenseUpgrade() { buyUpgrade(2, COST_DEFENSE, "Defense"); }
-    @FXML public void onBuyRangeUpgrade() { buyUpgrade(3, COST_RANGE, "Range"); }
-    @FXML public void onBuySpeedUpgrade() { buyUpgrade(4, COST_SPEED, "Speed"); }
-    @FXML public void onBuyPrecisionUpgrade() { buyUpgrade(5, COST_PRECISION, "Precision"); }
-    @FXML public void onBuyManaUpgrade() { buyUpgrade(6, COST_MANA, "Mana"); }
-    @FXML public void onBuySpellPowerUpgrade() { buyUpgrade(7, COST_SPELL, "Spell Power"); }
-    @FXML public void onBuyCooldownUpgrade() { buyUpgrade(8, COST_COOLDOWN, "Cooldown"); }
+    @FXML public void onBuyHealthUpgrade() { buyUpgrade(WARRIOR_HEALTH); }
+    @FXML public void onBuyAttackUpgrade() { buyUpgrade(WARRIOR_ATTACK); }
+    @FXML public void onBuyDefenseUpgrade() { buyUpgrade(WARRIOR_DEFENSE); }
+    @FXML public void onBuyRangeUpgrade() { buyUpgrade(ARCHER_RANGE); }
+    @FXML public void onBuySpeedUpgrade() { buyUpgrade(ARCHER_SPEED); }
+    @FXML public void onBuyPrecisionUpgrade() { buyUpgrade(ARCHER_ATTACKS); }
+    @FXML public void onBuyManaUpgrade() { buyUpgrade(MAGE_MANA); }
+    @FXML public void onBuySpellPowerUpgrade() { buyUpgrade(MAGE_SPELL_POWER); }
+    @FXML public void onBuyCooldownUpgrade() { buyUpgrade(MAGE_COOLDOWN); }
 
-    @FXML public void onBuyHealthPotion() { buyItem("Health Potion", COST_POTION_HP, "Health Potion"); }
-    @FXML public void onBuyManaPotion() { buyItem("Mana Potion", COST_POTION_MP, "Mana Potion"); }
-    @FXML public void onBuyHastePotion() { buyItem("Haste Potion", COST_POTION_HASTE, "Haste Potion"); }
-    @FXML public void onBuyRevivalToken() { buyItem("Revival Token", COST_TOKEN_REVIVE, "Revival Token"); }
+    @FXML public void onBuyHealthPotion() { buyItem(HEALTH_POTION, "Health Potion"); }
+    @FXML public void onBuyManaPotion() { buyItem(MANA_POTION, "Mana Potion"); }
+    @FXML public void onBuyHastePotion() { buyItem(HASTE_POTION, "Haste Potion"); }
 
     @FXML
     public void onBack() {

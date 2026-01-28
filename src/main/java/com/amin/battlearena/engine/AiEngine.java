@@ -1,11 +1,11 @@
 package com.amin.battlearena.engine;
 
-import com.amin.battlearena.domain.character.Character;
-import com.amin.battlearena.domain.Tile;
-
 import java.util.List;
 
-public class AiEngine {
+import com.amin.battlearena.domain.Tile;
+import com.amin.battlearena.domain.character.Character;
+
+public final class AiEngine {
     
     public void performTurn(GameEngine engine) {
         List<Character> chars = engine.getAllCharacters();

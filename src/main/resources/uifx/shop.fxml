@@ -144,13 +144,13 @@
                                         </HBox>
                                     </VBox>
                                     
-                                    <!-- Precision Upgrade -->
+                                    <!-- Attacks Per Turn Upgrade -->
                                     <VBox spacing="5" styleClass="upgrade-item" GridPane.columnIndex="2" GridPane.rowIndex="0">
                                         <HBox alignment="CENTER_LEFT" spacing="5">
                                             <Label text="💥" styleClass="upgrade-icon"/>
-                                            <Label text="Precision Shot" styleClass="upgrade-name"/>
+                                            <Label text="Rapid Assault" styleClass="upgrade-name"/>
                                         </HBox>
-                                        <Label text="+15% Critical Chance" styleClass="upgrade-desc"/>
+                                        <Label text="+1 Attack per Turn" styleClass="upgrade-desc"/>
                                         <HBox alignment="CENTER_LEFT" spacing="10">
                                             <Label fx:id="precisionPrice" styleClass="upgrade-price"/>
                                             <Button fx:id="precisionShotBtn" text="Buy" styleClass="buy-button" onAction="#onBuyPrecisionUpgrade"/>
@@ -263,19 +263,6 @@
                                 <HBox alignment="CENTER" spacing="10">
                                     <Label fx:id="hastePotionPrice" styleClass="item-price"/>
                                     <Button fx:id="hasteBuyBtn" text="Buy" styleClass="buy-button-small" onAction="#onBuyHastePotion"/>
-                                </HBox>
-                            </VBox>
-                            
-                            <!-- Revival Token -->
-                            <VBox spacing="8" styleClass="item-card premium" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                <Label text="💫" styleClass="item-icon-large">
-                                    <font><Font size="24"/></font>
-                                </Label>
-                                <Label text="Revival Token" styleClass="item-name"/>
-                                <Label text="Revive with 25% HP" wrapText="true" styleClass="item-desc"/>
-                                <HBox alignment="CENTER" spacing="10">
-                                    <Label fx:id="revivalTokenPrice" styleClass="item-price premium"/>
-                                    <Button fx:id="revivalBuyBtn" text="Buy" styleClass="buy-button-premium" onAction="#onBuyRevivalToken"/>
                                 </HBox>
                             </VBox>
                         </GridPane>

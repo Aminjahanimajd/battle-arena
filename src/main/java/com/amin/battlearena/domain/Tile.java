@@ -2,7 +2,7 @@ package com.amin.battlearena.domain;
 
 import com.amin.battlearena.domain.character.Character;
 
-public class Tile {
+public final class Tile {
     private final int x;
     private final int y;
     private Character occupant;

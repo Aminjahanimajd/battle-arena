@@ -2,8 +2,8 @@ package com.amin.battlearena.domain.consumable;
 
 import com.amin.battlearena.domain.character.Character;
 
-public class HealthPotion extends Consumable {
-    private int healAmount;
+public final class HealthPotion extends Consumable {
+    private final int healAmount;
 
     public HealthPotion(int healAmount) {
         super("Health Potion", "Heals " + healAmount + " HP");
