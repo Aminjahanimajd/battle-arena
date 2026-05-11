@@ -1,15 +1,18 @@
 package com.amin.battlearena.infra;
 
+import java.io.IOException;
+import java.net.URL;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.net.URL;
 
-public class SceneManager {
+public final class SceneManager {
     private static SceneManager instance;
     private Stage stage;
+
+    private SceneManager() {}
 
     public static SceneManager getInstance() {
         if (instance == null) {
@@ -33,6 +36,7 @@ public class SceneManager {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setFullScreen(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

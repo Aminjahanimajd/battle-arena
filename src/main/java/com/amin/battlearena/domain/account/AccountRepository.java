@@ -1,14 +1,20 @@
-package com.amin.battlearena.persistence;
+package com.amin.battlearena.domain.account;
 
-import com.amin.battlearena.domain.Player;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AccountRepository {
+public final class AccountRepository {
     private static AccountRepository instance;
     private Player currentUser;
     private final String SAVE_FILE = "savegame.dat";
+
+    private AccountRepository() {}
 
     public static AccountRepository getInstance() {
         if (instance == null) {

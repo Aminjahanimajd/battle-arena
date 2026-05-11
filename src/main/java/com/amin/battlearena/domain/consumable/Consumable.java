@@ -2,7 +2,7 @@ package com.amin.battlearena.domain.consumable;
 
 import com.amin.battlearena.domain.character.Character;
 
-public abstract class Consumable {
+public abstract class Consumable implements ConsumableInterface {
     private final String name;
     private final String description;
 

@@ -1,9 +1,10 @@
-package com.amin.battlearena.domain;
+package com.amin.battlearena.domain.account;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class Player {
+import com.amin.battlearena.domain.Inventory;
+
+public final class Player {
     private String nickname;
     private int gold;
     private int level;
@@ -13,8 +14,8 @@ public class Player {
     // Upgrades: 0=Health, 1=Attack, 2=Defense, 3=Range, 4=Speed, 5=Precision, 6=Mana, 7=SpellPower, 8=Cooldown
     private int[] upgrades;
     
-    // Inventory: Key=ItemName, Value=Count
-    private Map<String, Integer> inventory;
+    // Inventory
+    private Inventory inventory;
 
     public Player(String nickname) {
         this.nickname = nickname;
@@ -23,7 +24,7 @@ public class Player {
         this.victories = 0;
         this.campaignProgress = 1;
         this.upgrades = new int[9];
-        this.inventory = new HashMap<>();
+        this.inventory = new Inventory();
     }
 
     public String getNickname() {
@@ -75,6 +76,12 @@ public class Player {
         return 0;
     }
 
+    public void incrementUpgrade(int type) {
+        if (type >= 0 && type < upgrades.length) {
+            upgrades[type]++;
+        }
+    }
+
     public void upgrade(int type) {
         if (type >= 0 && type < upgrades.length) {
             upgrades[type]++;
@@ -82,26 +89,19 @@ public class Player {
     }
 
     public void addItem(String itemName) {
-        inventory.put(itemName, inventory.getOrDefault(itemName, 0) + 1);
+        inventory.addItem(itemName);
     }
 
     public boolean hasItem(String itemName) {
-        return inventory.getOrDefault(itemName, 0) > 0;
+        return inventory.hasItem(itemName);
     }
 
     public void useItem(String itemName) {
-        if (hasItem(itemName)) {
-            int count = inventory.get(itemName);
-            if (count > 1) {
-                inventory.put(itemName, count - 1);
-            } else {
-                inventory.remove(itemName);
-            }
-        }
+        inventory.removeItem(itemName);
     }
     
     public Map<String, Integer> getInventory() {
-        return inventory;
+        return inventory.getAllItems();
     }
 
     // Setters for loading from file
@@ -110,5 +110,7 @@ public class Player {
     public void setVictories(int victories) { this.victories = victories; }
     public void setCampaignProgress(int campaignProgress) { this.campaignProgress = campaignProgress; }
     public void setUpgrades(int[] upgrades) { this.upgrades = upgrades; }
-    public void setInventory(Map<String, Integer> inventory) { this.inventory = inventory; }
+    public void setInventory(Map<String, Integer> inventoryItems) { 
+        this.inventory.setItems(inventoryItems); 
+    }
 }

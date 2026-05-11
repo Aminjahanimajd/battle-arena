@@ -1,26 +1,32 @@
 package com.amin.battlearena.uifx.controller;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
-import com.amin.battlearena.domain.*;
+import com.amin.battlearena.domain.Board;
+import com.amin.battlearena.domain.Tile;
+import com.amin.battlearena.domain.ability.AbilityInterface;
+import com.amin.battlearena.domain.account.AccountRepository;
+import com.amin.battlearena.domain.account.Player;
 import com.amin.battlearena.domain.character.Character;
-import com.amin.battlearena.domain.character.Warrior;
-import com.amin.battlearena.domain.character.Archer;
-import com.amin.battlearena.domain.character.Mage;
-import com.amin.battlearena.domain.character.Enemy;
-import com.amin.battlearena.domain.ability.Ability;
 import com.amin.battlearena.domain.consumable.Consumable;
-import com.amin.battlearena.domain.consumable.HealthPotion;
-import com.amin.battlearena.domain.consumable.ItemFactory;
+import com.amin.battlearena.domain.consumable.ConsumableFactory;
 import com.amin.battlearena.engine.AiEngine;
 import com.amin.battlearena.engine.GameEngine;
 import com.amin.battlearena.infra.SceneManager;
-import com.amin.battlearena.persistence.AccountRepository;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -28,9 +34,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-
-import java.util.List;
-import java.util.Map;
 
 public class GameController {
 
@@ -66,7 +69,7 @@ public class GameController {
     
     @FXML private ToggleButton moveBtn;
     @FXML private ToggleButton attackBtn;
-    @FXML private Button endTurnBtn;
+    // Removed unused variable endTurnBtn
 
     private static int targetLevel = 1;
     public static void setTargetLevel(int level) { targetLevel = level; }
@@ -74,7 +77,7 @@ public class GameController {
     private GameEngine engine;
     private AiEngine aiEngine;
     private Character selectedCharacter;
-    private Ability selectedAbility;
+    private AbilityInterface selectedAbility;
     private String selectedItem;
     
     private final int TILE_SIZE = 50;
@@ -88,11 +91,9 @@ public class GameController {
         aiEngine = new AiEngine();
         log("Initializing Level " + targetLevel + "...");
         engine.initLevel(targetLevel);
-        
         gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> updateTimer()));
         gameTimer.setCycleCount(Timeline.INDEFINITE);
         gameTimer.play();
-        
         renderBoard();
         updateUI();
         updateConsumablesList();
@@ -177,9 +178,7 @@ public class GameController {
     }
 
     private void handleMoveClick(Tile tile, int x, int y) {
-        if (selectedCharacter == null || !selectedCharacter.isPlayerTeam() || !engine.isPlayerTurn()) return;
-
-        if (engine.moveCharacter(selectedCharacter, tile)) {
+        if (selectedCharacter != null && engine.moveCharacter(selectedCharacter, tile)) {
             log(selectedCharacter.getName() + " moved to (" + x + "," + y + ")");
             moveBtn.setSelected(false);
             renderBoard();
@@ -192,17 +191,16 @@ public class GameController {
     private void handleAttackClick(Tile tile) {
         if (selectedCharacter == null || !selectedCharacter.isPlayerTeam() || !engine.isPlayerTurn()) return;
         if (!tile.isOccupied() || tile.getOccupant().isPlayerTeam()) return;
-
         if (engine.attackCharacter(selectedCharacter, tile.getOccupant(), selectedAbility)) {
             log(selectedCharacter.getName() + " attacked " + tile.getOccupant().getName());
-            attackBtn.setSelected(false);
-            selectedAbility = null;
-            useAbilityBtn.setDisable(true);
-            renderBoard();
-            updateUI();
         } else {
-            log("Attack failed (Out of range or no actions left)!");
+            log("Attack failed.");
         }
+        attackBtn.setSelected(false);
+        selectedAbility = null;
+        useAbilityBtn.setDisable(true);
+        renderBoard();
+        updateUI();
     }
 
     private void handleSelectionClick(Tile tile) {
@@ -256,7 +254,7 @@ public class GameController {
         abilitiesContainer.getChildren().clear();
         if (selectedCharacter == null) return;
         
-        for (Ability a : selectedCharacter.getAbilities()) {
+        for (AbilityInterface a : selectedCharacter.getAbilities()) {
             Button btn = new Button(a.getName() + " (" + a.getManaCost() + " MP)");
             btn.setMaxWidth(Double.MAX_VALUE);
             btn.setOnAction(e -> {
@@ -321,7 +319,7 @@ public class GameController {
                         updateUI();
                     });
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    // Error handling: log or ignore as needed
                 }
             }).start();
         }
@@ -417,33 +415,50 @@ public class GameController {
     @FXML 
     public void onUseConsumable() {
         if (selectedItem == null) return;
-        
         if (selectedCharacter != null && selectedCharacter.isPlayerTeam() && engine.isPlayerTurn()) {
-             Player p = AccountRepository.getInstance().getCurrentUser();
-             if (p != null && p.hasItem(selectedItem)) {
-                 Consumable item = ItemFactory.createItem(selectedItem);
-                 if (item != null) {
-                     item.use(selectedCharacter);
-                     p.useItem(selectedItem);
-                     AccountRepository.getInstance().savePlayer(p);
-                     
-                     log("Used " + selectedItem + " on " + selectedCharacter.getName());
-                     updateUI();
-                     updateConsumablesList();
-                     
-                     if (!p.hasItem(selectedItem)) {
-                         selectedItem = null;
-                         useConsumableBtn.setDisable(true);
-                         useConsumableBtn.setText("Use Selected Consumable");
-                     }
-                 } else {
-                     log("Item effect not implemented: " + selectedItem);
-                 }
-             }
+            Player p = AccountRepository.getInstance().getCurrentUser();
+            if (p != null && p.hasItem(selectedItem)) {
+                Consumable item = ConsumableFactory.createItem(selectedItem);
+                if (item != null) {
+                    item.use(selectedCharacter);
+                    p.useItem(selectedItem);
+                    AccountRepository.getInstance().savePlayer(p);
+                    log("Used " + selectedItem + " on " + selectedCharacter.getName());
+                    updateUI();
+                    updateConsumablesList();
+                    if (!p.hasItem(selectedItem)) {
+                        selectedItem = null;
+                        useConsumableBtn.setDisable(true);
+                        useConsumableBtn.setText("Use Selected Consumable");
+                    }
+                } else {
+                    log("Item effect not implemented: " + selectedItem);
+                }
+            }
         } else {
             log("Select a player character to use item.");
         }
     }
     @FXML public void onClearLog() { logArea.clear(); }
-    @FXML public void onExportLog() {}
+    @FXML public void onExportLog() {
+        String text = (logArea == null) ? "" : logArea.getText();
+        if (text == null || text.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No logs to export.");
+            alert.showAndWait();
+            return;
+        }
+
+        String userHome = System.getProperty("user.home");
+        String filename = "battlearena_log_" + System.currentTimeMillis() + ".txt";
+        File out = new File(userHome, filename);
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(out))) {
+            pw.print(text);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Log exported to: " + out.getAbsolutePath());
+            alert.showAndWait();
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to export log: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
 }

@@ -2,7 +2,7 @@ package com.amin.battlearena.domain.ability;
 
 import com.amin.battlearena.domain.character.Character;
 
-public class Fireball extends Ability {
+public final class Fireball extends Ability {
     public Fireball() {
         super("Fireball", 20, 3, 4);
     }

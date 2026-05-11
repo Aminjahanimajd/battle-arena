@@ -1,8 +1,11 @@
 package com.amin.battlearena.uifx.controller;
 
-import com.amin.battlearena.domain.Player;
+import com.amin.battlearena.domain.account.AccountRepository;
+import com.amin.battlearena.domain.account.Player;
+import com.amin.battlearena.domain.campaign.LevelConfig;
+import com.amin.battlearena.domain.campaign.Reward;
 import com.amin.battlearena.infra.SceneManager;
-import com.amin.battlearena.persistence.AccountRepository;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -45,8 +48,8 @@ public class CampaignController {
             victoriesCount.setText(p.getVictories() + " Wins");
             
             int progress = p.getCampaignProgress();
-            campaignProgress.setProgress((double) (progress - 1) / 12.0);
-            progressText.setText((progress - 1) + "/12 Complete");
+            campaignProgress.setProgress((double) (progress - 1) / 10.0);
+            progressText.setText((progress - 1) + "/10 Complete");
             
             // Logic to lock/unlock levels in UI would go here if we had references to them
             // Since we don't have direct references to all VBox level cards, we rely on FXML structure
@@ -89,14 +92,25 @@ public class CampaignController {
         else selectedLevelChapter.setText("Chapter 4: Final Arena");
         
         selectedLevelDescription.setText("Defeat all enemies to claim victory!");
-        enemyCount.setText(String.valueOf(2 + (levelId / 2))); // Simple formula
-        rewardAmount.setText(String.valueOf(50 + (levelId * 25)));
         
-        difficultyStars.getChildren().clear();
-        int stars = (levelId + 2) / 3;
-        for (int i = 0; i < stars; i++) {
-            Label star = new Label("⭐");
-            difficultyStars.getChildren().add(star);
+        // Use LevelConfig for campaign data
+        if (LevelConfig.isLevelValid(levelId)) {
+            String[] enemyTypes = LevelConfig.getEnemyTypes(levelId);
+            enemyCount.setText(String.valueOf(enemyTypes.length));
+            
+            Reward reward = LevelConfig.getReward(levelId);
+            rewardAmount.setText(String.valueOf(reward.getGoldAmount()));
+            
+            float difficulty = LevelConfig.getDifficultyMultiplier(levelId);
+            int stars = (int) Math.ceil(difficulty);
+            difficultyStars.getChildren().clear();
+            for (int i = 0; i < stars && i < 5; i++) {
+                Label star = new Label("⭐");
+                difficultyStars.getChildren().add(star);
+            }
+        } else {
+            enemyCount.setText("N/A");
+            rewardAmount.setText("0");
         }
     }
 

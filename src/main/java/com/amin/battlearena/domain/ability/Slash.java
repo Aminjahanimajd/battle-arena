@@ -2,7 +2,7 @@ package com.amin.battlearena.domain.ability;
 
 import com.amin.battlearena.domain.character.Character;
 
-public class Slash extends Ability {
+public final class Slash extends Ability {
     public Slash() {
         super("Slash", 0, 1, 1);
     }

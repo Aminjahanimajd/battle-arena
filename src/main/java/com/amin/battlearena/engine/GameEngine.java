@@ -1,21 +1,22 @@
 package com.amin.battlearena.engine;
 
-import com.amin.battlearena.domain.ability.Ability;
-import com.amin.battlearena.domain.character.Archer;
-import com.amin.battlearena.domain.Board;
-import com.amin.battlearena.domain.character.Character;
-import com.amin.battlearena.domain.character.Enemy;
-import com.amin.battlearena.domain.character.Mage;
-import com.amin.battlearena.domain.Tile;
-import com.amin.battlearena.domain.character.Warrior;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GameEngine {
+import com.amin.battlearena.domain.Board;
+import com.amin.battlearena.domain.Tile;
+import com.amin.battlearena.domain.ability.AbilityInterface;
+import com.amin.battlearena.domain.character.Character;
+import com.amin.battlearena.domain.team.EnemyTeam;
+import com.amin.battlearena.domain.team.HumanTeam;
+import com.amin.battlearena.domain.team.Team;
+
+public final class GameEngine {
     private Board board;
     private List<Character> allCharacters;
+    private Team humanTeam;
+    private Team enemyTeam;
     private int turnCount;
     private boolean isPlayerTurn;
     private boolean isGameOver;
@@ -38,21 +39,18 @@ public class GameEngine {
         this.isPlayerTurn = true;
         this.isGameOver = false;
 
-        // Spawn Player Team
-        spawnCharacter(new Warrior(true), 1, 2);
-        spawnCharacter(new Archer(true), 1, 5);
-        spawnCharacter(new Mage(true), 1, 8);
+        // Create teams
+        humanTeam = new HumanTeam();
+        humanTeam.initialize();
+        
+        enemyTeam = new EnemyTeam(levelId);
+        enemyTeam.initialize();
 
-        // Spawn Enemies based on level
-        int enemyCount = 2 + (levelId / 2);
-        Random rand = new Random();
-        for (int i = 0; i < enemyCount; i++) {
-            int x = width - 2 - rand.nextInt(3);
-            int y = rand.nextInt(height);
-            if (!board.getTile(x, y).isOccupied()) {
-                spawnCharacter(new Enemy("Enemy " + (i+1), levelId), x, y);
-            }
-        }
+        // Spawn Human Team
+        spawnTeam(humanTeam, 1, 2);
+        
+        // Spawn Enemy Team
+        spawnTeam(enemyTeam, width - 2, height / 2);
     }
 
     private void spawnCharacter(Character c, int x, int y) {
@@ -63,9 +61,22 @@ public class GameEngine {
             allCharacters.add(c);
         }
     }
+    
+    private void spawnTeam(Team team, int startX, int startY) {
+        Random rand = new Random();
+        for (Character member : team.getMembers()) {
+            int x = startX + rand.nextInt(3) - 1;
+            int y = startY + rand.nextInt(3) - 1;
+            if (board.getTile(x, y) != null && !board.getTile(x, y).isOccupied()) {
+                spawnCharacter(member, x, y);
+            }
+        }
+    }
 
     public Board getBoard() { return board; }
     public List<Character> getAllCharacters() { return allCharacters; }
+    public Team getHumanTeam() { return humanTeam; }
+    public Team getEnemyTeam() { return enemyTeam; }
     public int getTurnCount() { return turnCount; }
     public boolean isPlayerTurn() { return isPlayerTurn; }
     public boolean isGameOver() { return isGameOver; }
@@ -76,8 +87,8 @@ public class GameEngine {
         if (target.isOccupied()) return false;
         
         // Simple distance check (Manhattan distance)
-        int dist = Math.abs(c.getPosition().getX() - target.getX()) + 
-                   Math.abs(c.getPosition().getY() - target.getY());
+        int dist = Math.abs(c.getPosition().getX() - target.getX()) +
+                    Math.abs(c.getPosition().getY() - target.getY());
         
         if (dist > c.getSpeed()) return false;
 
@@ -88,7 +99,7 @@ public class GameEngine {
         return true;
     }
 
-    public boolean attackCharacter(Character attacker, Character target, Ability ability) {
+    public boolean attackCharacter(Character attacker, Character target, AbilityInterface ability) {
         if (attacker.getAttacksLeft() <= 0) return false;
         if (ability != null && !ability.isReady()) return false;
         if (ability != null && attacker.getCurrentMana() < ability.getManaCost()) return false;
@@ -108,7 +119,7 @@ public class GameEngine {
         return true;
     }
 
-    private void performAttack(Character attacker, Character target, Ability ability) {
+    private void performAttack(Character attacker, Character target, AbilityInterface ability) {
         if (ability != null) {
             attacker.spendMana(ability.getManaCost());
             ability.execute(attacker, target);

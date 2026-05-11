@@ -2,33 +2,31 @@ package com.amin.battlearena.domain;
 
 import com.amin.battlearena.domain.character.Character;
 
-public class Tile {
+// Represents a board tile
+public final class Tile {
     private final int x;
     private final int y;
     private Character occupant;
 
-    public Tile(int x, int y) {
+    // Tile constructor
+    public Tile(final int x, final int y) {
         this.x = x;
         this.y = y;
+        this.occupant = null;
     }
 
-    public int getX() {
-        return x;
-    }
+    // Returns X coordinate
+    public final int getX() { return x; }
 
-    public int getY() {
-        return y;
-    }
+    // Returns Y coordinate
+    public final int getY() { return y; }
 
-    public Character getOccupant() {
-        return occupant;
-    }
+    // Returns occupied status
+    public final boolean isOccupied() { return occupant != null; }
 
-    public void setOccupant(Character occupant) {
-        this.occupant = occupant;
-    }
+    // Returns the occupant character
+    public final Character getOccupant() { return occupant; }
 
-    public boolean isOccupied() {
-        return occupant != null;
-    }
+    // Sets the occupant character
+    public final void setOccupant(final Character occupant) { this.occupant = occupant; }
 }
